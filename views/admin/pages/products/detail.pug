@@ -1,0 +1,101 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(5000)
+  +alert-error(5000)
+  
+  h1.mb-4 Chi tiết sản phẩm
+
+  .card.product-detail
+    .card-body
+      .row
+        
+        .col-md-4
+          .image-box
+            img.product-image(
+              src=product.thumbnail || "/images/no-image.png"
+              alt=product.title
+            )
+
+        
+        .col-md-8
+          h3.product-title #{product.title}
+
+          p.text-muted #{product.description}
+
+          hr
+
+          .row.mb-2
+            .col-6
+              strong Giá:
+            .col-6
+              span.text-danger #{product.price}$
+
+          .row.mb-2
+            .col-6
+              strong Giảm giá:
+            .col-6
+              span #{product.discountPercentage}%
+
+          .row.mb-2
+            .col-6
+              strong Tồn kho:
+            .col-6
+              span #{product.stock}
+
+          .row.mb-2
+            .col-6
+              strong Vị trí:
+            .col-6
+              span #{product.position}
+
+          
+          .row.mb-3
+            .col-6
+              strong Trạng thái:
+            .col-6
+              if product.status == "active"
+                a(
+                  href="javascript:;"
+                  data-status="active"
+                  data-id=product._id
+                  button-change-status
+                  class="badge bg-success text-decoration-none"
+                ) Hoạt động
+              else
+                a(
+                  href="javascript:;"
+                  data-status="inactive"
+                  data-id=product._id
+                  button-change-status
+                  class="badge bg-danger text-decoration-none"
+                ) Dừng hoạt động
+
+          .row.mb-3
+            .col-6
+              strong Cập nhật:
+            .col-6
+              span #{product.updatedAt ? new Date(product.updatedAt).toLocaleString() : "Chưa cập nhật"}
+
+          hr
+
+          a(
+            href=`${prefixAdmin}/products/edit/${product._id}`
+            class="btn btn-warning"
+          ) Sửa
+
+          a(
+            href=`${prefixAdmin}/products`
+            class="btn btn-secondary ms-2"
+          ) Quay lại
+
+  
+  form(
+    action=""
+    method="POST"
+    id="form-change-status"
+    data-path=`${prefixAdmin}/products/change-status`
+  )
+
+  script(src="/admin/js/product.js")

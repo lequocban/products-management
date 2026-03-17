@@ -1,0 +1,63 @@
+extend ../../layouts/default.pug
+
+block main
+  .container.mt-4
+    .row
+      // Ảnh sản phẩm
+      .col-md-5
+        .product-image-box
+          img.main-image(
+            src=product.thumbnail || "/images/no-image.png"
+            alt=product.title
+          )
+
+      // Thông tin sản phẩm
+      .col-md-7
+        h2.product-title #{product.title}
+
+        p.text-muted.mt-2 #{product.description}
+
+        // Giá
+        .price-box.mt-3
+          if product.discountPercentage > 0
+            span.old-price #{product.price}$
+            br
+            span.new-price #{product.newPrice}$
+          else
+            span.new-price #{product.price}$
+
+        // Trạng thái
+        .mt-3
+          if product.status == "active"
+            span.badge.bg-success Còn hàng
+          else
+            span.badge.bg-danger Hết hàng
+
+        // Tồn kho
+        .mt-3
+          strong Tồn kho: 
+          span #{product.stock}
+
+        // Số lượng
+        .mt-3
+          label Số lượng:
+          input(
+            type="number"
+            min="1"
+            max=product.stock
+            value="1"
+            class="form-control quantity-input"
+          )
+
+        // Nút hành động
+        .mt-4
+          button.btn.btn-primary.me-2 Mua ngay
+          button.btn.btn-outline-secondary Thêm vào giỏ hàng
+
+    // Mô tả chi tiết
+    .row.mt-5
+      .col-12
+        .card
+          .card-header Mô tả chi tiết
+          .card-body
+            p #{product.description}
