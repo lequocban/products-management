@@ -39,8 +39,18 @@ module.exports.index = async (req, res) => {
 
   // end pagination
 
+  // sort
+  let sort = {};
+  if (req.query.sortKey && req.query.sortValue) {
+    sort[req.query.sortKey] = req.query.sortValue;
+  } else {
+    sort.position = "desc";
+  }
+
+  // end sort
+
   const lstProduct = await Product.find(find)
-    .sort({ position: "desc" })
+    .sort(sort)
     .limit(objectPagination.limitItems)
     .skip(objectPagination.skip);
 
@@ -50,6 +60,8 @@ module.exports.index = async (req, res) => {
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
     pagination: objectPagination,
+    sortKey: req.query.sortKey,
+    sortValue: req.query.sortValue,
   });
 };
 
@@ -150,7 +162,6 @@ module.exports.createPost = async (req, res) => {
     req.body.position = parseInt(req.body.position);
   }
 
-
   const product = new Product(req.body);
   await product.save();
 
@@ -180,18 +191,13 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH]  /admin/products/edit/:id
 module.exports.editPatch = async (req, res) => {
-  const id = req.params.id;
-
-  req.body.price = parseInt(req.body.price);
-  req.body.discountPercentage = parseInt(req.body.discountPercentage);
-  req.body.stock = parseInt(req.body.stock);
-  req.body.position = parseInt(req.body.position);
-
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-  }
-
   try {
+    const id = req.params.id;
+
+    req.body.price = parseInt(req.body.price);
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.position = parseInt(req.body.position);
     await Product.updateOne(
       {
         _id: id,
@@ -205,7 +211,6 @@ module.exports.editPatch = async (req, res) => {
     res.redirect(req.headers.referer);
   }
 };
-
 
 // [GET]  /admin/products/detail/:id
 module.exports.detail = async (req, res) => {

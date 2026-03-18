@@ -2,12 +2,13 @@ mixin form-change-multi(path)
   form(
     action=path 
     method="POST"
+    class="mb-3"
     form-change-multi
   )
-    .d-flex.align-items-start
+    .d-flex.align-items-start.gap-2
       .form-group
         select(name="type" class="form-select")
-          option(disabled  selected) --Chọn hành động--
+          option(disabled selected) --Chọn hành động--
           option(value="active") Hoạt động
           option(value="inactive") Dừng hoạt động
           option(value="delete-multi") Xóa mục đã chọn
