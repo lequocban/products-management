@@ -190,10 +190,21 @@ if (sort) {
 
     window.location.href = url.href;
   });
+
   sortClear.addEventListener("click", () => {
     url.searchParams.delete("sortKey");
     url.searchParams.delete("sortValue");
     window.location.href = url.href;
   });
+
+  const sortKey = url.searchParams.get("sortKey");
+  const sortValue = url.searchParams.get("sortValue");
+  if (sortKey && sortValue) {
+    const stringSort = `${sortKey}-${sortValue}`;
+    const optionSelected = sortSelect.querySelector(
+      `option[value='${stringSort}']`,
+    );
+    optionSelected.selected = true;
+  }
 }
 //end sort

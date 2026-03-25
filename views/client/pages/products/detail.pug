@@ -15,7 +15,7 @@ block main
       .col-md-7
         h2.product-title #{product.title}
 
-        p.text-muted.mt-2 #{product.description}
+        p.text-muted.mt-2 !{product.description}
 
         // Giá
         .price-box.mt-3
@@ -60,4 +60,4 @@ block main
         .card
           .card-header Mô tả chi tiết
           .card-body
-            p #{product.description}
+            p !{product.description}

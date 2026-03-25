@@ -4,6 +4,7 @@ include ../../mixins/form-search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
+include ../../mixins/sort.pug
 
 block main 
 
@@ -27,41 +28,7 @@ block main
       .card-body
         .row 
           .col-4
-            div(sort)
-              select(
-                class="form-select"
-                name="sort"
-                sort-select
-              )
-                option(
-                  value="position-desc" 
-                  selected=(sortKey + "-" + sortValue == "position-desc")
-                ) Vị trí giảm dần
-                option(
-                  value="position-asc"
-                  selected=(sortKey + "-" + sortValue == "position-asc")
-                ) Vị trí tăng dần
-                option(
-                  value="price-desc"
-                  selected=(sortKey + "-" + sortValue == "price-desc")
-                ) Giá giảm dần
-                option(
-                  value="price-asc"
-                  selected=(sortKey + "-" + sortValue == "price-asc")
-                ) Giá tăng dần
-                option(
-                  value="title-asc"
-                  selected=(sortKey + "-" + sortValue == "title-asc")
-                ) Tiêu đề A-Z
-                option(
-                  value="title-desc"
-                  selected=(sortKey + "-" + sortValue == "title-desc")
-                ) Tiêu đề Z-A
-
-              button(
-                class="btn btn-danger mt-2"
-                sort-clear
-              ) Clear
+            +sort()
 
   .card.mb-3
     .card-header Danh sách sản phẩm

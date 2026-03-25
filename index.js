@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const database = require("./config/database.js");
 
 const methodOverride = require("method-override");
@@ -15,6 +16,7 @@ const route = require("./routes/client/index.route");
 const routeAdmin = require("./routes/admin/index.route");
 
 const systemConfig = require("./config/system.js");
+const { patch } = require("./routes/client/products.route.js");
 
 const app = express();
 
@@ -28,6 +30,13 @@ app.use(cookieParser("le quoc ban dep trai"));
 app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 //end   express flash
+
+// tiny mce
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce")),
+);
+// end tiny mce
 
 const port = process.env.PORT;
 

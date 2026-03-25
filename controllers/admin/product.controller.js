@@ -53,15 +53,13 @@ module.exports.index = async (req, res) => {
     .sort(sort)
     .limit(objectPagination.limitItems)
     .skip(objectPagination.skip);
-
+  
   res.render("admin/pages/products/index", {
     pageTitle: "Trang sản phẩm",
     products: lstProduct,
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
     pagination: objectPagination,
-    sortKey: req.query.sortKey,
-    sortValue: req.query.sortValue,
   });
 };
 
