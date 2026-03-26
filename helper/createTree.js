@@ -1,11 +1,13 @@
-function createTree(arr, parentId = "") {
+let count = 0;
+function buildTree(arr, parentId = "") {
   const tree = [];
 
   arr.forEach((item) => {
     if (item.parent_id === parentId) {
+      count++;
       const newItem = item;
-
-      const children = createTree(arr, item.id);
+      newItem.index = count;
+      const children = buildTree(arr, item.id);
 
       if (children.length > 0) {
         newItem.children = children;
@@ -18,4 +20,8 @@ function createTree(arr, parentId = "") {
   return tree;
 }
 
-module.exports = { createTree };
+module.exports.createTree = (arr, parentId = "") => {
+  count = 0;
+  const tree = buildTree(arr, (parentId = ""));
+  return tree;
+};
