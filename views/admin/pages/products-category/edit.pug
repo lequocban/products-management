@@ -1,5 +1,6 @@
 extend ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/render-tree.pug
 
 block main
   +alert-error(5000)
@@ -23,15 +24,34 @@ block main
         required
         value=record.title
       )
+    //- div(class="form-group mb-3")
+    //-   label(for="parent_id") Danh mục cha
+    //-   input(
+    //-     type="text"
+    //-     class="form-control"
+    //-     id="parent_id"
+    //-     name="parent_id"
+    //-     value=record.parent_id
+    //-   ) 
+
+    
     div(class="form-group mb-3")
       label(for="parent_id") Danh mục cha
-      input(
-        type="text"
-        class="form-control"
-        id="parent_id"
-        name="parent_id"
-        value=record.parent_id
-      ) 
+      
+      - const currentParentId = record.parent_id ? record.parent_id.toString() : ""
+      input(type="hidden" name="parent_id" id="parent_id_input" value=currentParentId)
+      
+      .tree-container
+        .tree-item.root-item(data-id="")
+          .item-content
+            span.toggle.empty
+            span.title -- Danh mục gốc --
+        
+        if(records)
+          - const currentId = record.id ? record.id.toString() : (record._id ? record._id.toString() : "")
+          +render-tree-list(records, currentId)
+    
+
     div(class="form-group mb-3")
       label(for="desc") Mô tả
       textarea(
@@ -39,7 +59,7 @@ block main
         id="desc"
         name="description"
         rows="5"
-      ) !{value=record.description}
+      ) !{record.description}
     div(
       class="form-group mb-3"
       upload-image
@@ -109,3 +129,4 @@ block main
 
 
   script(src="/admin/js/product-category.js") 
+  script(src="/admin/js/edit-category-tree.js") 

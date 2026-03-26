@@ -1,5 +1,6 @@
 extend ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/render-tree.pug
 
 block main
   +alert-error(5000)
@@ -22,12 +23,20 @@ block main
       )
     div(class="form-group mb-3")
       label(for="parent_id") Danh mục cha
-      input(
-        type="text"
-        class="form-control"
-        id="parent_id"
-        name="parent_id"
-      ) 
+      input(type="hidden" name="parent_id" id="parent_id_input" value="")
+      .tree-container
+        .tree-item.root-item.selected(data-id="")
+          .item-content
+            span.toggle.empty
+            span.title -- Danh mục gốc --
+        if(records)
+          +render-tree-list(records)
+
+    //- div(class="category-tree-wrapper")
+    //-   h5 Danh mục sản phẩm
+    //-   if(records)
+    //-     +render-tree-list(records)
+
     div(class="form-group mb-3")
       label(for="desc") Mô tả
       textarea(
@@ -103,4 +112,5 @@ block main
 
 
 
-  script(src="/admin/js/product.js") 
+  script(src="/admin/js/product-category.js") 
+  script(src="/admin/js/create-category-tree.js") 

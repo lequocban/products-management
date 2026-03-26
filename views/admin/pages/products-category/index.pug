@@ -1,10 +1,10 @@
 extend ../../layouts/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/form-search.pug
-include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort-category.pug
+include ../../mixins/table-tree.pug
 
 block main 
 
@@ -14,14 +14,6 @@ block main
       
   h1 Danh mục sản phẩm 
 
-  .card.mb-3
-    .card-header Bộ lọc và tìm kiếm
-    .card-body
-      .row 
-        .col-6
-          +filter-status(filterStatus)
-        .col-6 
-          +form-search(keyword)
 
   .card.mb-3
     .card-header Sắp xếp
@@ -53,71 +45,13 @@ block main
               th STT 
               th Hình ảnh 
               th Tiêu đề
-              th Danh mục cha
               th Vị trí
               th Trạng thái
               th Hành động
 
           tbody 
-            each item, index in records
-              tr
-                td
-                  input(
-                    type="checkbox" 
-                    name="id"
-                    value=item.id
-                    ) 
-                td #{index + 1}
-                td 
-                  img(
-                    src=item.thumbnail
-                    alt=item.title
-                    width="100px"
-                    height="auto"
-                  ) 
-                td #{item.title}
-                td #{item.parent_id}
-                td 
-                  input(
-                    type="number"
-                    value=item.position
-                    style='width: 60px'
-                    min='1'
-                    name="position"
-                  )
-                td
-                  if (item.status == "active")
-                    a(
-                      href="javascript:;" 
-                      data-status=item.status
-                      data-id=item.id
-                      button-change-status
-                      class="badge bg-success text-decoration-none"
-                    ) Hoạt động
-                  else 
-                    a(
-                      href="javascript:;" 
-                      data-status=item.status
-                      data-id=item.id
-                      button-change-status 
-                      class="badge bg-danger text-decoration-none"
-                    ) Dừng hoạt động
-                td 
-                  a(
-                    href=`${prefixAdmin}/products-category/detail/${item.id}`
-                    class="btn btn-secondary btn-sm ms-1"
-                  ) Chi tiết
-                  a(
-                    href=`${prefixAdmin}/products-category/edit/${item.id}`
-                    class="btn btn-warning btn-sm ms-1"
-                  ) Sửa
-                  button(
-                    class="btn btn-danger btn-sm ms-1"
-                    data-id=item.id
-                    button-delete
-                  ) Xóa
+            +table-tree(records)
 
-  +pagination(pagination)
 
   form(
     action=""

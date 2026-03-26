@@ -1,0 +1,17 @@
+mixin render-tree-list(items, current_id = "")
+  ul.tree-view
+    each item in items
+      //- Kiểm tra: BỎ QUA nếu item này chính là bản ghi đang chỉnh sửa
+      if item.id != current_id
+        li.tree-item(data-id=item.id)
+          .item-content
+            if item.children && item.children.length > 0
+              span.toggle ▶
+            else
+              span.toggle.empty  
+            span.title #{item.title}
+          
+          if item.children && item.children.length > 0
+            .child-container(style="display: none;")
+              //- Truyền tiếp current_id xuống các cấp đệ quy
+              +render-tree-list(item.children, current_id)
