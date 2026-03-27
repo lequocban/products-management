@@ -1,9 +1,12 @@
-mixin render-tree-list(items, current_id = "")
+
+mixin render-tree-list(items, current_id = "", parent_id = "")
   ul.tree-view
     each item in items
-      //- Kiểm tra: BỎ QUA nếu item này chính là bản ghi đang chỉnh sửa
       if item.id != current_id
-        li.tree-item(data-id=item.id)
+        //- Kiểm tra nếu id của item trùng với parent_id thì bôi đen
+        - const isSelected = (item.id == parent_id) ? "selected" : ""
+        
+        li.tree-item(data-id=item.id class=isSelected)
           .item-content
             if item.children && item.children.length > 0
               span.toggle ▶
@@ -13,5 +16,25 @@ mixin render-tree-list(items, current_id = "")
           
           if item.children && item.children.length > 0
             .child-container(style="display: none;")
-              //- Truyền tiếp current_id xuống các cấp đệ quy
-              +render-tree-list(item.children, current_id)
+              //- Truyền tiếp các biến xuống cấp con
+              +render-tree-list(item.children, current_id, parent_id)
+
+
+//- 2. Mixin tổng (Wrapper) dùng để gọi ở file chính
+//- Bao gồm cả Input ẩn, Cấu trúc khung và Danh mục gốc
+mixin tree-select(records, current_id = "", parent_id = "")
+  //- Input ẩn gửi về Backend
+  input(type="hidden" name="parent_id" id="parent_id_input" value=parent_id)
+  
+  .tree-container
+    //- Xử lý bôi đen "Danh mục gốc" nếu parent_id rỗng
+    - const isRootSelected = (parent_id === "") ? "selected" : ""
+    
+    .tree-item.root-item(data-id="" class=isRootSelected)
+      .item-content
+        span.toggle.empty
+        span.title -- Danh mục gốc --
+    
+    //- Gọi mixin đệ quy để in các danh mục con
+    if(records)
+      +render-tree-list(records, current_id, parent_id)

@@ -6,6 +6,12 @@ block main
 
   h1(class="mb-4") Thêm mới sản phẩm
 
+  div(class="mb-3")
+    a(
+      href=`${prefixAdmin}/products`
+      class="btn btn-secondary"
+    ) Quay lại
+
   form(
     action=`${prefixAdmin}/products/create`
     id="form-create-product"

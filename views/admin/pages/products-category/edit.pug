@@ -8,6 +8,12 @@ block main
 
   
   h1(class="mb-4") Chỉnh sửa danh mục sản phẩm
+  
+  div(class="mb-3")
+    a(
+      href=`${prefixAdmin}/products-category`
+      class="btn btn-secondary"
+    ) Quay lại
 
   form(
     action=`${prefixAdmin}/products-category/edit/${record._id}?_method=PATCH`
@@ -24,32 +30,12 @@ block main
         required
         value=record.title
       )
-    //- div(class="form-group mb-3")
-    //-   label(for="parent_id") Danh mục cha
-    //-   input(
-    //-     type="text"
-    //-     class="form-control"
-    //-     id="parent_id"
-    //-     name="parent_id"
-    //-     value=record.parent_id
-    //-   ) 
 
-    
     div(class="form-group mb-3")
       label(for="parent_id") Danh mục cha
-      
       - const currentParentId = record.parent_id ? record.parent_id.toString() : ""
-      input(type="hidden" name="parent_id" id="parent_id_input" value=currentParentId)
-      
-      .tree-container
-        .tree-item.root-item(data-id="")
-          .item-content
-            span.toggle.empty
-            span.title -- Danh mục gốc --
-        
-        if(records)
-          - const currentId = record.id ? record.id.toString() : (record._id ? record._id.toString() : "")
-          +render-tree-list(records, currentId)
+      - const currentId = record.id ? record.id.toString() : (record._id ? record._id.toString() : "")
+      +tree-select(records, currentId, currentParentId)
     
 
     div(class="form-group mb-3")

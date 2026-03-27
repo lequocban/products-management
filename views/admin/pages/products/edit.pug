@@ -7,6 +7,12 @@ block main
 
   h1(class="mb-4") Chỉnh sửa sản phẩm
 
+  div(class="mb-3")
+    a(
+      href=`${prefixAdmin}/products`
+      class="btn btn-secondary"
+    ) Quay lại
+
   form(
     action=`${prefixAdmin}/products/edit/${product._id}?_method=PATCH`
     id="form-edit-product"

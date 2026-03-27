@@ -6,6 +6,11 @@ block main
   +alert-error(5000)
 
   h1(class="mb-4") Thêm mới danh mục sản phẩm
+  div(class="mb-3")
+    a(
+      href=`${prefixAdmin}/products-category`
+      class="btn btn-secondary"
+    ) Quay lại
 
   form(
     action=`${prefixAdmin}/products-category/create`
@@ -23,19 +28,9 @@ block main
       )
     div(class="form-group mb-3")
       label(for="parent_id") Danh mục cha
-      input(type="hidden" name="parent_id" id="parent_id_input" value="")
-      .tree-container
-        .tree-item.root-item.selected(data-id="")
-          .item-content
-            span.toggle.empty
-            span.title -- Danh mục gốc --
         if(records)
-          +render-tree-list(records)
+          +tree-select(records)
 
-    //- div(class="category-tree-wrapper")
-    //-   h5 Danh mục sản phẩm
-    //-   if(records)
-    //-     +render-tree-list(records)
 
     div(class="form-group mb-3")
       label(for="desc") Mô tả
