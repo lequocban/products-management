@@ -22,12 +22,19 @@ mixin render-tree-list(items, current_id = "", parent_id = "")
 
 //- 2. Mixin tổng (Wrapper) dùng để gọi ở file chính
 //- Bao gồm cả Input ẩn, Cấu trúc khung và Danh mục gốc
-mixin tree-select(records, current_id = "", parent_id = "")
-  //- Input ẩn gửi về Backend
-  input(type="hidden" name="parent_id" id="parent_id_input" value=parent_id)
+mixin tree-select(records, current_id = "", parent_id = "", input_name = "parent_id")
+  
+  //- 1. Gán biến input_name vào thuộc tính name và id
+  //- 2. Thêm thuộc tính đánh dấu "input-tree-value" cho JS dễ tìm
+  input(
+    type="hidden" 
+    name=input_name 
+    id=input_name 
+    value=parent_id 
+    input-tree-value
+  )
   
   .tree-container
-    //- Xử lý bôi đen "Danh mục gốc" nếu parent_id rỗng
     - const isRootSelected = (parent_id === "") ? "selected" : ""
     
     .tree-item.root-item(data-id="" class=isRootSelected)
@@ -35,6 +42,5 @@ mixin tree-select(records, current_id = "", parent_id = "")
         span.toggle.empty
         span.title -- Danh mục gốc --
     
-    //- Gọi mixin đệ quy để in các danh mục con
     if(records)
       +render-tree-list(records, current_id, parent_id)

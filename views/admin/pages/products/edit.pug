@@ -1,5 +1,7 @@
 extend ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/render-tree.pug
+
 
 block main
   +alert-error(5000)
@@ -29,6 +31,27 @@ block main
         required
         value=product.title
       ) 
+
+    div(class="form-group mb-3")
+      label(for="product_category_id") Danh mục sản phẩm
+      - const currentCategoryId = product.product_category_id ? product.product_category_id.toString() : ""  
+      input(
+        type="hidden" 
+        name="product_category_id" 
+        id="product_category_id" 
+        value=currentCategoryId
+        input-tree-value
+      )   
+      .tree-container
+        - const isRootSelected = (currentCategoryId === "") ? "selected" : ""
+        .tree-item.root-item(data-id="" class=isRootSelected)
+          .item-content
+            span.toggle.empty
+            span.title -- Chọn danh mục --
+        
+        if(category)
+          +render-tree-list(category, "", currentCategoryId)
+    
     div(class="form-group mb-3")
       label(for="desc") Mô tả
       textarea(
@@ -134,3 +157,4 @@ block main
 
 
   script(src="/admin/js/product.js") 
+  script(src="/admin/js/tree.js") 
