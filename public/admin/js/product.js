@@ -10,9 +10,6 @@ if (btnChangeStatus.length > 0) {
       const id = btn.getAttribute("data-id");
 
       let newStatus = statusCurrent == "active" ? "inactive" : "active";
-
-      // console.log(statusCurrent, id, newStatus);
-
       const action = path + `/${newStatus}/${id}?_method=PATCH`;
       formChangeStatus.action = action;
       formChangeStatus.submit();
@@ -34,7 +31,6 @@ if (btnDelete.length > 0) {
         const id = btn.getAttribute("data-id");
         
         const action = path + `/${id}?_method=DELETE`;
-        console.log(action)
         formDeleteItem.action = action;
         formDeleteItem.submit();
       }

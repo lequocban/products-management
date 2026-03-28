@@ -144,7 +144,6 @@ if (showAlert) {
   setTimeout(() => {
     showAlert.classList.add("alert-hidden");
   }, time);
-  console.log(showAlert);
 }
 // end show alert
 

@@ -111,7 +111,6 @@ module.exports.editPatch = async (req, res) => {
   }
 };
 
-
 // [DELETE]  /admin/roles/delete-item/:id
 module.exports.deleteItem = async (req, res) => {
   const id = req.params.id;
@@ -126,4 +125,39 @@ module.exports.deleteItem = async (req, res) => {
   // await ProductCategory.deleteOne({ _id: id });
   req.flash("success", "Xóa nhóm quyền thành công!");
   res.redirect(req.headers.referer);
+};
+
+// [GET]  /admin/roles/permissions
+module.exports.permissions = async (req, res) => {
+  let find = {
+    deleted: false,
+  };
+  const records = await Role.find(find);
+
+  records.forEach((item) => {
+    console.log(item.permissions);
+    const permissions = item.permissions;
+    
+  });
+
+  res.render("admin/pages/roles/permission", {
+    pageTitle: "Phân quyền",
+    records: records,
+  });
+};
+
+// [PATCH]  /admin/roles/permissions
+module.exports.permissionsPatch = async (req, res) => {
+  try {
+    const permissions = JSON.parse(req.body.permissions);
+    for (const item of permissions) {
+      await Role.updateOne({ _id: item.id }, { permissions: item.permissions });
+    }
+
+    req.flash("success", "Cập nhật quyền thành công!");
+    res.redirect(req.headers.referer);
+  } catch (error) {
+    req.flash("error", "Lỗi!");
+    res.redirect(req.headers.referer);
+  }
 };
