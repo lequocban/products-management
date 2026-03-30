@@ -1,0 +1,100 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(5000)
+  +alert-error(5000)
+  
+  h1.mb-4 Chi tiết tài khoản
+
+  .card.product-detail
+    .card-body
+      .row
+        
+        //- Cột ảnh đại diện
+        .col-md-4
+          .image-box
+            img.product-image(
+              src=record.avatar || "/images/avatar-default.png"
+              alt=record.fullName
+              style="width: 100%; border-radius: 8px;"
+            )
+
+        //- Cột thông tin chi tiết
+        .col-md-8
+          h3.product-title #{record.fullName}
+
+          hr
+
+          .row.mb-2
+            .col-6
+              strong Email:
+            .col-6
+              span #{record.email}
+
+          .row.mb-2
+            .col-6
+              strong Số điện thoại:
+            .col-6
+              span #{record.phone}
+
+          .row.mb-2
+            .col-6
+              strong Nhóm quyền:
+            .col-6
+              //- Ưu tiên in ra tiêu đề của quyền nếu đã được populate, nếu không in tạm role_id
+              span.badge.bg-info.text-dark #{record.role ? record.role.title : record.role_id}
+
+          .row.mb-3
+            .col-6
+              strong Trạng thái:
+            .col-6
+              if record.status == "active"
+                a(
+                  href="javascript:;"
+                  data-status="active"
+                  data-id=record._id
+                  button-change-status
+                  class="badge bg-success text-decoration-none"
+                ) Hoạt động
+              else
+                a(
+                  href="javascript:;"
+                  data-status="inactive"
+                  data-id=record._id
+                  button-change-status
+                  class="badge bg-danger text-decoration-none"
+                ) Dừng hoạt động
+
+          .row.mb-2
+            .col-6
+              strong Ngày tạo:
+            .col-6
+              span #{record.createdAt ? new Date(record.createdAt).toLocaleString("vi-VN") : "Trống"}
+
+          .row.mb-3
+            .col-6
+              strong Cập nhật lần cuối:
+            .col-6
+              span #{record.updatedAt ? new Date(record.updatedAt).toLocaleString("vi-VN") : "Chưa cập nhật"}
+
+          hr
+
+          a(
+            href=`${prefixAdmin}/accounts/edit/${record._id}`
+            class="btn btn-warning"
+          ) Sửa
+
+          a(
+            href=`${prefixAdmin}/accounts`
+            class="btn btn-secondary ms-2"
+          ) Quay lại
+
+  form(
+    action=""
+    method="POST"
+    id="form-change-status"
+    data-path=`${prefixAdmin}/accounts/change-status`
+  )
+
+  script(src="/admin/js/account.js")

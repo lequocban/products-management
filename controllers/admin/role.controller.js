@@ -1,9 +1,5 @@
 const Role = require("../../models/role.model");
 
-const createTreeHelper = require("../../helper/createTree");
-const filterStatusHelper = require("../../helper/filterStatus");
-const searchHelper = require("../../helper/search");
-const paginationHelper = require("../../helper/pagination");
 const systemConfig = require("../../config/system");
 
 // [GET]  /admin/roles
@@ -25,13 +21,8 @@ module.exports.index = async (req, res) => {
 // [GET]  /admin/roles/create
 module.exports.create = async (req, res) => {
   try {
-    let find = {
-      deleted: false,
-    };
-    const records = await Role.find(find);
     res.render("admin/pages/roles/create", {
       pageTitle: "Thêm mới nhóm quyền",
-      records: records,
     });
   } catch (error) {
     req.flash("error", "Lỗi!");
@@ -133,12 +124,6 @@ module.exports.permissions = async (req, res) => {
     deleted: false,
   };
   const records = await Role.find(find);
-
-  records.forEach((item) => {
-    console.log(item.permissions);
-    const permissions = item.permissions;
-    
-  });
 
   res.render("admin/pages/roles/permission", {
     pageTitle: "Phân quyền",
