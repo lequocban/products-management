@@ -2,12 +2,8 @@ const Account = require("../../models/account.model");
 const Role = require("../../models/role.model");
 const md5 = require("md5");
 
-const createTreeHelper = require("../../helper/createTree");
-const filterStatusHelper = require("../../helper/filterStatus");
-const searchHelper = require("../../helper/search");
-const paginationHelper = require("../../helper/pagination");
 const systemConfig = require("../../config/system");
-const { deleteItem } = require("./product.controller");
+
 
 // [GET]  /admin/accounts
 module.exports.index = async (req, res) => {
