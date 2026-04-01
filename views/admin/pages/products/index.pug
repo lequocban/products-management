@@ -62,6 +62,7 @@ block main
                   th Vị trí
                   th Trạng thái
                 th Người tạo
+                th Cập nhật
                 th Hành động
 
             tbody 
@@ -111,9 +112,16 @@ block main
                           class="badge bg-danger text-decoration-none"
                         ) Dừng hoạt động
                   td 
-                    p #{item.createdBy.accountFullName}
-                    p 
-                      +formatDate(item.createdBy.createdAt)
+                    if item.createdBy && item.createdBy.account_id
+                      p #{item.createdBy.account_id.fullName}
+                      p 
+                        +formatDate(item.createdBy.createdAt)
+                  td 
+                    -const updatedHistory = item.updatedBy.slice(-1)[0]
+                    if updatedHistory && updatedHistory.account_id
+                      p #{updatedHistory.account_id.fullName}
+                      p 
+                        +formatDateTime(updatedHistory.updatedAt)
                   td 
                     a(
                       href=`${prefixAdmin}/products/detail/${item.id}`

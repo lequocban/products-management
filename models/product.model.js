@@ -22,7 +22,10 @@ const productSchema = new mongoose.Schema(
       unique: true,
     },
     createdBy: {
-      account_id: String,
+      account_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Account",
+      },
       createdAt: {
         type: Date,
         default: Date.now,
@@ -34,10 +37,17 @@ const productSchema = new mongoose.Schema(
     },
     deletedBy: {
       account_id: String,
-      deletedAt: {
-        type: Date,
-      },
+      deletedAt: Date,
     },
+    updatedBy: [
+      {
+        account_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Account",
+        },
+        updatedAt: Date,
+      },
+    ],
   },
   {
     timestamps: true,
