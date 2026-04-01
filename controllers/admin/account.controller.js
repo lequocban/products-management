@@ -4,7 +4,6 @@ const md5 = require("md5");
 
 const systemConfig = require("../../config/system");
 
-
 // [GET]  /admin/accounts
 module.exports.index = async (req, res) => {
   try {
@@ -18,6 +17,14 @@ module.exports.index = async (req, res) => {
         deleted: false,
       });
       item.role = role;
+    }
+    for (const record of records) {
+      const user = await Account.findOne({
+        _id: record.createdBy.account_id,
+      });
+      if (user) {
+        record.createdBy.accountFullName = user.fullName;
+      }
     }
 
     res.render("admin/pages/accounts/index", {
@@ -58,6 +65,9 @@ module.exports.createPost = async (req, res) => {
       res.redirect(req.headers.referer);
     } else {
       req.body.password = md5(req.body.password);
+      req.body.createdBy = {
+        account_id: res.locals.user.id,
+      };
       const record = new Account(req.body);
       await record.save();
       req.flash("success", "Thêm tài khoản mới thành công!");
@@ -148,7 +158,6 @@ module.exports.editPatch = async (req, res) => {
       deleted: false,
     });
 
-
     if (emailExist) {
       req.flash("error", "Email đã tồn tại, vui lòng nhập email khác!");
     } else {
@@ -167,7 +176,6 @@ module.exports.editPatch = async (req, res) => {
   }
 };
 
-
 // [DELETE]  /admin/accounts/delete-item/:id
 module.exports.deleteItem = async (req, res) => {
   const id = req.params.id;
@@ -176,7 +184,10 @@ module.exports.deleteItem = async (req, res) => {
     { _id: id },
     {
       deleted: true,
-      deletedAt: new Date(),
+      deletedBy: {
+        account_id: res.locals.user.id,
+        deletedAt: new Date(),
+      },
     },
   );
   // await ProductCategory.deleteOne({ _id: id });

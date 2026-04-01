@@ -1,5 +1,6 @@
 extend ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/moment.pug
 
 block main 
 
@@ -33,6 +34,7 @@ block main
               th Quyền
               if(role.permissions.includes("accounts_edit"))
                 th Trạng thái
+              th Người tạo
               th Hành động
 
           tbody 
@@ -68,6 +70,10 @@ block main
                           button-change-status 
                           class="badge bg-danger text-decoration-none"
                         ) Dừng hoạt động
+                  td 
+                    p #{item.createdBy.accountFullName}
+                    p 
+                      +formatDate(item.createdBy.createdAt)
                   td 
                     a(
                       class="btn btn-secondary btn-sm"
