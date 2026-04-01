@@ -1,11 +1,11 @@
 const ProductCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 
 const systemConfig = require("../../config/system");
 const createTreeHelper = require("../../helper/createTree");
 
 // [GET]  /admin/products-category
 module.exports.index = async (req, res) => {
-
   let find = {
     deleted: false,
   };
@@ -13,7 +13,6 @@ module.exports.index = async (req, res) => {
   if (req.query.status) {
     find.status = req.query.status;
   }
-
 
   // sort
   let sort = {};
@@ -26,6 +25,12 @@ module.exports.index = async (req, res) => {
 
   const records = await ProductCategory.find(find).sort(sort);
   const newRecords = createTreeHelper.createTree(records);
+  for (const record of newRecords) {
+    const user = await Account.findOne({ _id: record.createdBy.account_id });
+    if (user) {
+      record.createdBy.accountFullName = user.fullName;
+    }
+  }
 
   res.render("admin/pages/products-category/index", {
     pageTitle: "Danh mục sản phẩm",
@@ -56,7 +61,9 @@ module.exports.createPost = async (req, res) => {
   } else {
     req.body.position = parseInt(req.body.position);
   }
-
+  req.body.createdBy = {
+    account_id: res.locals.user.id,
+  };
   const record = new ProductCategory(req.body);
   await record.save();
 
@@ -219,7 +226,10 @@ module.exports.deleteItem = async (req, res) => {
     { _id: id },
     {
       deleted: true,
-      deletedAt: new Date(),
+      deletedBy: {
+        account_id: res.locals.user.id,
+        deletedAt: new Date(),
+      },
     },
   );
   // await ProductCategory.deleteOne({ _id: id });

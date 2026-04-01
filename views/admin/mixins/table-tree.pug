@@ -1,3 +1,4 @@
+include ./moment.pug
 mixin table-tree(items, level = 1)
   each item, index in items
     - const prefix = Array(level + 1).join("-- ")
@@ -42,7 +43,10 @@ mixin table-tree(items, level = 1)
               data-id=item.id
               button-change-status
             ) Dừng hoạt động
-
+      td 
+        p #{item.createdBy.accountFullName}
+        p 
+          +formatDate(item.createdBy.createdAt)
       td
         a.btn.btn-secondary.btn-sm.ms-1(
           href=`${prefixAdmin}/products-category/detail/${item.id}`
