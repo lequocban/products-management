@@ -1,6 +1,6 @@
 extend ../../layouts/default.pug
 include ../../mixins/alert.pug
-
+include ../../mixins/moment.pug
 
 block main 
 
@@ -30,6 +30,7 @@ block main
             th STT 
             th Nhóm quyền 
             th Mô tả ngắn
+            th Người tạo
             th Hành động
 
         tbody 
@@ -39,6 +40,10 @@ block main
                 td #{index+ 1}
                 td #{item.title}
                 td #{item.description}
+                td 
+                    p #{item.createdBy.accountFullName}
+                    p 
+                      +formatDate(item.createdBy.createdAt)
                 td 
                   a(
                     class="btn btn-secondary btn-sm"

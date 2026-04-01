@@ -1,4 +1,5 @@
 const Role = require("../../models/role.model");
+const Account = require("../../models/account.model");
 
 const systemConfig = require("../../config/system");
 
@@ -9,6 +10,12 @@ module.exports.index = async (req, res) => {
       deleted: false,
     };
     const records = await Role.find(find);
+     for (const record of records) {
+       const user = await Account.findOne({ _id: record.createdBy.account_id });
+       if (user) {
+         record.createdBy.accountFullName = user.fullName;
+       }
+     }
     res.render("admin/pages/roles/index", {
       pageTitle: "Nhóm quyền",
       records: records,
@@ -33,6 +40,9 @@ module.exports.create = async (req, res) => {
 // [POST]  /admin/roles/create
 module.exports.createPost = async (req, res) => {
   try {
+     req.body.createdBy = {
+       account_id: res.locals.user.id,
+     };
     const record = new Role(req.body);
     await record.save();
 
@@ -110,7 +120,10 @@ module.exports.deleteItem = async (req, res) => {
     { _id: id },
     {
       deleted: true,
-      deletedAt: new Date(),
+      deletedBy: {
+        account_id: res.locals.user.id,
+        deletedAt: new Date(),
+      },
     },
   );
   // await ProductCategory.deleteOne({ _id: id });
