@@ -4,10 +4,24 @@ const md5 = require("md5");
 const systemConfig = require("../../config/system");
 
 // [GET]  /admin/auth/login
-module.exports.login = (req, res) => {
-  res.render("admin/pages/auth/login", {
-    pageTitle: "Đăng nhập",
-  });
+module.exports.login = async (req, res) => {
+  const token = req.cookies.token;
+  if (token) {
+    const user = await Account.findOne({
+      token: token,
+      deleted: false,
+      status: "active", // Nên check cả trạng thái hoạt động
+    });
+    if (user) {
+      return res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+    } else {
+      res.clearCookie("token");
+    }
+  } else {
+    res.render("admin/pages/auth/login", {
+      pageTitle: "Đăng nhập",
+    });
+  }
 };
 
 // [POST]  /admin/auth/login
