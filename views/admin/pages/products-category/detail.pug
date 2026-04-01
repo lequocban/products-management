@@ -4,96 +4,99 @@ include ../../mixins/alert.pug
 block main
   +alert-success(5000)
   +alert-error(5000)
-  
-  h1.mb-4 Chi tiết danh mục sản phẩm
+  if(role.permissions.includes("products-category_view"))
+    h1.mb-4 Chi tiết danh mục sản phẩm
 
-  .card.product-detail
-    .card-body
-      .row
-        
-        .col-md-4
-          .image-box
-            img.product-image(
-              src=record.thumbnail || ""
-              alt=record.title
-            )
-
-        
-        .col-md-8
-          h3.product-title #{record.title}
-
-          p.text-muted !{record.description}
-
-          hr
-
-          .row.mb-2
-            .col-6
-              strong Danh mục cha:
-            .col-6
-              if (record.parent_id)
-                span.text-success #{record.parent_title}
-              else
-                span.text-danger Không có
-          .row.mb-2
-            .col-6
-              strong  ID danh mục cha:
-            .col-6
-              if (record.parent_id)
-                span.text-success #{record.parent_id}
-              else
-                span.text-danger Không có
-          .row.mb-2
-            .col-6
-              strong Vị trí:
-            .col-6
-              span #{record.position}
+    .card.product-detail
+      .card-body
+        .row
+          
+          .col-md-4
+            .image-box
+              img.product-image(
+                src=record.thumbnail || ""
+                alt=record.title
+              )
 
           
-          .row.mb-3
-            .col-6
-              strong Trạng thái:
-            .col-6
-              if record.status == "active"
-                a(
-                  href="javascript:;"
-                  data-status="active"
-                  data-id=record._id
-                  button-change-status
-                  class="badge bg-success text-decoration-none"
-                ) Hoạt động
-              else
-                a(
-                  href="javascript:;"
-                  data-status="inactive"
-                  data-id=record._id
-                  button-change-status
-                  class="badge bg-danger text-decoration-none"
-                ) Dừng hoạt động
+          .col-md-8
+            h3.product-title #{record.title}
 
-          .row.mb-3
-            .col-6
-              strong Cập nhật:
-            .col-6
-              span #{record.updatedAt ? new Date(record.updatedAt).toLocaleString() : "Chưa cập nhật"}
+            p.text-muted !{record.description}
 
-          hr
+            hr
 
-          a(
-            href=`${prefixAdmin}/products-category/edit/${record._id}`
-            class="btn btn-warning"
-          ) Sửa
+            .row.mb-2
+              .col-6
+                strong Danh mục cha:
+              .col-6
+                if (record.parent_id)
+                  span.text-success #{record.parent_title}
+                else
+                  span.text-danger Không có
+            .row.mb-2
+              .col-6
+                strong  ID danh mục cha:
+              .col-6
+                if (record.parent_id)
+                  span.text-success #{record.parent_id}
+                else
+                  span.text-danger Không có
+            .row.mb-2
+              .col-6
+                strong Vị trí:
+              .col-6
+                span #{record.position}
 
-          a(
-            href=`${prefixAdmin}/products-category`
-            class="btn btn-secondary ms-2"
-          ) Quay lại
+            
+            .row.mb-3
+              if(role.permissions.includes("products-category_edit"))
+                .col-6
+                  strong Trạng thái:
+                .col-6
+                  if record.status == "active"
+                    a(
+                      href="javascript:;"
+                      data-status="active"
+                      data-id=record._id
+                      button-change-status
+                      class="badge bg-success text-decoration-none"
+                    ) Hoạt động
+                  else
+                    a(
+                      href="javascript:;"
+                      data-status="inactive"
+                      data-id=record._id
+                      button-change-status
+                      class="badge bg-danger text-decoration-none"
+                    ) Dừng hoạt động
 
-  
-  form(
-    action=""
-    method="POST"
-    id="form-change-status"
-    data-path=`${prefixAdmin}/products-category/change-status`
-  )
+            .row.mb-3
+              .col-6
+                strong Cập nhật:
+              .col-6
+                span #{record.updatedAt ? new Date(record.updatedAt).toLocaleString() : "Chưa cập nhật"}
 
-  script(src="/admin/js/product-category.js")
+            hr
+            if(role.permissions.includes("products-category_edit"))
+              a(
+                href=`${prefixAdmin}/products-category/edit/${record._id}`
+                class="btn btn-warning"
+              ) Sửa
+
+            a(
+              href=`${prefixAdmin}/products-category`
+              class="btn btn-secondary ms-2"
+            ) Quay lại
+
+    
+    form(
+      action=""
+      method="POST"
+      id="form-change-status"
+      data-path=`${prefixAdmin}/products-category/change-status`
+    )
+
+    script(src="/admin/js/product-category.js")
+  else 
+    h1 Bạn không có quyền truy cập

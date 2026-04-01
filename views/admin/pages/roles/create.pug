@@ -4,44 +4,43 @@ include ../../mixins/alert.pug
 
 block main
   +alert-error(5000)
+  if(role.permissions.includes("roles_create"))
+    h1(class="mb-4") Thêm mới nhóm quyền
 
-  h1(class="mb-4") Thêm mới nhóm quyền
+    div(class="mb-3")
+      a(
+        href=`${prefixAdmin}/roles`
+        class="btn btn-secondary"
+      ) Quay lại
 
-  div(class="mb-3")
-    a(
-      href=`${prefixAdmin}/roles`
-      class="btn btn-secondary"
-    ) Quay lại
+    form(
+      action=`${prefixAdmin}/roles/create`
+      method="POST"
+    )
+      div(class="form-group mb-3")
+        label(for="title") Tiêu đề
+        input(
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+        )
+      
+      
+      div(class="form-group mb-3")
+        label(for="desc") Mô tả
+        textarea(
+          class="form-control"
+          id="desc"
+          name="description"
+          rows="5"
+        ) 
 
-  form(
-    action=`${prefixAdmin}/roles/create`
-    method="POST"
-  )
-    div(class="form-group mb-3")
-      label(for="title") Tiêu đề
-      input(
-        type="text"
-        class="form-control"
-        id="title"
-        name="title"
-        required
-      )
-    
-    
-    div(class="form-group mb-3")
-      label(for="desc") Mô tả
-      textarea(
-        class="form-control"
-        id="desc"
-        name="description"
-        rows="5"
-      ) 
-
-    div(class="form-group mb-3")
-      button(
-        type="submit"
-        class="btn btn-primary"
-      ) Tạo mới   
-
-
-
+      div(class="form-group mb-3")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Tạo mới   
+  else 
+    h1 Bạn không có quyền truy cập

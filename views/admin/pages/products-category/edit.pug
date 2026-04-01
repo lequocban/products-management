@@ -6,113 +6,115 @@ block main
   +alert-error(5000)
   +alert-success(5000)
 
-  
-  h1(class="mb-4") Chỉnh sửa danh mục sản phẩm
-  
-  div(class="mb-3")
-    a(
-      href=`${prefixAdmin}/products-category`
-      class="btn btn-secondary"
-    ) Quay lại
-
-  form(
-    action=`${prefixAdmin}/products-category/edit/${record._id}?_method=PATCH`
-    method="POST"
-    enctype="multipart/form-data"
-  )
-    div(class="form-group mb-3")
-      label(for="title") Tiêu đề
-      input(
-        type="text"
-        class="form-control"
-        id="title"
-        name="title"
-        required
-        value=record.title
-      )
-
-    div(class="form-group mb-3")
-      label(for="parent_id") Danh mục cha
-      - const currentParentId = record.parent_id ? record.parent_id.toString() : ""
-      - const currentId = record.id ? record.id.toString() : (record._id ? record._id.toString() : "")
-      +tree-select(records, currentId, currentParentId)
+  if(role.permissions.includes("products-category_edit"))
+    h1(class="mb-4") Chỉnh sửa danh mục sản phẩm
     
+    div(class="mb-3")
+      a(
+        href=`${prefixAdmin}/products-category`
+        class="btn btn-secondary"
+      ) Quay lại
 
-    div(class="form-group mb-3")
-      label(for="desc") Mô tả
-      textarea(
-        class="form-control textarea-mce"
-        id="desc"
-        name="description"
-        rows="5"
-      ) !{record.description}
-    div(
-      class="form-group mb-3"
-      upload-image
+    form(
+      action=`${prefixAdmin}/products-category/edit/${record._id}?_method=PATCH`
+      method="POST"
+      enctype="multipart/form-data"
     )
-      label(for="thumbnail") Ảnh
-      input(
-        type="file"
-        class="form-control-file"
-        id="thumbnail"
-        name="thumbnail"
-        accept="image/*"
-        upload-image-input
+      div(class="form-group mb-3")
+        label(for="title") Tiêu đề
+        input(
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+          value=record.title
+        )
+
+      div(class="form-group mb-3")
+        label(for="parent_id") Danh mục cha
+        - const currentParentId = record.parent_id ? record.parent_id.toString() : ""
+        - const currentId = record.id ? record.id.toString() : (record._id ? record._id.toString() : "")
+        +tree-select(records, currentId, currentParentId)
+      
+
+      div(class="form-group mb-3")
+        label(for="desc") Mô tả
+        textarea(
+          class="form-control textarea-mce"
+          id="desc"
+          name="description"
+          rows="5"
+        ) !{record.description}
+      div(
+        class="form-group mb-3"
+        upload-image
       )
+        label(for="thumbnail") Ảnh
+        input(
+          type="file"
+          class="form-control-file"
+          id="thumbnail"
+          name="thumbnail"
+          accept="image/*"
+          upload-image-input
+        )
+        br
+        .image-preview-wrapper
+          img(
+            src=record.thumbnail || ""
+            class="image-preview"
+            upload-image-preview
+          ) 
+          span(
+            remove-image-preview  
+            class="remove-image"
+          ) x
+      
+      div(class="form-group mb-3")
+        label(for="position") Vị trí
+        input(
+          type="number"
+          class="form-control"
+          id="position"
+          name="position"
+          placeholder="Tự động tăng"
+          min="1"
+          value=record.position
+        )
+
+      
+      label Trạng thái
       br
-      .image-preview-wrapper
-        img(
-          src=record.thumbnail || ""
-          class="image-preview"
-          upload-image-preview
-        ) 
-        span(
-          remove-image-preview  
-          class="remove-image"
-        ) x
-    
-    div(class="form-group mb-3")
-      label(for="position") Vị trí
-      input(
-        type="number"
-        class="form-control"
-        id="position"
-        name="position"
-        placeholder="Tự động tăng"
-        min="1"
-        value=record.position
-      )
-
-    
-    label Trạng thái
-    br
-    div(class="form-group form-check form-check-inline mb-3")
-      input(
-        type="radio"
-        class="form-check-input"
-        id="statusActive"
-        name="status"
-        value="active"
-        checked=(record.status == "active" ? true : false)
-      )
-      label(for="statusActive" class="form-check-label") Hoạt động
-    div(class="form-group form-check form-check-inline mb-3")
-      input(
-        type="radio"
-        class="form-check-input"
-        id="statusInActive"
-        name="status"
-        value="inactive"
-        checked=(record.status == "inactive" ? true : false)
-      )
-      label(for="statusInActive" class="form-check-label") Dừng hoạt động
-    div(class="form-group mb-3")
-      button(
-        type="submit"
-        class="btn btn-primary"
-      ) Cập nhật  
+      div(class="form-group form-check form-check-inline mb-3")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusActive"
+          name="status"
+          value="active"
+          checked=(record.status == "active" ? true : false)
+        )
+        label(for="statusActive" class="form-check-label") Hoạt động
+      div(class="form-group form-check form-check-inline mb-3")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusInActive"
+          name="status"
+          value="inactive"
+          checked=(record.status == "inactive" ? true : false)
+        )
+        label(for="statusInActive" class="form-check-label") Dừng hoạt động
+      div(class="form-group mb-3")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Cập nhật  
 
 
 
-  script(src="/admin/js/product-category.js") 
-  script(src="/admin/js/tree.js") 
+    script(src="/admin/js/product-category.js") 
+    script(src="/admin/js/tree.js") 
+  else 
+    h1 Bạn không có quyền truy cập

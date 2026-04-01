@@ -4,50 +4,54 @@ include ../../mixins/alert.pug
 block main
   +alert-success(5000)
   +alert-error(5000)
-  
-  h1(class="mb-4") Chi tiết nhóm quyền
 
-  
+  if(role.permissions.includes("roles_view"))
+    h1(class="mb-4") Chi tiết nhóm quyền
 
-  //- Thẻ Card chứa nội dung (Đổ bóng nhẹ, bo góc)
-  .card.shadow-sm.border-0
-    //- Header của Card: Chứa tên nhóm quyền nổi bật
-    .card-header.bg-light.border-bottom.pt-3.pb-3
-      h4.m-0.text-primary #{record.title}
+    
 
-    .card-body.p-4
-      //- Hàng 1: Mô tả
-      .row.mb-3
-        .col-md-3
-          strong.text-muted Mô tả chi tiết:
-        .col-md-9
-          if record.description
-            span !{record.description}
-          else
-            span.text-muted.fst-italic (Không có mô tả)
-      
-      hr.text-black-50
+    //- Thẻ Card chứa nội dung (Đổ bóng nhẹ, bo góc)
+    .card.shadow-sm.border-0
+      //- Header của Card: Chứa tên nhóm quyền nổi bật
+      .card-header.bg-light.border-bottom.pt-3.pb-3
+        h4.m-0.text-primary #{record.title}
 
-      //- Hàng 2: Thời gian cập nhật
-      .row.mb-4
-        .col-md-3
-          strong.text-muted Lần cập nhật cuối:
-        .col-md-9
-          if record.updatedAt
-            - const updateTime = new Date(record.updatedAt).toLocaleString("vi-VN")
-            span.badge.bg-info.text-dark #{updateTime}
-          else
-            span.badge.bg-secondary Chưa cập nhật
+      .card-body.p-4
+        //- Hàng 1: Mô tả
+        .row.mb-3
+          .col-md-3
+            strong.text-muted Mô tả chi tiết:
+          .col-md-9
+            if record.description
+              span !{record.description}
+            else
+              span.text-muted.fst-italic (Không có mô tả)
+        
+        hr.text-black-50
 
-      //- Hàng 3: Nút hành động
-      .row
-        .col-12
-          a(
-            href=`${prefixAdmin}/roles/edit/${record._id}`
-            class="btn btn-warning"
-          ) Sửa
+        //- Hàng 2: Thời gian cập nhật
+        .row.mb-4
+          .col-md-3
+            strong.text-muted Lần cập nhật cuối:
+          .col-md-9
+            if record.updatedAt
+              - const updateTime = new Date(record.updatedAt).toLocaleString("vi-VN")
+              span.badge.bg-info.text-dark #{updateTime}
+            else
+              span.badge.bg-secondary Chưa cập nhật
 
-          a(
-            href=`${prefixAdmin}/roles`
-            class="btn btn-secondary ms-2"
-          ) Quay lại
+        //- Hàng 3: Nút hành động
+        .row
+          .col-12
+            if(role.permissions.includes("roles_edit"))
+              a(
+                href=`${prefixAdmin}/roles/edit/${record._id}`
+                class="btn btn-warning"
+              ) Sửa
+
+            a(
+              href=`${prefixAdmin}/roles`
+              class="btn btn-secondary ms-2"
+            ) Quay lại
+  else 
+    h1 Bạn không có quyền truy cập
