@@ -1,5 +1,6 @@
 const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 
 const createTreeHelper = require("../../helper/createTree");
 const filterStatusHelper = require("../../helper/filterStatus");
@@ -48,13 +49,19 @@ module.exports.index = async (req, res) => {
   } else {
     sort.position = "desc";
   }
-
   // end sort
 
   const lstProduct = await Product.find(find)
     .sort(sort)
     .limit(objectPagination.limitItems)
     .skip(objectPagination.skip);
+
+  for (const product of lstProduct) {
+    const user = await Account.findOne({ _id: product.createdBy.account_id });
+    if (user) {
+      product.createdBy.accountFullName = user.fullName;
+    }
+  }
 
   res.render("admin/pages/products/index", {
     pageTitle: "Trang sản phẩm",
@@ -158,8 +165,8 @@ module.exports.create = async (req, res) => {
 
 // [POST]  /admin/products/create
 module.exports.createPost = async (req, res) => {
-  req.body.price = parseInt(req.body.price);
-  req.body.discountPercentage = parseInt(req.body.discountPercentage);
+  req.body.price = parseFloat(req.body.price);
+  req.body.discountPercentage = parseFloat(req.body.discountPercentage);
   req.body.stock = parseInt(req.body.stock);
 
   if (req.body.position == "") {
@@ -168,6 +175,10 @@ module.exports.createPost = async (req, res) => {
   } else {
     req.body.position = parseInt(req.body.position);
   }
+
+  req.body.createdBy = {
+    account_id: res.locals.user.id,
+  };
 
   const product = new Product(req.body);
   await product.save();
