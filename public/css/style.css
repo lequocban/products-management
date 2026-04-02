@@ -139,3 +139,81 @@
   width: 100px;
 }
 /* end product detail  */
+
+/* BẮT ĐẦU SUB-MENU */
+.sub-menu {
+  position: relative;
+  z-index: 999;
+}
+
+/* --- Xóa gạch chân và style cho thẻ <a> --- */
+.sub-menu a {
+  text-decoration: none !important; /* Xóa gạch chân */
+  color: #333; /* Màu chữ tối, dễ đọc */
+  display: block; /* Giúp thẻ a chiếm toàn bộ chiều rộng của li, click dễ hơn */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển màu mượt mà */
+}
+
+/* --- Hộp chứa Menu xổ xuống (ul) --- */
+.sub-menu ul {
+  position: absolute;
+  right: 0; /* Đổi thành left: 0 để menu canh trái chuẩn xác */
+  top: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #f0f8ff; 
+  min-width: 220px; /* Chiều rộng thoáng hơn */
+  display: none;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); /* Đổ bóng mềm mại tạo chiều sâu */
+  border-radius: 8px; /* Bo góc hiện đại */
+
+  /* Tạo viền bao quanh toàn bộ khối menu */
+  border: 1px solid #ccc; 
+  /* Đổ bóng nhẹ một chút cho menu không bị bẹp */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Các mục con (li) --- */
+.sub-menu ul li {
+  position: relative;
+  border-bottom: 1px solid #ccc; /* Đường viền ngăn cách mờ nhẹ */
+}
+
+/* Xóa đường viền ở thẻ li cuối cùng cho gọn */
+.sub-menu ul li:last-child {
+  border-bottom: none;
+}
+
+/* --- Vùng đệm chữ bên trong --- */
+.sub-menu ul li a {
+  padding: 12px 18px; 
+}
+
+/* =========================================
+   HIỆU ỨNG KHI DI CHUỘT (HOVER EFFECTS) 
+========================================= */
+
+/* 1. Hiệu ứng cho từng dòng (li) khi hover */
+.sub-menu ul li a:hover {
+  background-color: #f8f9fa; /* Đổi nền thành xám cực nhạt */
+  color: #0d6efd; /* Chữ đổi sang màu xanh (giống Bootstrap) */
+  padding-left: 24px; /* Chữ trượt nhẹ sang phải một chút tạo điểm nhấn */
+}
+
+/* 2. Hiển thị menu cấp 1 khi hover vào cha */
+.sub-menu:hover > ul {
+  display: block;
+}
+
+/* 3. Hiển thị menu cấp 2, 3... khi hover vào li */
+.sub-menu ul li:hover > ul {
+  display: block;
+}
+
+/* --- Vị trí của menu con cấp 2, cấp 3... --- */
+.sub-menu ul li ul {
+  right: 100%; /* Cấp 2 sẽ mở bung sang bên phải của cấp 1 */
+  top: -1px; /* Căn chỉnh cho mép trên bằng nhau */
+}
+/* KẾT THÚC SUB-MENU */

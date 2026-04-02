@@ -1,3 +1,5 @@
+include ../mixins/sub-menu.pug
+
 header.header
   .container
     .row.align-items-center
@@ -13,8 +15,12 @@ header.header
                 class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
                 href="/"
               ) Trang chủ
-            li 
+              
+
+            li(class="sub-menu")
+              - const pathProduct = "/products"; 
               a(
                 class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
                 href="/products"
               ) Sản phẩm
+              +sub-menu(layoutProductsCategory, pathProduct)
