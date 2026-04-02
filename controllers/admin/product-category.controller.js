@@ -28,12 +28,6 @@ module.exports.index = async (req, res) => {
     .populate("createdBy.account_id", "fullName")
     .populate("updatedBy.account_id", "fullName");
   const newRecords = createTreeHelper.createTree(records);
-  // for (const record of newRecords) {
-  //   const user = await Account.findOne({ _id: record.createdBy.account_id });
-  //   if (user) {
-  //     record.createdBy.accountFullName = user.fullName;
-  //   }
-  // }
 
   res.render("admin/pages/products-category/index", {
     pageTitle: "Danh mục sản phẩm",

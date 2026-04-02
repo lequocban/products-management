@@ -12,7 +12,11 @@ module.exports.index = async (req, res) => {
     };
     const records = await Account.find(find)
       .sort({ createdAt: "desc" })
-      .populate("role_id", "title")
+      .populate({
+        path: "role_id",
+        select: "title",
+        match: { deleted: false },
+      })
       .populate("updatedBy.account_id", "fullName")
       .populate("createdBy.account_id", "fullName")
       .select("-password -token");
@@ -77,8 +81,13 @@ module.exports.detail = async (req, res) => {
       _id: req.params.id,
     };
     const record = await Account.findOne(find)
-      .populate("role_id", "title")
+      .populate({
+        path: "role_id",
+        select: "title",
+        match: { deleted: false },
+      })
       .populate("updatedBy.account_id", "fullName")
+      .populate("createdBy.account_id", "fullName")
       .select("-password -token");
 
     res.render("admin/pages/accounts/detail", {
