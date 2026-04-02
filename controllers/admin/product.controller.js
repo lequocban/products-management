@@ -55,27 +55,9 @@ module.exports.index = async (req, res) => {
     .sort(sort)
     .limit(objectPagination.limitItems)
     .skip(objectPagination.skip)
-    .populate("createdBy.account_id", "fullName") // Lấy tên người tạo
+    .populate("createdBy.account_id", "fullName")
     .populate("updatedBy.account_id", "fullName")
 
-  // for (const product of lstProduct) {
-  //   const user = await Account.findOne({ _id: product.createdBy.account_id });
-
-  //   // lấy ra người tạo
-  //   if (user) {
-  //     product.createdBy.accountFullName = user.fullName;
-  //   }
-
-  //   // lấy ra người cập nhật gần nhất
-  //   const updatedBy = product.updatedBy.slice(-1)[0];
-  //   if (updatedBy) {
-  //     const userUpdated = await Account.findOne({ _id: updatedBy.account_id });
-  //     updatedBy.accountFullName = userUpdated.fullName;
-  //   }
-  // }
-  for (const product of lstProduct) {
-    console.log(product.createdBy)
-  }
     res.render("admin/pages/products/index", {
       pageTitle: "Trang sản phẩm",
       products: lstProduct,
@@ -305,7 +287,7 @@ module.exports.detail = async (req, res) => {
     };
     const product = await Product.findOne(find)
       .populate("createdBy.account_id", "fullName")
-      .populate("updatedBy.account_id", "fullName");;
+      .populate("updatedBy.account_id", "fullName");
     res.render("admin/pages/products/detail", {
       pageTitle: product.title,
       product: product,

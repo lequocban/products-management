@@ -19,7 +19,10 @@ const productCategorySchema = new mongoose.Schema(
       unique: true,
     },
     createdBy: {
-      account_id: String,
+      account_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Account",
+      },
       createdAt: {
         type: Date,
         default: Date.now,
@@ -33,6 +36,15 @@ const productCategorySchema = new mongoose.Schema(
       account_id: String,
       deletedAt: Date,
     },
+    updatedBy: [
+      {
+        account_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Account",
+        },
+        updatedAt: Date,
+      },
+    ],
   },
   {
     timestamps: true,

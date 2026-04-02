@@ -23,14 +23,17 @@ module.exports.index = async (req, res) => {
   }
   // end sort
 
-  const records = await ProductCategory.find(find).sort(sort);
+  const records = await ProductCategory.find(find)
+    .sort(sort)
+    .populate("createdBy.account_id", "fullName")
+    .populate("updatedBy.account_id", "fullName");
   const newRecords = createTreeHelper.createTree(records);
-  for (const record of newRecords) {
-    const user = await Account.findOne({ _id: record.createdBy.account_id });
-    if (user) {
-      record.createdBy.accountFullName = user.fullName;
-    }
-  }
+  // for (const record of newRecords) {
+  //   const user = await Account.findOne({ _id: record.createdBy.account_id });
+  //   if (user) {
+  //     record.createdBy.accountFullName = user.fullName;
+  //   }
+  // }
 
   res.render("admin/pages/products-category/index", {
     pageTitle: "Danh mục sản phẩm",
@@ -76,8 +79,17 @@ module.exports.createPost = async (req, res) => {
 module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
-
-  await ProductCategory.updateOne({ _id: id }, { status: status });
+  const updatedBy = {
+    account_id: res.locals.user.id,
+    updatedAt: new Date(),
+  };
+  await ProductCategory.updateOne(
+    { _id: id },
+    {
+      status: status,
+      $push: { updatedBy: updatedBy },
+    },
+  );
 
   req.flash("success", "Cập nhật trạng thái thành công!");
 
@@ -93,7 +105,10 @@ module.exports.changeMulti = async (req, res) => {
     case "active":
       await ProductCategory.updateMany(
         { _id: { $in: ids } },
-        { status: "active" },
+        {
+          status: "active",
+          $push: { updatedBy: updatedBy },
+        },
       );
       req.flash(
         "success",
@@ -103,7 +118,10 @@ module.exports.changeMulti = async (req, res) => {
     case "inactive":
       await ProductCategory.updateMany(
         { _id: { $in: ids } },
-        { status: "inactive" },
+        {
+          status: "inactive",
+          $push: { updatedBy: updatedBy },
+        },
       );
       req.flash(
         "success",
@@ -115,7 +133,10 @@ module.exports.changeMulti = async (req, res) => {
         { _id: { $in: ids } },
         {
           deleted: true,
-          deletedAt: new Date(),
+          deletedBy: {
+            account_id: res.locals.user.id,
+            deletedAt: new Date(),
+          },
         },
       );
       req.flash("success", `Xóa ${ids.length} danh mục sản phẩm thành công!`);
@@ -125,7 +146,13 @@ module.exports.changeMulti = async (req, res) => {
       for (const item of ids) {
         let [id, position] = item.split("-");
         position = parseInt(position);
-        await ProductCategory.updateOne({ _id: id }, { position: position });
+        await ProductCategory.updateOne(
+          { _id: id },
+          {
+            position: position,
+            $push: { updatedBy: updatedBy },
+          },
+        );
       }
       req.flash(
         "success",
@@ -171,12 +198,20 @@ module.exports.editPatch = async (req, res) => {
   try {
     const id = req.params.id;
 
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    };
+
     req.body.position = parseInt(req.body.position);
     await ProductCategory.updateOne(
       {
         _id: id,
       },
-      req.body,
+      {
+        ...req.body,
+        $push: { updatedBy: updatedBy },
+      },
     );
     req.flash("success", "Cập nhật danh mục sản phẩm thành công!");
     res.redirect(req.headers.referer);
@@ -193,7 +228,9 @@ module.exports.detail = async (req, res) => {
       deleted: false,
       _id: req.params.id,
     };
-    const record = await ProductCategory.findOne(find);
+    const record = await ProductCategory.findOne(find)
+      .populate("createdBy.account_id", "fullName")
+      .populate("updatedBy.account_id", "fullName");
 
     if (record.parent_id) {
       const parent = await ProductCategory.findOne({

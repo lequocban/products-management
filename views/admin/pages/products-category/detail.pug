@@ -48,6 +48,16 @@ block main
               .col-6
                 span #{record.position}
 
+            .row.mb-3
+              .col-6
+                strong Người tạo:
+              .col-6
+                if record.createdBy && record.createdBy.account_id
+                  span.text-primary #{record.createdBy.account_id.fullName} 
+                  br
+                  small.text-muted (#{new Date(record.createdBy.createdAt).toLocaleString("vi-VN")})
+                else 
+                  span.text-muted Không xác định
             
             .row.mb-3
               if(role.permissions.includes("products-category_edit"))
@@ -72,10 +82,32 @@ block main
                     ) Dừng hoạt động
 
             .row.mb-3
-              .col-6
-                strong Cập nhật:
-              .col-6
-                span #{record.updatedAt ? new Date(record.updatedAt).toLocaleString() : "Chưa cập nhật"}
+              .col-12
+                strong Lịch sử cập nhật:
+                if record.updatedBy && record.updatedBy.length > 0
+                  //- Đảo ngược mảng để mới nhất lên đầu
+                  - const history = [...record.updatedBy].reverse()
+                  
+                  table.table.table-sm.table-bordered.mt-2
+                    thead.table-light
+                      tr
+                        th Thời gian
+                        th Người cập nhật
+                        th Id
+                    tbody
+                      each item in history
+                        tr
+                          td #{new Date(item.updatedAt).toLocaleString("vi-VN")}
+                          td 
+                            if item.account_id && item.account_id.fullName
+                              | #{item.account_id.fullName}
+                          td 
+                            if item.account_id && item.account_id.fullName
+                              | #{item.account_id.id}
+                            else 
+                              span.text-muted Không xác định
+                else
+                  p.text-muted.mt-2.fst-italic Chưa có lịch sử cập nhật.
 
             hr
             if(role.permissions.includes("products-category_edit"))
