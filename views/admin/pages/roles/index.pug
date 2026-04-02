@@ -31,6 +31,7 @@ block main
             th Nhóm quyền 
             th Mô tả ngắn
             th Người tạo
+            th Cập nhật
             th Hành động
 
         tbody 
@@ -41,9 +42,16 @@ block main
                 td #{item.title}
                 td #{item.description}
                 td 
-                    p #{item.createdBy.accountFullName}
+                  if item.createdBy && item.createdBy.account_id
+                    p #{item.createdBy.account_id.fullName}
                     p 
                       +formatDate(item.createdBy.createdAt)
+                td 
+                  -const updatedHistory = item.updatedBy.slice(-1)[0]
+                  if updatedHistory && updatedHistory.account_id
+                    p #{updatedHistory.account_id.fullName}
+                    p 
+                      +formatDateTime(updatedHistory.updatedAt)
                 td 
                   a(
                     class="btn btn-secondary btn-sm"

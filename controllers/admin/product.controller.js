@@ -56,15 +56,15 @@ module.exports.index = async (req, res) => {
     .limit(objectPagination.limitItems)
     .skip(objectPagination.skip)
     .populate("createdBy.account_id", "fullName")
-    .populate("updatedBy.account_id", "fullName")
+    .populate("updatedBy.account_id", "fullName");
 
-    res.render("admin/pages/products/index", {
-      pageTitle: "Trang sản phẩm",
-      products: lstProduct,
-      filterStatus: filterStatus,
-      keyword: objectSearch.keyword,
-      pagination: objectPagination,
-    });
+  res.render("admin/pages/products/index", {
+    pageTitle: "Trang sản phẩm",
+    products: lstProduct,
+    filterStatus: filterStatus,
+    keyword: objectSearch.keyword,
+    pagination: objectPagination,
+  });
 };
 
 // [PATCH]  /admin/products/change-status/:status/:id

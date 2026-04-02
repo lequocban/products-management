@@ -17,7 +17,6 @@ block main
         h4.m-0.text-primary #{record.title}
 
       .card-body.p-4
-        //- Hàng 1: Mô tả
         .row.mb-3
           .col-md-3
             strong.text-muted Mô tả chi tiết:
@@ -29,18 +28,45 @@ block main
         
         hr.text-black-50
 
-        //- Hàng 2: Thời gian cập nhật
         .row.mb-4
           .col-md-3
-            strong.text-muted Lần cập nhật cuối:
+            strong.text-muted Người tạo:
           .col-md-9
-            if record.updatedAt
-              - const updateTime = new Date(record.updatedAt).toLocaleString("vi-VN")
-              span.badge.bg-info.text-dark #{updateTime}
+            if record.createdBy && record.createdBy.account_id
+              span.text-primary #{record.createdBy.account_id.fullName} 
+              br
+              small.text-muted (#{new Date(record.createdBy.createdAt).toLocaleString("vi-VN")})
+            else 
+              span.text-muted Không xác định
+        .row.mb-4
+          .col-md-3
+            strong.text-muted Lịch sử cập nhật:
+          .col-md-9
+            if record.updatedBy && record.updatedBy.length > 0
+              //- Đảo ngược mảng để mới nhất lên đầu
+              - const history = [...record.updatedBy].reverse()
+              
+              table.table.table-sm.table-bordered.mt-2
+                thead.table-light
+                  tr
+                    th Thời gian
+                    th Người cập nhật
+                    th Id
+                tbody
+                  each item in history
+                    tr
+                      td #{new Date(item.updatedAt).toLocaleString("vi-VN")}
+                      td 
+                        if item.account_id && item.account_id.fullName
+                          | #{item.account_id.fullName}
+                      td 
+                        if item.account_id && item.account_id.fullName
+                          | #{item.account_id.id}
+                        else 
+                          span.text-muted Không xác định
             else
-              span.badge.bg-secondary Chưa cập nhật
+              p.text-muted.mt-2.fst-italic Chưa có lịch sử cập nhật.
 
-        //- Hàng 3: Nút hành động
         .row
           .col-12
             if(role.permissions.includes("roles_edit"))

@@ -9,13 +9,11 @@ module.exports.index = async (req, res) => {
     let find = {
       deleted: false,
     };
-    const records = await Role.find(find);
-     for (const record of records) {
-       const user = await Account.findOne({ _id: record.createdBy.account_id });
-       if (user) {
-         record.createdBy.accountFullName = user.fullName;
-       }
-     }
+    const records = await Role.find(find)
+      .sort({ createdAt: "desc" })
+      .populate("createdBy.account_id", "fullName")
+      .populate("updatedBy.account_id", "fullName");
+
     res.render("admin/pages/roles/index", {
       pageTitle: "Nhóm quyền",
       records: records,
@@ -40,9 +38,9 @@ module.exports.create = async (req, res) => {
 // [POST]  /admin/roles/create
 module.exports.createPost = async (req, res) => {
   try {
-     req.body.createdBy = {
-       account_id: res.locals.user.id,
-     };
+    req.body.createdBy = {
+      account_id: res.locals.user.id,
+    };
     const record = new Role(req.body);
     await record.save();
 
@@ -62,7 +60,9 @@ module.exports.detail = async (req, res) => {
       deleted: false,
       _id: req.params.id,
     };
-    const record = await Role.findOne(find);
+    const record = await Role.findOne(find)
+      .populate("createdBy.account_id", "fullName")
+      .populate("updatedBy.account_id", "fullName");
 
     res.render("admin/pages/roles/detail", {
       pageTitle: record.title,
@@ -97,12 +97,18 @@ module.exports.edit = async (req, res) => {
 module.exports.editPatch = async (req, res) => {
   try {
     const id = req.params.id;
-
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    };
     await Role.updateOne(
       {
         _id: id,
       },
-      req.body,
+      {
+        ...req.body,
+        $push: { updatedBy: updatedBy },
+      },
     );
     req.flash("success", "Cập nhật nhóm quyền thành công!");
     res.redirect(req.headers.referer);
@@ -147,9 +153,19 @@ module.exports.permissions = async (req, res) => {
 // [PATCH]  /admin/roles/permissions
 module.exports.permissionsPatch = async (req, res) => {
   try {
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    };
     const permissions = JSON.parse(req.body.permissions);
     for (const item of permissions) {
-      await Role.updateOne({ _id: item.id }, { permissions: item.permissions });
+      await Role.updateOne(
+        { _id: item.id },
+        {
+          permissions: item.permissions,
+          $push: { updatedBy: updatedBy },
+        },
+      );
     }
 
     req.flash("success", "Cập nhật quyền thành công!");
