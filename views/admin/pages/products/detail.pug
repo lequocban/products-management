@@ -52,6 +52,15 @@ block main
 
             .row.mb-3
               .col-6
+                strong Danh mục sản phẩm:
+              .col-6
+                if product.product_category_id && product.product_category_id.title
+                  span.text-primary #{product.product_category_id.title} 
+                else 
+                  span.text-muted Không xác định
+
+            .row.mb-3
+              .col-6
                 strong Người tạo:
               .col-6
                 if product.createdBy && product.createdBy.account_id

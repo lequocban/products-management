@@ -6,7 +6,8 @@ const productSchema = new mongoose.Schema(
   {
     title: String,
     product_category_id: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ProductCategory",
       default: "",
     },
     description: String,

@@ -287,13 +287,19 @@ module.exports.detail = async (req, res) => {
     };
     const product = await Product.findOne(find)
       .populate("createdBy.account_id", "fullName")
-      .populate("updatedBy.account_id", "fullName");
+      .populate("updatedBy.account_id", "fullName")
+      .populate({
+        path: "product_category_id",
+        select: "title",
+        match: { deleted: false, status: "active" },
+      });
+
     res.render("admin/pages/products/detail", {
       pageTitle: product.title,
       product: product,
     });
   } catch (error) {
-    req.flash("error", "Sản phẩm không tồn tại!");
+    req.flash("error", "Lỗi!");
     res.redirect(`${systemConfig.prefixAdmin}/products`);
   }
 };
