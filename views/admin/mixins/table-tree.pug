@@ -71,3 +71,77 @@ mixin table-tree(items, level = 1)
 
     if item.children && item.children.length > 0
       +table-tree(item.children, level + 1)
+
+
+mixin table-tree-article(items, level = 1)
+  each item, index in items
+    - const prefix = Array(level + 1).join("-- ")
+
+    tr
+      td
+        input(type="checkbox" name="id" value=item.id)
+
+      td #{item.index}
+
+      td
+        img(
+          src=item.thumbnail
+          alt=item.title
+          width="100px"
+          height="auto"
+        )
+
+      td #{prefix} #{item.title}
+
+      td
+        input(
+          type="number"
+          value=item.position
+          style="width:60px"
+          min="1"
+          name="position"
+        )
+      if(role.permissions.includes("articles-category_edit"))
+        td
+          if item.status == "active"
+            a.badge.bg-success.text-decoration-none(
+              href="javascript:;"
+              data-status=item.status
+              data-id=item.id
+              button-change-status
+            ) Hoạt động
+          else
+            a.badge.bg-danger.text-decoration-none(
+              href="javascript:;"
+              data-status=item.status
+              data-id=item.id
+              button-change-status
+            ) Dừng hoạt động
+      td 
+        if item.createdBy && item.createdBy.account_id
+          p #{item.createdBy.account_id.fullName}
+          p 
+            +formatDate(item.createdBy.createdAt)
+      td 
+        -const updatedHistory = item.updatedBy.slice(-1)[0]
+        if updatedHistory && updatedHistory.account_id
+          p #{updatedHistory.account_id.fullName}
+          p 
+            +formatDateTime(updatedHistory.updatedAt)
+      td
+        a.btn.btn-secondary.btn-sm.ms-1(
+          href=`${prefixAdmin}/articles-category/detail/${item.id}`
+        ) Chi tiết
+
+        if(role.permissions.includes("articles-category_edit"))
+          a.btn.btn-warning.btn-sm.ms-1(
+            href=`${prefixAdmin}/articles-category/edit/${item.id}`
+          ) Sửa
+        if(role.permissions.includes("articles-category_delete"))
+          button.btn.btn-danger.btn-sm.ms-1(
+            data-id=item.id
+            button-delete
+          ) Xóa
+
+    if item.children && item.children.length > 0
+      +table-tree-article(item.children, level + 1)

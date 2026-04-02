@@ -11,6 +11,14 @@
       if(role.permissions.includes("products_view"))
         li
           a(href=`${prefixAdmin}/products`) Danh sách sản phẩm
+
+      if(role.permissions.includes("articles-category_view"))
+        li
+          a(href=`${prefixAdmin}/articles-category`) Danh mục bài viết
+
+      if(role.permissions.includes("articles_view"))
+        li
+          a(href=`${prefixAdmin}/articles`) Danh sách bài viết
       
       if(role.permissions.includes("roles_view"))
         li

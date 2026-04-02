@@ -1,0 +1,134 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(5000)
+  +alert-error(5000)
+  if(role.permissions.includes("articles-category_view"))
+    h1.mb-4 Chi tiết danh mục bài viết
+
+    .card.product-detail
+      .card-body
+        .row
+          
+          .col-md-4
+            .image-box
+              img.product-image(
+                src=record.thumbnail || ""
+                alt=record.title
+              )
+
+          
+          .col-md-8
+            h3.product-title #{record.title}
+
+            p.text-muted !{record.description}
+
+            hr
+
+            .row.mb-2
+              .col-6
+                strong Danh mục cha:
+              .col-6
+                if (record.parent_id)
+                  span.text-success #{record.parent_title}
+                else
+                  span.text-danger Không có
+            .row.mb-2
+              .col-6
+                strong  ID danh mục cha:
+              .col-6
+                if (record.parent_id)
+                  span.text-success #{record.parent_id}
+                else
+                  span.text-danger Không có
+            .row.mb-2
+              .col-6
+                strong Vị trí:
+              .col-6
+                span #{record.position}
+
+            .row.mb-3
+              .col-6
+                strong Người tạo:
+              .col-6
+                if record.createdBy && record.createdBy.account_id
+                  span.text-primary #{record.createdBy.account_id.fullName} 
+                  br
+                  small.text-muted (#{new Date(record.createdBy.createdAt).toLocaleString("vi-VN")})
+                else 
+                  span.text-muted Không xác định
+            
+            .row.mb-3
+              if(role.permissions.includes("articles-category_edit"))
+                .col-6
+                  strong Trạng thái:
+                .col-6
+                  if record.status == "active"
+                    a(
+                      href="javascript:;"
+                      data-status="active"
+                      data-id=record._id
+                      button-change-status
+                      class="badge bg-success text-decoration-none"
+                    ) Hoạt động
+                  else
+                    a(
+                      href="javascript:;"
+                      data-status="inactive"
+                      data-id=record._id
+                      button-change-status
+                      class="badge bg-danger text-decoration-none"
+                    ) Dừng hoạt động
+
+            .row.mb-3
+              .col-12
+                strong Lịch sử cập nhật:
+                if record.updatedBy && record.updatedBy.length > 0
+                  //- Đảo ngược mảng để mới nhất lên đầu
+                  - const history = [...record.updatedBy].reverse()
+                  
+                  table.table.table-sm.table-bordered.mt-2
+                    thead.table-light
+                      tr
+                        th Thời gian
+                        th Người cập nhật
+                        th Id
+                    tbody
+                      each item in history
+                        tr
+                          td #{new Date(item.updatedAt).toLocaleString("vi-VN")}
+                          td 
+                            if item.account_id && item.account_id.fullName
+                              | #{item.account_id.fullName}
+                          td 
+                            if item.account_id && item.account_id.fullName
+                              | #{item.account_id.id}
+                            else 
+                              span.text-muted Không xác định
+                else
+                  p.text-muted.mt-2.fst-italic Chưa có lịch sử cập nhật.
+
+            hr
+            if(role.permissions.includes("articles-category_edit"))
+              a(
+                href=`${prefixAdmin}/articles-category/edit/${record._id}`
+                class="btn btn-warning"
+              ) Sửa
+
+            a(
+              href=`${prefixAdmin}/articles-category`
+              class="btn btn-secondary ms-2"
+            ) Quay lại
+
+    
+    form(
+      action=""
+      method="POST"
+      id="form-change-status"
+      data-path=`${prefixAdmin}/articles-category/change-status`
+    )
+
+    script(src="/admin/js/article-category.js")
+  else 
+    h1 Bạn không có quyền truy cập

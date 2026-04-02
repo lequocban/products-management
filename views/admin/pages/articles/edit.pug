@@ -1,0 +1,134 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/render-tree.pug
+
+
+block main
+  +alert-error(5000)
+  +alert-success(5000)
+
+  if(role.permissions.includes("articles_edit"))
+    h1(class="mb-4") Chỉnh sửa bài viết
+
+    div(class="mb-3")
+      a(
+        href=`${prefixAdmin}/articles`
+        class="btn btn-secondary"
+      ) Quay lại
+
+    form(
+      action=`${prefixAdmin}/articles/edit/${record._id}?_method=PATCH`
+      id="form-edit-article"
+      method="POST"
+      enctype="multipart/form-data"
+    )
+      div(class="form-group mb-3")
+        label(for="title") Tiêu đề
+        input(
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+          value=record.title
+        ) 
+
+      div(class="form-group mb-3")
+        label(for="article_category_id") Danh mục sản phẩm
+        - const currentCategoryId = record.article_category_id ? record.article_category_id.toString() : ""  
+        input(
+          type="hidden" 
+          name="article_category_id" 
+          id="article_category_id" 
+          value=currentCategoryId
+          input-tree-value
+        )   
+        .tree-container
+          - const isRootSelected = (currentCategoryId === "") ? "selected" : ""
+          .tree-item.root-item(data-id="" class=isRootSelected)
+            .item-content
+              span.toggle.empty
+              span.title -- Chọn danh mục --
+          
+          if(category)
+            +render-tree-list(category, "", currentCategoryId)
+      
+      div(class="form-group mb-3")
+        label(for="desc") Nội dung
+        textarea(
+          class="form-control textarea-mce"
+          id="desc"
+          name="content"
+          rows="5"
+        ) #{record.content}
+
+      div(
+        class="form-group mb-3"
+        upload-image
+      )
+        label(for="thumbnail") Ảnh
+        input(
+          type="file"
+          class="form-control-file"
+          id="thumbnail"
+          name="thumbnail"
+          accept="image/*"
+          upload-image-input
+        )
+        br
+        .image-preview-wrapper
+          img(
+            src=record.thumbnail || ""
+            class="image-preview"
+            upload-image-preview
+          ) 
+          span(
+            remove-image-preview  
+            class="remove-image"
+          ) x
+
+      div(class="form-group mb-3")
+        label(for="position") Vị trí
+        input(
+          type="number"
+          class="form-control"
+          id="position"
+          name="position"
+          placeholder="Tự động tăng"
+          min="1"
+          value=record.position
+        )
+      label Trạng thái
+      br
+      div(class="form-group form-check form-check-inline mb-3")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusActive"
+          name="status"
+          value="active"
+          checked=(record.status == "active" ? true : false)
+        )
+        label(for="statusActive" class="form-check-label") Hoạt động
+      div(class="form-group form-check form-check-inline mb-3")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusInActive"
+          name="status"
+          value="inactive"
+          checked=(record.status == "inactive" ? true : false)
+        )
+        label(for="statusInActive" class="form-check-label") Dừng hoạt động
+      div(class="form-group mb-3")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Cập nhật  
+
+
+
+    script(src="/admin/js/article.js") 
+    script(src="/admin/js/tree.js") 
+  else 
+    h1 Bạn không có quyền truy cập

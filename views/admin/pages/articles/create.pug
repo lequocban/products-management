@@ -1,0 +1,130 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/render-tree.pug
+
+block main
+  +alert-error(5000)
+  if(role.permissions.includes("articles_create"))
+    h1(class="mb-4") Thêm mới bài viết
+
+    div(class="mb-3")
+      a(
+        href=`${prefixAdmin}/articles`
+        class="btn btn-secondary"
+      ) Quay lại
+
+    form(
+      action=`${prefixAdmin}/articles/create`
+      id="form-create-article"
+      method="POST"
+      enctype="multipart/form-data"
+    )
+      div(class="form-group mb-3")
+        label(for="title") Tiêu đề
+        input(
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+        )
+      
+      div(class="form-group mb-3")
+        label(for="article_category_id") Danh mục bài viết
+        //- Input ẩn lưu ID danh mục
+        input(
+          type="hidden" 
+          name="article_category_id" 
+          id="article_category_id" 
+          value=""
+          input-tree-value
+        )
+        
+        .tree-container
+          //- Mặc định bôi đen mục này khi ở trang Tạo mới
+          .tree-item.root-item.selected(data-id="")
+            .item-content
+              span.toggle.empty
+              span.title -- Chọn danh mục --
+          
+          //- Render cây danh mục (biến category từ Controller truyền sang)
+          if(category)
+            +render-tree-list(category)
+
+      div(class="form-group mb-3")
+        label(for="desc") Nội dung
+        textarea(
+          class="form-control textarea-mce"
+          id="desc"
+          name="content"
+          rows="5"
+        ) 
+     
+      div(
+        class="form-group mb-3"
+        upload-image
+      )
+        label(for="thumbnail") Ảnh
+        input(
+          type="file"
+          class="form-control-file"
+          id="thumbnail"
+          name="thumbnail"
+          accept="image/*"
+          upload-image-input
+        )
+        br
+        .image-preview-wrapper
+          img(
+            src=""
+            class="image-preview"
+            upload-image-preview
+          ) 
+          span(
+            remove-image-preview  
+            class="remove-image"
+          ) x
+
+      div(class="form-group mb-3")
+        label(for="position") Vị trí
+        input(
+          type="number"
+          class="form-control"
+          id="position"
+          name="position"
+          placeholder="Tự động tăng"
+          min="1"
+        )
+      label Trạng thái
+      br
+      div(class="form-group form-check form-check-inline mb-3")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusActive"
+          name="status"
+          value="active"
+          checked
+        )
+        label(for="statusActive" class="form-check-label") Hoạt động
+      div(class="form-group form-check form-check-inline mb-3")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusInActive"
+          name="status"
+          value="inactive"
+        )
+        label(for="statusInActive" class="form-check-label") Dừng hoạt động
+      div(class="form-group mb-3")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Tạo mới   
+
+
+
+    script(src="/admin/js/article.js") 
+    script(src="/admin/js/tree.js") 
+  else 
+    h1 Bạn không có quyền truy cập

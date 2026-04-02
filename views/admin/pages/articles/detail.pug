@@ -1,0 +1,118 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(5000)
+  +alert-error(5000)
+
+  if(role.permissions.includes("articles_view"))
+    h1.mb-4 Chi tiết bài viết
+
+    .card.article-detail
+      .card-body
+        .row
+
+          // ===== Thumbnail =====
+          .col-md-4
+            .image-box.text-center
+              img(
+                src=record.thumbnail || "/images/no-image.png"
+                alt=record.title
+                style="max-width:100%; border-radius:8px"
+              )
+
+          // ===== Content =====
+          .col-md-8
+            h3.mb-3 #{record.title}
+
+            hr
+
+            .mb-3
+              strong Nội dung bài viết:
+              .border.rounded.p-3.bg-light
+                != record.content
+
+            hr
+
+            // ===== Category =====
+            .row.mb-2
+              .col-4
+                strong Danh mục:
+              .col-8
+                if record.article_category_id && record.article_category_id.title
+                  span.text-primary #{record.article_category_id.title}
+                else
+                  span.text-muted Không xác định
+
+            // ===== Status =====
+            .row.mb-2
+              .col-4
+                strong Trạng thái:
+              .col-8
+                if record.status == "active"
+                  span.badge.bg-success Hoạt động
+                else
+                  span.badge.bg-danger Dừng hoạt động
+
+            // ===== Creator =====
+            .row.mb-3
+              .col-4
+                strong Người tạo:
+              .col-8
+                if record.createdBy && record.createdBy.account_id
+                  span.text-primary #{record.createdBy.account_id.fullName}
+                  br
+                  small.text-muted (#{new Date(record.createdBy.createdAt).toLocaleString("vi-VN")})
+                else
+                  span.text-muted Không xác định
+
+            // ===== Update History =====
+            .row.mb-3
+              .col-12
+                strong Lịch sử cập nhật:
+
+                if record.updatedBy && record.updatedBy.length > 0
+                  - const history = [...record.updatedBy].reverse()
+
+                  table.table.table-sm.table-bordered.mt-2
+                    thead.table-light
+                      tr
+                        th Thời gian
+                        th Người cập nhật
+                    tbody
+                      each item in history
+                        tr
+                          td #{new Date(item.updatedAt).toLocaleString("vi-VN")}
+                          td
+                            if item.account_id
+                              | #{item.account_id.fullName}
+                            else
+                              span.text-muted Không xác định
+                else
+                  p.text-muted.mt-2 Chưa có lịch sử cập nhật
+
+            hr
+
+            // ===== Buttons =====
+            if(role.permissions.includes("articles_edit"))
+              a(
+                href=`${prefixAdmin}/articles/edit/${record.id}`
+                class="btn btn-warning"
+              ) Sửa
+
+            a(
+              href=`${prefixAdmin}/articles`
+              class="btn btn-secondary ms-2"
+            ) Quay lại
+
+    form(
+      action=""
+      method="POST"
+      id="form-change-status"
+      data-path=`${prefixAdmin}/articles/change-status`
+    )
+
+    script(src="/admin/js/article.js")
+
+  else
+    h1.text-danger Bạn không có quyền truy cập
