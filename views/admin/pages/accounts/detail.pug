@@ -43,8 +43,10 @@ block main
               .col-6
                 strong Nhóm quyền:
               .col-6
-                //- Ưu tiên in ra tiêu đề của quyền nếu đã được populate, nếu không in tạm role_id
-                span.badge.bg-info.text-dark #{record.role ? record.role.title : record.role_id}
+                if record.role_id && record.role_id.title
+                  span.badge.bg-info.text-dark #{record.role_id.title}
+                else 
+                  span.text-muted Không xác định
             if(role.permissions.includes("accounts_edit"))
               .row.mb-3
                 .col-6
@@ -69,15 +71,43 @@ block main
 
             .row.mb-2
               .col-6
-                strong Ngày tạo:
+                strong Người tạo:
               .col-6
-                span #{record.createdAt ? new Date(record.createdAt).toLocaleString("vi-VN") : "Trống"}
+                if record.createdBy && record.createdBy.account_id
+                  span.text-primary #{record.createdBy.account_id.fullName} 
+                  br
+                  small.text-muted (#{new Date(record.createdBy.createdAt).toLocaleString("vi-VN")})
+                else 
+                  span.text-muted Không xác định
 
             .row.mb-3
               .col-6
-                strong Cập nhật lần cuối:
+                strong Lịch sử cập nhật:
               .col-6
-                span #{record.updatedAt ? new Date(record.updatedAt).toLocaleString("vi-VN") : "Chưa cập nhật"}
+                if record.updatedBy && record.updatedBy.length > 0
+                  //- Đảo ngược mảng để mới nhất lên đầu
+                  - const history = [...record.updatedBy].reverse()
+                  
+                  table.table.table-sm.table-bordered.mt-2
+                    thead.table-light
+                      tr
+                        th Thời gian
+                        th Người cập nhật
+                        th Id
+                    tbody
+                      each item in history
+                        tr
+                          td #{new Date(item.updatedAt).toLocaleString("vi-VN")}
+                          td 
+                            if item.account_id && item.account_id.fullName
+                              | #{item.account_id.fullName}
+                          td 
+                            if item.account_id && item.account_id.fullName
+                              | #{item.account_id.id}
+                            else 
+                              span.text-muted Không xác định
+                else
+                  p.text-muted.mt-2.fst-italic Chưa có lịch sử cập nhật.
 
             hr
             if(role.permissions.includes("accounts_edit"))

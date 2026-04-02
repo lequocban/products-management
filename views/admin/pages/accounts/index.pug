@@ -35,6 +35,7 @@ block main
               if(role.permissions.includes("accounts_edit"))
                 th Trạng thái
               th Người tạo
+              th Cập nhật
               th Hành động
 
           tbody 
@@ -51,7 +52,11 @@ block main
                       ) 
                   td #{item.fullName}
                   td #{item.email}
-                  td #{item.role.title}
+                  td 
+                    if item.role_id
+                      span #{item.role_id.title}
+                    else
+                      span.text-muted Không xác định
                   if(role.permissions.includes("accounts_edit"))
                     td
                       if (item.status == "active")
@@ -71,9 +76,16 @@ block main
                           class="badge bg-danger text-decoration-none"
                         ) Dừng hoạt động
                   td 
-                    p #{item.createdBy.accountFullName}
-                    p 
-                      +formatDate(item.createdBy.createdAt)
+                    if item.createdBy && item.createdBy.account_id
+                      p #{item.createdBy.account_id.fullName}
+                      p 
+                        +formatDate(item.createdBy.createdAt)
+                  td 
+                    -const updatedHistory = item.updatedBy.slice(-1)[0]
+                    if updatedHistory && updatedHistory.account_id
+                      p #{updatedHistory.account_id.fullName}
+                      p 
+                        +formatDateTime(updatedHistory.updatedAt)
                   td 
                     a(
                       class="btn btn-secondary btn-sm"

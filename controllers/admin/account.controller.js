@@ -10,22 +10,12 @@ module.exports.index = async (req, res) => {
     let find = {
       deleted: false,
     };
-    const records = await Account.find(find).select("-password -token");
-    for (const item of records) {
-      const role = await Role.findOne({
-        _id: item.role_id,
-        deleted: false,
-      });
-      item.role = role;
-    }
-    for (const record of records) {
-      const user = await Account.findOne({
-        _id: record.createdBy.account_id,
-      });
-      if (user) {
-        record.createdBy.accountFullName = user.fullName;
-      }
-    }
+    const records = await Account.find(find)
+      .sort({ createdAt: "desc" })
+      .populate("role_id", "title")
+      .populate("updatedBy.account_id", "fullName")
+      .populate("createdBy.account_id", "fullName")
+      .select("-password -token");
 
     res.render("admin/pages/accounts/index", {
       pageTitle: "Danh sách tài khoản",
@@ -86,13 +76,10 @@ module.exports.detail = async (req, res) => {
       deleted: false,
       _id: req.params.id,
     };
-    const record = await Account.findOne(find).select("-password -token");
-
-    const role = await Role.findOne({
-      _id: record.role_id,
-      deleted: false,
-    });
-    record.role = role;
+    const record = await Account.findOne(find)
+      .populate("role_id", "title")
+      .populate("updatedBy.account_id", "fullName")
+      .select("-password -token");
 
     res.render("admin/pages/accounts/detail", {
       pageTitle: record.fullName,
@@ -108,8 +95,17 @@ module.exports.detail = async (req, res) => {
 module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
-
-  await Account.updateOne({ _id: id }, { status: status });
+  const updatedBy = {
+    account_id: res.locals.user.id,
+    updatedAt: new Date(),
+  };
+  await Account.updateOne(
+    { _id: id },
+    {
+      status: status,
+      $push: { updatedBy: updatedBy },
+    },
+  );
 
   req.flash("success", "Cập nhật trạng thái thành công!");
 
@@ -161,11 +157,18 @@ module.exports.editPatch = async (req, res) => {
     if (emailExist) {
       req.flash("error", "Email đã tồn tại, vui lòng nhập email khác!");
     } else {
+      const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date(),
+      };
       await Account.updateOne(
         {
           _id: id,
         },
-        req.body,
+        {
+          ...req.body,
+          $push: { updatedBy: updatedBy },
+        },
       );
       req.flash("success", "Cập nhật tài khoản thành công!");
     }
