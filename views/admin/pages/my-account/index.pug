@@ -1,0 +1,88 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(5000)
+  +alert-error(5000)
+
+  h1(class="mb-4") Thông tin cá nhân
+
+  if (user)
+    .card.shadow-sm.border-0
+      .card-header.bg-light.border-bottom.pt-3.pb-3
+        h4.m-0.text-primary Hồ sơ của tôi
+      
+      .card-body.p-4
+        .row
+          //- Cột ảnh đại diện (Avatar)
+          .col-md-4.text-center.mb-4.mb-md-0
+            if (user.avatar)
+              img(
+                src=user.avatar
+                alt=user.fullName
+                class="img-thumbnail rounded-circle shadow-sm"
+                style="width: 200px; height: 200px; object-fit: cover;"
+              )
+            else
+              //- Hiển thị ảnh mặc định nếu user chưa cập nhật avatar
+              img(
+                src="/admin/images/avatar-default.png" 
+                alt=user.fullName
+                class="img-thumbnail rounded-circle shadow-sm"
+                style="width: 200px; height: 200px; object-fit: cover;"
+              )
+
+          //- Cột thông tin chi tiết
+          .col-md-8
+            h3.mb-3 #{user.fullName}
+            hr.text-black-50
+
+            .row.mb-3
+              .col-sm-4
+                strong.text-muted Email:
+              .col-sm-8
+                span #{user.email}
+
+            .row.mb-3
+              .col-sm-4
+                strong.text-muted Số điện thoại:
+              .col-sm-8
+                if (user.phone)
+                  span #{user.phone}
+                else
+                  span.text-muted.fst-italic Chưa cập nhật
+
+            .row.mb-3
+              .col-sm-4
+                strong.text-muted Trạng thái:
+              .col-sm-8
+                if (user.status === "active")
+                  span.badge.bg-success Hoạt động
+                else
+                  span.badge.bg-danger Dừng hoạt động
+
+            .row.mb-3
+              .col-sm-4
+                strong.text-muted Nhóm quyền:
+              .col-sm-8
+                if (role && role.title)
+                  span.badge.bg-info.text-dark #{role.title}
+                else
+                  span.text-muted Không xác định
+
+            .row.mb-3
+              .col-sm-4
+                strong.text-muted Ngày tham gia:
+              .col-sm-8
+                span #{user.createdAt ? new Date(user.createdAt).toLocaleString("vi-VN") : "Không xác định"}
+
+            hr.text-black-50
+            
+            //- Nút chuyển hướng sang trang chỉnh sửa thông tin cá nhân
+            a(
+              href=`${prefixAdmin}/my-account/edit`
+              class="btn btn-warning px-4"
+            ) Chỉnh sửa thông tin
+            
+  else
+    h1.text-danger Vui lòng đăng nhập để xem thông tin!
