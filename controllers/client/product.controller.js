@@ -1,5 +1,6 @@
 const Product = require("../../models/product.model");
-const systemConfig = require("../../config/system");
+
+const productsHelper = require("../../helper/product");
 
 // [GET]  /products
 module.exports.index = async (req, res) => {
@@ -8,16 +9,11 @@ module.exports.index = async (req, res) => {
     deleted: false,
   }).sort({ position: "desc" });
 
-  lstProduct.forEach((item) => {
-    item.newPrice = (
-      (item.price * (100 - item.discountPercentage)) /
-      100
-    ).toFixed(2);
-  });
+  const newProducts = productsHelper.priceNewProducts(lstProduct);
 
   res.render("client/pages/products/index", {
     pageTitle: "Trang sản phẩm",
-    products: lstProduct,
+    products: newProducts,
   });
 };
 
@@ -29,7 +25,7 @@ module.exports.detail = async (req, res) => {
       deleted: false,
       status: "active",
     });
-    if(product){
+    if (product) {
       product.newPrice = (
         (product.price * (100 - product.discountPercentage)) /
         100
@@ -40,6 +36,6 @@ module.exports.detail = async (req, res) => {
       product: product,
     });
   } catch (error) {
-    res.redirect(`/products`);
+    res.redirect(req.headers.referer);
   }
 };

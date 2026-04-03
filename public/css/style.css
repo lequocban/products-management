@@ -58,6 +58,7 @@
 }
 
 .product-item .inner-image {
+  position: relative;
   width: 100%;
   aspect-ratio: 4/3;
   border-bottom: 1px solid #ddd;
@@ -69,6 +70,23 @@
   object-fit: cover;
 }
 
+.product-item .inner-image .inner-featured {
+  position: absolute;
+  top: 10px;    
+  right: 10px;  
+  
+  background-color: #ff4757; /* Màu đỏ cam nổi bật, thu hút sự chú ý */
+  color: #ffffff; /* Chữ màu trắng */
+  padding: 4px 12px; /* Tạo vùng đệm cho chữ dễ đọc */
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px; /* Bo góc tròn trịa hình viên thuốc */
+  box-shadow: 0 4px 8px rgba(255, 71, 87, 0.4); /* Đổ bóng cùng tone màu đỏ để tạo hiệu ứng phát sáng nhẹ */
+  z-index: 10; /* Đảm bảo huy hiệu không bị ảnh đè lên */
+  
+  text-transform: uppercase; /* In hoa chữ NỔI BẬT */
+  letter-spacing: 0.5px; /* Giãn chữ một chút cho sang trọng */
+}
 .product-item .inner-content {
   padding: 15px;
 }
@@ -139,6 +157,36 @@
   width: 100px;
 }
 /* end product detail  */
+
+/* =========================================
+   SẢN PHẨM NỔI BẬT (TRANG CHỦ)
+========================================= */
+
+.section-products-featured {
+  background-color: #fcfcfc; /* Thêm nền xám cực nhẹ để nổi bật khu vực này */
+  padding: 40px 0; /* Tạo không gian thở trên/dưới */
+  border-top: 2px solid #f0f0f0; /* Đường viền nhẹ ngăn cách với phần trên */
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* Thêm hiệu ứng hover riêng cho ảnh ở trang chủ (tùy chọn) */
+.section-products-featured .product-item:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  transition: all 0.3s ease;
+  border-color: #0d6efd; /* Đổi màu viền khi di chuột */
+}
+
+/* Sửa lỗi ảnh bị méo nếu kích thước không đồng đều */
+.section-products-featured .product-item .inner-image img {
+  transition: transform 0.3s ease;
+}
+
+.section-products-featured .product-item:hover .inner-image img {
+  transform: scale(1.05); /* Ảnh zoom nhẹ lên khi hover */
+}
+
+/*end sản phẩm nổi bật */
 
 /* BẮT ĐẦU SUB-MENU */
 .sub-menu {
