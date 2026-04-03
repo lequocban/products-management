@@ -4,84 +4,85 @@ include ../../mixins/alert.pug
 block main
   +alert-success(5000)
   +alert-error(5000)
+  
   if(role.permissions.includes("products_view"))
     h1.mb-4 Chi tiết sản phẩm
 
-    .card.product-detail
+    .card.product-detail.shadow-sm
       .card-body
+        
+        //- =========================================
+        //- PHẦN 1: THÔNG TIN CỐT LÕI (CHIA 2 CỘT)
+        //- =========================================
         .row
-          
-          .col-md-4
-            .image-box
-              img.product-image(
+          //- Cột Ảnh
+          .col-md-4.text-center.mb-4
+            .image-box.border.rounded.p-2.bg-light
+              img.product-image.img-fluid.rounded(
                 src=product.thumbnail || "/images/no-image.png"
                 alt=product.title
               )
 
-          
+          //- Cột Thông số
           .col-md-8
-            h3.product-title #{product.title}
-
-            p.text-muted !{product.description}
-
-            hr
+            h3.product-title.mb-4 #{product.title}
 
             if product.featured && product.featured == "1"
               .row.mb-2
-                .col-6
+                .col-4
                   strong Sản phẩm nổi bật:
-                .col-6
-                  span.text-success Có
+                .col-8
+                  span.badge.bg-warning.text-dark Có
 
             .row.mb-2
-              .col-6
+              .col-4
                 strong Giá:
-              .col-6
-                span.text-danger #{product.price}$
+              .col-8
+                span.text-danger.fw-bold #{product.price}$
 
             .row.mb-2
-              .col-6
+              .col-4
                 strong Giảm giá:
-              .col-6
+              .col-8
                 span #{product.discountPercentage}%
 
             .row.mb-2
-              .col-6
+              .col-4
                 strong Tồn kho:
-              .col-6
+              .col-8
                 span #{product.stock}
 
             .row.mb-2
-              .col-6
+              .col-4
                 strong Vị trí:
-              .col-6
+              .col-8
                 span #{product.position}
 
             .row.mb-3
-              .col-6
-                strong Danh mục sản phẩm:
-              .col-6
+              .col-4
+                strong Danh mục:
+              .col-8
                 if product.product_category_id && product.product_category_id.title
-                  span.text-primary #{product.product_category_id.title} 
+                  span.badge.bg-primary #{product.product_category_id.title} 
                 else 
                   span.text-muted Không xác định
 
             .row.mb-3
-              .col-6
+              .col-4
                 strong Người tạo:
-              .col-6
+              .col-8
                 if product.createdBy && product.createdBy.account_id
-                  span.text-primary #{product.createdBy.account_id.fullName} 
+                  span.text-info #{product.createdBy.account_id.fullName} 
                   br
                   small.text-muted (#{new Date(product.createdBy.createdAt).toLocaleString("vi-VN")})
                 else 
                   span.text-muted Không xác định
 
-            .row.mb-3
-              if(role.permissions.includes("products_edit"))
-                .col-6
+            if(role.permissions.includes("products_edit"))
+              .row.mb-3
+                .col-4
                   strong Trạng thái:
-                .col-6
+                .col-8
                   if product.status == "active"
                     a(
                       href="javascript:;"
@@ -99,47 +100,71 @@ block main
                       class="badge bg-danger text-decoration-none"
                     ) Dừng hoạt động
 
-            .row.mb-3
-              .col-12
-                strong Lịch sử cập nhật:
-                if product.updatedBy && product.updatedBy.length > 0
-                  //- Đảo ngược mảng để mới nhất lên đầu
-                  - const history = [...product.updatedBy].reverse()
-                  
-                  table.table.table-sm.table-bordered.mt-2
-                    thead.table-light
-                      tr
-                        th Thời gian
-                        th Người cập nhật
-                        th Id
-                    tbody
-                      each item in history
-                        tr
-                          td #{new Date(item.updatedAt).toLocaleString("vi-VN")}
-                          td 
-                            if item.account_id && item.account_id.fullName
-                              | #{item.account_id.fullName}
-                          td 
-                            if item.account_id && item.account_id.fullName
-                              | #{item.account_id.id}
-                            else 
-                              span.text-muted Không xác định
-                else
-                  p.text-muted.mt-2.fst-italic Chưa có lịch sử cập nhật.
+        hr
 
-            hr
+        //- =========================================
+        //- PHẦN 2: MÔ TẢ CHI TIẾT (FULL WIDTH)
+        //- =========================================
+        .row.mb-4
+          .col-12
+            h5.mb-3 Mô tả chi tiết:
+            if product.description
+              //- Đổi thẻ p thành thẻ div để render HTML chuẩn, thêm nền xám nhạt để tách biệt nội dung
+              .description-content.border.rounded.p-3.bg-light
+                | !{product.description}
+            else
+              p.text-muted.fst-italic Chưa có mô tả cho sản phẩm này.
+
+        hr
+
+        //- =========================================
+        //- PHẦN 3: LỊCH SỬ CẬP NHẬT
+        //- =========================================
+        .row.mb-4
+          .col-12
+            h5.mb-3 Lịch sử cập nhật:
+            if product.updatedBy && product.updatedBy.length > 0
+              - const history = [...product.updatedBy].reverse()
+              
+              .table-responsive
+                table.table.table-sm.table-bordered.table-hover.mt-2
+                  thead.table-light
+                    tr
+                      th Thời gian
+                      th Người cập nhật
+                      th Mã ID Tài khoản
+                  tbody
+                    each item in history
+                      tr
+                        td #{new Date(item.updatedAt).toLocaleString("vi-VN")}
+                        td 
+                          if item.account_id && item.account_id.fullName
+                            | #{item.account_id.fullName}
+                          else
+                            span.text-muted N/A
+                        td 
+                          if item.account_id && item.account_id.id
+                            | #{item.account_id.id}
+                          else 
+                            span.text-muted Không xác định
+            else
+              p.text-muted.fst-italic Chưa có lịch sử cập nhật.
+
+        //- =========================================
+        //- PHẦN 4: NÚT ĐIỀU HƯỚNG
+        //- =========================================
+        .row
+          .col-12.text-end
+            a(
+              href=`${prefixAdmin}/products`
+              class="btn btn-secondary me-2"
+            ) Quay lại
             if(role.permissions.includes("products_edit"))
               a(
                 href=`${prefixAdmin}/products/edit/${product._id}`
-                class="btn btn-warning"
-              ) Sửa
+                class="btn btn-warning px-4"
+              ) ✎ Sửa sản phẩm
 
-            a(
-              href=`${prefixAdmin}/products`
-              class="btn btn-secondary ms-2"
-            ) Quay lại
-
-    
     form(
       action=""
       method="POST"
@@ -149,4 +174,4 @@ block main
 
     script(src="/admin/js/product.js")
   else 
-    h1 Bạn không có quyền truy cập
+    h1.text-danger Bạn không có quyền truy cập

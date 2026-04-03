@@ -1,63 +1,101 @@
-extend ../../layouts/default.pug
+extends ../../layouts/default.pug
 
 block main
-  .container.mt-4
+  .container.mt-4.mb-5
+    
+    //- Nút quay lại (UX tốt cho trang chi tiết)
+    .row.mb-3
+      .col-12
+        a.btn.btn-sm.btn-outline-secondary(href="javascript:history.back()") 
+          | ← Quay lại
+
     .row
-      // Ảnh sản phẩm
-      .col-md-5
-        .product-image-box
-          img.main-image(
+      //- ===== 1. Cột Ảnh Sản Phẩm =====
+      .col-md-5.mb-4
+        .product-image-box.position-relative
+          img.main-image.img-fluid.rounded.border(
             src=product.thumbnail || "/images/no-image.png"
             alt=product.title
+            style="width: 100%; aspect-ratio: 1/1; object-fit: cover;"
           )
+          
+          //- Huy hiệu Nổi bật đè lên ảnh
+          if product.featured == "1"
+            span.badge.badge-featured.position-absolute(style="top: 10px; right: 10px; font-size: 14px;") Nổi bật
 
-      // Thông tin sản phẩm
+      //- ===== 2. Cột Thông Tin Sản Phẩm =====
       .col-md-7
-        h2.product-title #{product.title}
+        h1.product-title.fw-bold.mb-3 #{product.title}
 
-        p.text-muted.mt-2 !{product.description}
+        //- Danh mục (Cần populate "product_category_id" ở Controller)
+        if product.product_category_id && product.product_category_id.title
+          .mb-2
+            span.text-muted Danh mục: 
+            a(href=`/products/${product.product_category_id.slug}` class="text-decoration-none fw-bold") #{product.product_category_id.title}
 
-        // Giá
-        .price-box.mt-3
-          if product.discountPercentage > 0
-            span.old-price #{product.price}$
-            br
-            span.new-price #{product.newPrice}$
-          else
-            span.new-price #{product.price}$
-
-        // Trạng thái
-        .mt-3
+        //- Trạng thái
+        .mb-3
+          span.text-muted Trạng thái: 
           if product.status == "active"
             span.badge.bg-success Còn hàng
           else
             span.badge.bg-danger Hết hàng
 
-        // Tồn kho
-        .mt-3
-          strong Tồn kho: 
-          span #{product.stock}
+        //- Khối hiển thị Giá nổi bật
+        .price-box.p-3.bg-light.rounded.mb-4
+          if product.discountPercentage > 0
+            .old-price.text-danger.text-decoration-line-through.mb-1
+              | Giá gốc: #{product.price}$
+            .new-price.text-success.fw-bold.fs-2
+              //- product.newPrice được tính từ Helper bên Controller
+              | #{product.newPrice}$ 
+              span.badge.bg-danger.ms-2.fs-6.align-middle -#{product.discountPercentage}%
+          else
+            .new-price.text-success.fw-bold.fs-2
+              | #{product.price}$
 
-        // Số lượng
-        .mt-3
-          label Số lượng:
-          input(
-            type="number"
-            min="1"
-            max=product.stock
-            value="1"
-            class="form-control quantity-input"
+        //- ===== Khu vực Mua Hàng (Chỉ hiện khi còn hàng) =====
+        if product.status == "active" && product.stock > 0
+          .mb-3
+            span.text-muted Tồn kho: 
+            strong #{product.stock} 
+            span.text-muted sản phẩm
+
+          //- Form gửi dữ liệu thêm vào giỏ hàng
+          form(
+            action=`/cart/add/${product.id}`
+            method="POST"
           )
+            .d-flex.align-items-center.mb-4
+              label.me-3.text-muted(for="quantity") Số lượng:
+              input.form-control.quantity-input(
+                type="number"
+                name="quantity"
+                id="quantity"
+                min="1"
+                max=product.stock
+                value="1"
+                style="width: 100px;"
+              )
+            
+            button.btn.btn-blue-primary.btn-lg.me-2(type="submit") 
+              | Thêm vào giỏ hàng
+            button.btn.btn-blue-outline.btn-lg(type="button") 
+              | Mua ngay
+              
+        else 
+          .alert.alert-warning.mt-3 Sản phẩm hiện đang tạm hết hàng. Vui lòng quay lại sau!
 
-        // Nút hành động
-        .mt-4
-          button.btn.btn-primary.me-2 Mua ngay
-          button.btn.btn-outline-secondary Thêm vào giỏ hàng
-
-    // Mô tả chi tiết
+    //- ===== 3. Cột Mô Tả Chi Tiết =====
     .row.mt-5
       .col-12
-        .card
-          .card-header Mô tả chi tiết
+        .card.border-0.shadow-sm
+          .card-header.bg-white.border-bottom-0.pt-3.pb-0
+            h4.mb-0 Mô tả chi tiết
           .card-body
-            p !{product.description}
+            if product.description
+              //- Sử dụng !{} để render các thẻ HTML từ trình soạn thảo (như TinyMCE)
+              .content-rendered.border-top.pt-3
+                | !{product.description}
+            else
+              p.text-muted.border-top.pt-3 Đang cập nhật mô tả...

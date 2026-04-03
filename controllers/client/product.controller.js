@@ -26,12 +26,13 @@ module.exports.detail = async (req, res) => {
       slug: req.params.slugProduct,
       deleted: false,
       status: "active",
+    }).populate({
+      path: "product_category_id",
+      select: "title slug",
+      match: { deleted: false, status: "active" },
     });
     if (product) {
-      product.newPrice = (
-        (product.price * (100 - product.discountPercentage)) /
-        100
-      ).toFixed(2);
+      product.newPrice = productsHelper.priceNewProduct(product);
     }
     res.render("client/pages/products/detail", {
       pageTitle: product.title,

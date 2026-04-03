@@ -75,13 +75,13 @@
   top: 10px;    
   right: 10px;  
   
-  background-color: #ff4757; /* Màu đỏ cam nổi bật, thu hút sự chú ý */
+  background-color: #00b4d8; /* Màu đỏ cam nổi bật, thu hút sự chú ý */
   color: #ffffff; /* Chữ màu trắng */
   padding: 4px 12px; /* Tạo vùng đệm cho chữ dễ đọc */
   font-size: 12px;
   font-weight: 600;
   border-radius: 20px; /* Bo góc tròn trịa hình viên thuốc */
-  box-shadow: 0 4px 8px rgba(255, 71, 87, 0.4); /* Đổ bóng cùng tone màu đỏ để tạo hiệu ứng phát sáng nhẹ */
+  box-shadow: 0 4px 8px rgba(0, 180, 216, 0.4); /* Đổ bóng cùng tone màu đỏ để tạo hiệu ứng phát sáng nhẹ */
   z-index: 10; /* Đảm bảo huy hiệu không bị ảnh đè lên */
   
   text-transform: uppercase; /* In hoa chữ NỔI BẬT */
@@ -123,6 +123,7 @@
 /* product detail  */
 .product-image-box {
   text-align: center;
+  position: relative; /* THÊM MỚI: Bắt buộc phải có để huy hiệu Nổi bật không bị văng ra ngoài */
 }
 
 .main-image {
@@ -148,13 +149,59 @@
 }
 
 .new-price {
-  color: red;
+  color: #007bff; 
   font-weight: bold;
   font-size: 24px;
 }
 
 .quantity-input {
   width: 100px;
+}
+
+/* ==============================================
+   THÊM MỚI: CSS CHO NÚT BẤM VÀ HUY HIỆU (TONE XANH)
+============================================== */
+
+/* 1. Nút Mua Hàng (Nền xanh) */
+.btn-blue-primary {
+  background-color: #007bff;
+  color: #ffffff;
+  border: 2px solid #007bff;
+  transition: all 0.3s ease;
+}
+
+.btn-blue-primary:hover {
+  background-color: #0056b3; /* Đậm hơn khi di chuột */
+  border-color: #0056b3;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* 2. Nút Thêm Vào Giỏ (Viền xanh, nền trắng) */
+.btn-blue-outline {
+  background-color: #ffffff;
+  color: #007bff;
+  border: 2px solid #007bff;
+  transition: all 0.3s ease;
+}
+
+.btn-blue-outline:hover {
+  background-color: #f0f8ff; /* Nền xanh siêu nhạt */
+  color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* 3. Huy hiệu Nổi bật (Xanh ngọc) */
+.badge-featured {
+  background-color: #00b4d8; 
+  color: #ffffff;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 180, 216, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 /* end product detail  */
 
