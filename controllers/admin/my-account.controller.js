@@ -28,7 +28,6 @@ module.exports.edit = async (req, res) => {
 // [PATCH]  /admin/my-account/edit
 module.exports.editPatch = async (req, res) => {
   try {
-    console.log(req.body);
     const id = res.locals.user.id;
 
     const emailExist = await Account.findOne({
@@ -49,7 +48,15 @@ module.exports.editPatch = async (req, res) => {
         account_id: res.locals.user.id,
         updatedAt: new Date(),
       };
-      await Account.updateOne({ _id: id }, req.body);
+      await Account.updateOne(
+        {
+          _id: id,
+        },
+        {
+          ...req.body,
+          $push: { updatedBy: updatedBy },
+        },
+      );
       req.flash("success", "Cập nhật tài khoản thành công!");
     }
     res.redirect(req.headers.referer);

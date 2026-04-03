@@ -9,7 +9,6 @@ const systemConfig = require("../../config/system");
 
 // [GET]  /admin/articles
 module.exports.index = async (req, res) => {
-
   //Filter
   const filterStatus = filterStatusHelper(req.query);
   //end filter
@@ -69,115 +68,133 @@ module.exports.index = async (req, res) => {
 
 // [PATCH]  /admin/articles/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
-  const status = req.params.status;
-  const id = req.params.id;
-  const updatedBy = {
-    account_id: res.locals.user.id,
-    updatedAt: new Date(),
-  };
-  await Article.updateOne(
-    { _id: id },
-    {
-      status: status,
-      $push: { updatedBy: updatedBy },
-    },
-  );
+  const permissions = res.locals.role.permissions;
 
-  req.flash("success", "Cập nhật trạng thái thành công!");
+  if (permissions.includes("articles_edit")) {
+    const status = req.params.status;
+    const id = req.params.id;
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    };
+    await Article.updateOne(
+      { _id: id },
+      {
+        status: status,
+        $push: { updatedBy: updatedBy },
+      },
+    );
 
-  res.redirect(req.headers.referer);
+    req.flash("success", "Cập nhật trạng thái thành công!");
+
+    res.redirect(req.headers.referer);
+  } else {
+    res.send("403");
+    return;
+  }
 };
 
 // [PATCH]  /admin/articles/change-multi
 module.exports.changeMulti = async (req, res) => {
-  const type = req.body.type;
-  const ids = req.body.ids.split(",");
-  const updatedBy = {
-    account_id: res.locals.user.id,
-    updatedAt: new Date(),
-  };
-  switch (type) {
-    case "active":
-      await Article.updateMany(
-        { _id: { $in: ids } },
-        {
-          status: "active",
-          $push: { updatedBy: updatedBy },
-        },
-      );
-      req.flash(
-        "success",
-        `Cập nhật trạng thái ${ids.length} bài viết thành công!`,
-      );
-      break;
-    case "inactive":
-      await Article.updateMany(
-        { _id: { $in: ids } },
-        {
-          status: "inactive",
-          $push: { updatedBy: updatedBy },
-        },
-      );
-      req.flash(
-        "success",
-        `Cập nhật trạng thái ${ids.length} bài viết thành công!`,
-      );
-      break;
-    case "delete-multi":
-      await Article.updateMany(
-        { _id: { $in: ids } },
-        {
-          deleted: true,
-          deletedBy: {
-            account_id: res.locals.user.id,
-            deletedAt: new Date(),
-          },
-        },
-      );
-      req.flash("success", `Xóa ${ids.length} bài viết thành công!`);
+  const permissions = res.locals.role.permissions;
 
-      break;
-    case "change-position":
-      for (const item of ids) {
-        let [id, position] = item.split("-");
-        position = parseInt(position);
-        await Article.updateOne(
-          { _id: id },
+  if (permissions.includes("articles_edit")) {
+    const type = req.body.type;
+    const ids = req.body.ids.split(",");
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    };
+    switch (type) {
+      case "active":
+        await Article.updateMany(
+          { _id: { $in: ids } },
           {
-            position: position,
+            status: "active",
             $push: { updatedBy: updatedBy },
           },
         );
-      }
-      req.flash(
-        "success",
-        `Cập nhật vị trí ${ids.length} bài viết thành công!`,
-      );
+        req.flash(
+          "success",
+          `Cập nhật trạng thái ${ids.length} bài viết thành công!`,
+        );
+        break;
+      case "inactive":
+        await Article.updateMany(
+          { _id: { $in: ids } },
+          {
+            status: "inactive",
+            $push: { updatedBy: updatedBy },
+          },
+        );
+        req.flash(
+          "success",
+          `Cập nhật trạng thái ${ids.length} bài viết thành công!`,
+        );
+        break;
+      case "delete-multi":
+        await Article.updateMany(
+          { _id: { $in: ids } },
+          {
+            deleted: true,
+            deletedBy: {
+              account_id: res.locals.user.id,
+              deletedAt: new Date(),
+            },
+          },
+        );
+        req.flash("success", `Xóa ${ids.length} bài viết thành công!`);
 
-      break;
-    default:
-      break;
+        break;
+      case "change-position":
+        for (const item of ids) {
+          let [id, position] = item.split("-");
+          position = parseInt(position);
+          await Article.updateOne(
+            { _id: id },
+            {
+              position: position,
+              $push: { updatedBy: updatedBy },
+            },
+          );
+        }
+        req.flash(
+          "success",
+          `Cập nhật vị trí ${ids.length} bài viết thành công!`,
+        );
+
+        break;
+      default:
+        break;
+    }
+    res.redirect(req.headers.referer);
+  } else {
+    res.send("403");
+    return;
   }
-  res.redirect(req.headers.referer);
 };
 
 // [DELETE]  /admin/articles/delete-item/:id
 module.exports.deleteItem = async (req, res) => {
-  const id = req.params.id;
+  const permissions = res.locals.role.permissions;
 
-  await Article.updateOne(
-    { _id: id },
-    {
-      deleted: true,
-      deletedBy: {
-        account_id: res.locals.user.id,
-        deletedAt: new Date(),
+  if (permissions.includes("articles_delete")) {
+    const id = req.params.id;
+
+    await Article.updateOne(
+      { _id: id },
+      {
+        deleted: true,
+        deletedBy: {
+          account_id: res.locals.user.id,
+          deletedAt: new Date(),
+        },
       },
-    },
-  );
-  // await Product.deleteOne({ _id: id });
-  req.flash("success", "Xóa sản bài viết công!");
-  res.redirect(req.headers.referer);
+    );
+    // await Product.deleteOne({ _id: id });
+    req.flash("success", "Xóa sản bài viết công!");
+    res.redirect(req.headers.referer);
+  }
 };
 
 // [GET]  /admin/articles/create
@@ -196,23 +213,30 @@ module.exports.create = async (req, res) => {
 
 // [POST]  /admin/articles/create
 module.exports.createPost = async (req, res) => {
-  if (req.body.position == "") {
-    const countRecords = await Article.countDocuments();
-    req.body.position = countRecords + 1;
+  const permissions = res.locals.role.permissions;
+
+  if (permissions.includes("articles_create")) {
+    if (req.body.position == "") {
+      const countRecords = await Article.countDocuments();
+      req.body.position = countRecords + 1;
+    } else {
+      req.body.position = parseInt(req.body.position);
+    }
+
+    req.body.createdBy = {
+      account_id: res.locals.user.id,
+    };
+
+    const record = new Article(req.body);
+    await record.save();
+
+    req.flash("success", "Thêm bài viết mới thành công!");
+
+    res.redirect(`${systemConfig.prefixAdmin}/articles`);
   } else {
-    req.body.position = parseInt(req.body.position);
+    res.send("403");
+    return;
   }
-
-  req.body.createdBy = {
-    account_id: res.locals.user.id,
-  };
-
-  const record = new Article(req.body);
-  await record.save();
-
-  req.flash("success", "Thêm bài viết mới thành công!");
-
-  res.redirect(`${systemConfig.prefixAdmin}/articles`);
 };
 
 // [GET]  /admin/articles/edit/:id
@@ -244,30 +268,37 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH]  /admin/articles/edit/:id
 module.exports.editPatch = async (req, res) => {
-  try {
-    const id = req.params.id;
+  const permissions = res.locals.role.permissions;
 
-    req.body.position = parseInt(req.body.position);
+  if (permissions.includes("articles_edit")) {
+    try {
+      const id = req.params.id;
 
-    const updatedBy = {
-      account_id: res.locals.user.id,
-      updatedAt: new Date(),
-    };
+      req.body.position = parseInt(req.body.position);
 
-    await Article.updateOne(
-      {
-        _id: id,
-      },
-      {
-        ...req.body,
-        $push: { updatedBy: updatedBy },
-      },
-    );
-    req.flash("success", "Cập nhật bài viết thành công!");
-    res.redirect(req.headers.referer);
-  } catch (error) {
-    req.flash("error", "Lỗi!");
-    res.redirect(req.headers.referer);
+      const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date(),
+      };
+
+      await Article.updateOne(
+        {
+          _id: id,
+        },
+        {
+          ...req.body,
+          $push: { updatedBy: updatedBy },
+        },
+      );
+      req.flash("success", "Cập nhật bài viết thành công!");
+      res.redirect(req.headers.referer);
+    } catch (error) {
+      req.flash("error", "Lỗi!");
+      res.redirect(req.headers.referer);
+    }
+  } else {
+    res.send("403");
+    return;
   }
 };
 

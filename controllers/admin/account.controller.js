@@ -49,27 +49,34 @@ module.exports.create = async (req, res) => {
 
 // [POST]  /admin/accounts/create
 module.exports.createPost = async (req, res) => {
-  try {
-    const emailExist = await Account.findOne({
-      email: req.body.email,
-      deleted: false,
-    });
-    if (emailExist) {
-      req.flash("error", "Email đã tồn tại, vui lòng nhập email khác!");
-      res.redirect(req.headers.referer);
-    } else {
-      req.body.password = md5(req.body.password);
-      req.body.createdBy = {
-        account_id: res.locals.user.id,
-      };
-      const record = new Account(req.body);
-      await record.save();
-      req.flash("success", "Thêm tài khoản mới thành công!");
+  const permissions = res.locals.role.permissions;
+
+  if (permissions.includes("accounts_create")) {
+    try {
+      const emailExist = await Account.findOne({
+        email: req.body.email,
+        deleted: false,
+      });
+      if (emailExist) {
+        req.flash("error", "Email đã tồn tại, vui lòng nhập email khác!");
+        res.redirect(req.headers.referer);
+      } else {
+        req.body.password = md5(req.body.password);
+        req.body.createdBy = {
+          account_id: res.locals.user.id,
+        };
+        const record = new Account(req.body);
+        await record.save();
+        req.flash("success", "Thêm tài khoản mới thành công!");
+        res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+      }
+    } catch (error) {
+      req.flash("error", "Lỗi!");
       res.redirect(`${systemConfig.prefixAdmin}/accounts`);
     }
-  } catch (error) {
-    req.flash("error", "Lỗi!");
-    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  } else {
+    res.send("403");
+    return;
   }
 };
 
@@ -102,23 +109,30 @@ module.exports.detail = async (req, res) => {
 
 // [PATCH]  /admin/accounts/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
-  const status = req.params.status;
-  const id = req.params.id;
-  const updatedBy = {
-    account_id: res.locals.user.id,
-    updatedAt: new Date(),
-  };
-  await Account.updateOne(
-    { _id: id },
-    {
-      status: status,
-      $push: { updatedBy: updatedBy },
-    },
-  );
+  const permissions = res.locals.role.permissions;
 
-  req.flash("success", "Cập nhật trạng thái thành công!");
+  if (permissions.includes("accounts_edit")) {
+    const status = req.params.status;
+    const id = req.params.id;
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    };
+    await Account.updateOne(
+      { _id: id },
+      {
+        status: status,
+        $push: { updatedBy: updatedBy },
+      },
+    );
 
-  res.redirect(req.headers.referer);
+    req.flash("success", "Cập nhật trạng thái thành công!");
+
+    res.redirect(req.headers.referer);
+  } else {
+    res.send("403");
+    return;
+  }
 };
 
 // [GET]  /admin/accounts/edit/:id
@@ -148,61 +162,75 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH]  /admin/accounts/edit/:id
 module.exports.editPatch = async (req, res) => {
-  try {
-    const id = req.params.id;
+  const permissions = res.locals.role.permissions;
 
-    if (req.body.password) {
-      req.body.password = md5(req.body.password);
-    } else {
-      delete req.body.password;
+  if (permissions.includes("accounts_edit")) {
+    try {
+      const id = req.params.id;
+
+      if (req.body.password) {
+        req.body.password = md5(req.body.password);
+      } else {
+        delete req.body.password;
+      }
+
+      const emailExist = await Account.findOne({
+        _id: { $ne: id },
+        email: req.body.email,
+        deleted: false,
+      });
+
+      if (emailExist) {
+        req.flash("error", "Email đã tồn tại, vui lòng nhập email khác!");
+      } else {
+        const updatedBy = {
+          account_id: res.locals.user.id,
+          updatedAt: new Date(),
+        };
+        await Account.updateOne(
+          {
+            _id: id,
+          },
+          {
+            ...req.body,
+            $push: { updatedBy: updatedBy },
+          },
+        );
+        req.flash("success", "Cập nhật tài khoản thành công!");
+      }
+      res.redirect(req.headers.referer);
+    } catch (error) {
+      req.flash("error", "Lỗi!");
+      res.redirect(req.headers.referer);
     }
-
-    const emailExist = await Account.findOne({
-      _id: { $ne: id },
-      email: req.body.email,
-      deleted: false,
-    });
-
-    if (emailExist) {
-      req.flash("error", "Email đã tồn tại, vui lòng nhập email khác!");
-    } else {
-      const updatedBy = {
-        account_id: res.locals.user.id,
-        updatedAt: new Date(),
-      };
-      await Account.updateOne(
-        {
-          _id: id,
-        },
-        {
-          ...req.body,
-          $push: { updatedBy: updatedBy },
-        },
-      );
-      req.flash("success", "Cập nhật tài khoản thành công!");
-    }
-    res.redirect(req.headers.referer);
-  } catch (error) {
-    req.flash("error", "Lỗi!");
-    res.redirect(req.headers.referer);
+  } else {
+    res.send("403");
+    return;
   }
 };
 
 // [DELETE]  /admin/accounts/delete-item/:id
 module.exports.deleteItem = async (req, res) => {
-  const id = req.params.id;
+  const permissions = res.locals.role.permissions;
 
-  await Account.updateOne(
-    { _id: id },
-    {
-      deleted: true,
-      deletedBy: {
-        account_id: res.locals.user.id,
-        deletedAt: new Date(),
+  if (permissions.includes("accounts_delete")) {
+    const id = req.params.id;
+
+    await Account.updateOne(
+      { _id: id },
+      {
+        deleted: true,
+        deletedBy: {
+          account_id: res.locals.user.id,
+          deletedAt: new Date(),
+        },
       },
-    },
-  );
-  // await ProductCategory.deleteOne({ _id: id });
-  req.flash("success", "Xóa tài khoản thành công!");
-  res.redirect(req.headers.referer);
+    );
+    // await ProductCategory.deleteOne({ _id: id });
+    req.flash("success", "Xóa tài khoản thành công!");
+    res.redirect(req.headers.referer);
+  } else {
+    res.send("403");
+    return;
+  }
 };
