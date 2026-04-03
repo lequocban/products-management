@@ -26,6 +26,13 @@ block main
 
             hr
 
+            if product.featured && product.featured == "1"
+              .row.mb-2
+                .col-6
+                  strong Sản phẩm nổi bật:
+                .col-6
+                  span.text-success Có
+
             .row.mb-2
               .col-6
                 strong Giá:
