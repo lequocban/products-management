@@ -1,0 +1,31 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+  .container.my-3
+    .row
+      .col-12
+        +box-head("Danh sách bài viết") 
+        
+    .row 
+      each item in articles
+        .col-4.mb-4
+          .article-item.card.h-100.border-0.shadow-sm
+            .inner-image
+              a(href=`/articles/${item.slug}`)
+                img.card-img-top(
+                  src=(item.thumbnail || "/images/no-image.png")
+                  alt=item.title
+                  style="aspect-ratio: 16/9; object-fit: cover;"
+                )
+            .inner-content.card-body
+              h3.inner-title.h5
+                a(
+                  class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark fw-bold"
+                  href=`/articles/${item.slug}`
+                ) #{item.title}
+              
+              //- Hiển thị ngày tạo bài viết
+              if item.createdBy && item.createdBy.createdAt
+                .inner-date.text-muted.small.mt-2
+                  | Ngày đăng: #{new Date(item.createdBy.createdAt).toLocaleDateString("vi-VN")}

@@ -1,4 +1,5 @@
 const productsRoutes = require("./products.route");
+const articlesRoutes = require("./article.route");
 const homeRoutes = require("./home.route");
 
 const categoryMiddleware = require("../../middlewares/client/category.middleware");
@@ -8,4 +9,6 @@ module.exports = (app) => {
   app.use("/", homeRoutes);
 
   app.use("/products", productsRoutes);
+
+  app.use("/articles", articlesRoutes);
 };

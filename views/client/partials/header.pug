@@ -24,3 +24,11 @@ header.header
                 href="/products"
               ) Sản phẩm
               +sub-menu(layoutProductsCategory, pathProduct)
+            
+            li(class="sub-menu")
+              - const pathArticles = "/articles"; 
+              a(
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                href="/articles"
+              ) Bài viết
+              +sub-menu(layoutArticlesCategory, pathArticles)

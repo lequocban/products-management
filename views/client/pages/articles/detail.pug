@@ -1,0 +1,35 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.mt-4.mb-5
+    .row.justify-content-center
+      //- Cột hiển thị bài viết (thu hẹp lại một chút để chữ không bị dàn quá dài, dễ đọc hơn)
+      .col-md-10.col-lg-8
+        
+        //- Tiêu đề bài viết
+        h1.article-title.fw-bold.mb-3 #{article.title}
+
+        //- Thông tin phụ: Ngày đăng & Phân loại (nếu đã được populate từ Controller)
+        .article-meta.text-muted.mb-4.pb-3.border-bottom.d-flex.align-items-center
+          if article.createdBy && article.createdBy.createdAt
+            span.me-4
+              i.fa-regular.fa-calendar.me-1
+              | #{new Date(article.createdBy.createdAt).toLocaleDateString("vi-VN")}
+          
+          if article.article_category_id && article.article_category_id.title
+            span.badge.bg-light.text-dark.border
+              | #{article.article_category_id.title}
+
+        //- Ảnh đại diện bài viết (Thumbnail)
+        if article.thumbnail
+          .article-image-box.mb-4.text-center
+            img.img-fluid.rounded(
+              src=article.thumbnail
+              alt=article.title
+              style="max-height: 500px; width: 100%; object-fit: cover;"
+            )
+
+        //- Nội dung chính của bài viết
+        .article-content
+          //- Sử dụng !{} để render các thẻ HTML từ trình soạn thảo văn bản (như TinyMCE/CKEditor)
+          | !{article.content}

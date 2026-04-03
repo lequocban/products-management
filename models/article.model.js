@@ -13,6 +13,7 @@ const articleSchema = new mongoose.Schema(
     content: String,
     thumbnail: String,
     status: String,
+    featured: String,
     position: Number,
     slug: {
       type: String,

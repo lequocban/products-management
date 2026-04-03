@@ -34,6 +34,13 @@ block main
 
             hr
 
+            if record.featured && record.featured == "1"
+              .row.mb-2
+                .col-4
+                  strong Sản phẩm nổi bật:
+                .col-8
+                  span.text-success Có
+            hr
             // ===== Category =====
             .row.mb-2
               .col-4
