@@ -1,6 +1,10 @@
 extends ../../layouts/default.pug
+include ../../mixins/alert.pug
 
 block main
+  +alert-success(5000)
+  +alert-error(5000)
+
   .container.mt-4.mb-5
     
     //- Nút quay lại (UX tốt cho trang chi tiết)
