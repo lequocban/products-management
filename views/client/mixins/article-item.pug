@@ -1,0 +1,34 @@
+mixin article-item(item)
+  .col-md-4.mb-4
+    .article-item.card.h-100.border-0.shadow-sm
+      //- Khối ảnh đại diện
+      .inner-image.position-relative
+        a(href=`/articles/detail/${item.slug}`)
+          img.card-img-top(
+            src=(item.thumbnail || "/images/no-image.png")
+            alt=item.title
+            style="aspect-ratio: 16/9; object-fit: cover;"
+          )
+        //- Huy hiệu nổi bật (Tận dụng class badge-featured xanh ngọc đã làm trước đó)
+        if(item.featured == "1")
+          span.badge.badge-featured.position-absolute(style="top: 10px; right: 10px;") Nổi bật
+          
+      //- Khối nội dung
+      .card-body
+        //- Hiển thị danh mục (yêu cầu controller phải populate)
+        if item.article_category_id && item.article_category_id.title
+          span.badge.bg-light.text-primary.border.mb-2 #{item.article_category_id.title}
+          
+        //- Tiêu đề bài viết
+        h3.card-title.h5.fw-bold.mt-1
+          a(
+            class="text-dark text-decoration-none"
+            href=`/articles/detail/${item.slug}`
+            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"
+          ) #{item.title}
+          
+        //- Ngày đăng
+        if item.createdBy && item.createdBy.createdAt
+          p.card-text.text-muted.small.mt-2
+            i.fa-regular.fa-calendar.me-1
+            | #{new Date(item.createdBy.createdAt).toLocaleDateString("vi-VN")}

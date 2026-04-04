@@ -1,14 +1,48 @@
 /* header */
+/* =========================================
+   HEADER TÔNG XANH - TRẮNG HIỆN ĐẠI
+========================================= */
 .header {
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+  /* Gradient Gravity Blue */
+  background: linear-gradient(
+    135deg,
+    #0066ff 0%,
+    #3a7bff 35%,
+    #7b61ff 70%,
+    #a855f7 100%
+  );
+
+  /* Glass effect */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* Viền mờ sang */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* Đổ bóng nổi */
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+
+  padding: 15px 0;
+
+  /* Sticky Header */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  transition: all 0.3s ease;
 }
 
 .header .inner-logo img {
-  max-height: 50px;
-  max-width: 100%;
+  max-height: 45px; /* Kích thước logo vừa vặn */
+  width: auto;
+  transition: transform 0.3s ease;
 }
 
+.header .inner-logo a:hover img {
+  transform: scale(1.05); /* Logo phóng to nhẹ khi di chuột vào */
+}
+
+/* --- Khối Menu --- */
 .header .inner-menu > ul {
   list-style: none;
   padding: 0;
@@ -16,11 +50,31 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: wrap;
 }
 
 .header .inner-menu > ul > li {
-  margin-left: 20px;
+  margin-left: 35px; /* Giãn khoảng cách các menu cho thoáng mắt */
+}
+
+/* --- Chỉnh màu và font cho Link Menu --- */
+.header .inner-menu > ul > li > a {
+  color: #2b2b2b !important; 
+  font-weight: 600;
+  font-size: 15px;
+  text-transform: uppercase; /* In hoa chữ menu nhìn chuyên nghiệp hơn */
+  letter-spacing: 0.5px;
+  padding: 10px 0;
+  transition: all 0.3s ease;
+}
+
+/* --- Hiệu ứng Hover chuyển xanh --- */
+.header .inner-menu > ul > li > a:hover {
+  color: #007bff !important; /* Màu xanh dương (hoặc bạn có thể đổi mã màu khớp 100% với logo) */
+}
+
+/* Nếu bạn có menu con đang mở (active), bạn có thể dùng CSS này để tô xanh nó luôn */
+.header .inner-menu > ul > li:hover > a {
+  color: #007bff !important;
 }
 /* end header  */
 
@@ -312,3 +366,68 @@
   top: -1px; /* Căn chỉnh cho mép trên bằng nhau */
 }
 /* KẾT THÚC SUB-MENU */
+
+/* =========================================
+   GIAO DIỆN BÀI VIẾT (ARTICLES)
+========================================= */
+
+/* 1. Tách bạch các Thẻ Bài Viết (Card) */
+.article-item.card {
+  border: 1px solid #eaeaea !important; /* Viền xám rất nhạt bao quanh */
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important; /* Bóng mờ nhẹ tách khỏi nền */
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi di chuột vào bài viết */
+.article-item.card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important; /* Bóng đậm hơn */
+  transform: translateY(-5px); /* Nảy lên */
+  border-color: #007bff !important; /* Viền chuyển màu xanh đồng bộ theme */
+}
+
+/* 2. Làm nổi bật và thu gọn Sidebar Tin Mới */
+.sidebar-new-articles .card {
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06) !important; /* Bóng đổ giúp khối này nổi lên trên */
+}
+
+.sidebar-new-articles .card-header {
+  border-bottom: 1px solid #0056b3;
+}
+
+/* Tách bạch từng dòng tin tức trong Sidebar */
+.sidebar-new-articles .list-group-item {
+  border-bottom: 1px solid #f0f0f0;
+  border-left: none;
+  border-right: none;
+  transition: background-color 0.2s ease;
+}
+
+/* Bỏ gạch chân dưới cùng của item cuối */
+.sidebar-new-articles .list-group-item:last-child {
+  border-bottom: none;
+}
+
+.sidebar-new-articles .list-group-item:hover {
+  background-color: #f8f9fa; /* Màu nền đổi nhẹ khi hover vào 1 tin */
+}
+
+/* Thu nhỏ lại chữ trong Sidebar để cân đối với cột col-lg-3 */
+.sidebar-new-articles h6 {
+  font-size: 13px !important;
+  line-height: 1.4;
+}
+
+/* 3. Tách biệt khu vực "Bài viết nổi bật" và "Danh sách" */
+.section-featured {
+  background-color: #f8f9fa; /* Nền xám cực nhạt cho khu vực nổi bật */
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid #f0f0f0;
+}
+
+/* end articles */

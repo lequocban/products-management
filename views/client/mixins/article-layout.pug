@@ -1,0 +1,10 @@
+include article-item.pug
+
+mixin article-grid(articles)
+  .row
+    if articles && articles.length > 0
+      each item in articles
+        +article-item(item)
+    else
+      .col-12
+        p.text-muted.fst-italic Không có bài viết nào để hiển thị.
