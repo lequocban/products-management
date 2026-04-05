@@ -14,7 +14,6 @@ if (inputsQuantity.length > 0) {
 }
 // end update quantity of product in cart
 
-
 // checkbox multi
 const checkboxMulti = document.querySelector("[checkbox-multi]");
 if (checkboxMulti) {
@@ -73,3 +72,34 @@ if (checkboxMulti) {
 }
 // end checkbox multi
 
+// XỬ LÝ CHUYỂN HƯỚNG TRANG THANH TOÁN
+const buttonCheckout = document.querySelector("a[href='/checkout']");
+
+if (buttonCheckout) {
+  buttonCheckout.addEventListener("click", (e) => {
+    // 1. Ngăn chặn hành vi nhảy trang mặc định của thẻ <a>
+    e.preventDefault();
+
+    // 2. Tìm tất cả các ô checkbox đang được tick (trừ ô checkall)
+    const checkedInputs = document.querySelectorAll("input[name='id']:checked");
+
+    if (checkedInputs.length > 0) {
+      // 3. Tạo chuỗi query URL chứa các ID
+      // Ví dụ kết quả: id=65d1a&id=65d1b&
+      let queryUrl = "";
+      checkedInputs.forEach((input) => {
+        queryUrl += `id=${input.value}&`;
+      });
+
+      // 4. Cắt bỏ dấu '&' thừa ở cuối cùng
+      queryUrl = queryUrl.slice(0, -1);
+
+      // 5. Điều hướng người dùng sang trang checkout kèm theo data
+      window.location.href = `/checkout?${queryUrl}`;
+    } else {
+      // Nếu chưa chọn gì thì báo lỗi
+      alert("Vui lòng chọn ít nhất một sản phẩm để thanh toán!");
+    }
+  });
+}
+// END XỬ LÝ CHUYỂN HƯỚNG TRANG THANH TOÁN

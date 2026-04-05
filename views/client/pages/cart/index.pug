@@ -94,11 +94,5 @@ block main
             i.fa-solid.fa-cart-plus.me-2
             | Tiếp tục mua sắm
 
-  //- Script ép load lại trang khi back 
-  script.
-    window.addEventListener("pageshow", function (event) {
-      if (event.persisted) {
-        window.location.reload();
-      }
-    });
+
   script(src="js/cart.js")
