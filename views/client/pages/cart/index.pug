@@ -1,8 +1,12 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 include ../../mixins/product-layout.pug
+include ../../mixins/alert.pug
 
 block main 
+  +alert-success(5000)  
+  +alert-error(5000)
+
   .container
    
     .row.mb-3.mt-3
@@ -64,3 +68,5 @@ block main
                 .col-12.text-center.py-5
                   h3 Giỏ hàng của bạn đang trống.
                   a.btn.btn-primary.mt-3(href="/products") Tiếp tục mua sắm
+
+  script(src="js/cart.js") 

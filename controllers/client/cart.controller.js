@@ -26,42 +26,100 @@ module.exports.index = async (req, res) => {
 
 // [POST]  /cart/add/:productId
 module.exports.addPost = async (req, res) => {
-  const cartId = req.cookies.cartId;
-  const productId = req.params.productId;
-  const quantity = parseInt(req.body.quantity);
+  try {
+    const cartId = req.cookies.cartId;
+    const productId = req.params.productId;
+    const quantity = parseInt(req.body.quantity);
 
-  const cart = await Cart.findOne({ _id: cartId });
+    const cart = await Cart.findOne({ _id: cartId });
 
-  const existProductInCart = cart.products.find(
-    (item) => item.product_id == productId,
-  );
+    const existProductInCart = cart.products.find(
+      (item) => item.product_id == productId,
+    );
 
-  if (existProductInCart) {
-    const newQuantity = quantity + existProductInCart.quantity;
+    if (existProductInCart) {
+      const newQuantity = quantity + existProductInCart.quantity;
+      await Cart.updateOne(
+        {
+          _id: cartId,
+          "products.product_id": productId,
+        },
+        {
+          "products.$.quantity": newQuantity,
+        },
+      );
+    } else {
+      const objectCart = {
+        product_id: productId,
+        quantity: quantity,
+      };
+      await Cart.updateOne(
+        {
+          _id: cartId,
+        },
+        {
+          $push: { products: objectCart },
+        },
+      );
+    }
+
+    req.flash("success", "Thêm sản phẩm vào giỏ hàng thành công!");
+    res.redirect(req.headers.referer);
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+    req.flash("error", "Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng.");
+    res.redirect(req.headers.referer);
+  }
+};
+
+// [GET]  /cart/delete/:productId
+module.exports.delete = async (req, res) => {
+  try {
+    const cartId = req.cookies.cartId;
+    const productId = req.params.productId;
+
+    await Cart.updateOne(
+      {
+        _id: cartId,
+      },
+      {
+        $pull: { products: { product_id: productId } },
+      },
+    );
+
+    req.flash("success", "Xóa sản phẩm khỏi giỏ hàng thành công!");
+    res.redirect(req.headers.referer);
+  } catch (error) {
+    console.error("Error deleting product from cart:", error);
+    req.flash("error", "Đã xảy ra lỗi khi xóa sản phẩm khỏi giỏ hàng.");
+    res.redirect(req.headers.referer);
+  }
+};
+
+// [GET]  /cart/update/:productId/:quantity
+module.exports.update = async (req, res) => {
+  try {
+    const cartId = req.cookies.cartId;
+    const productId = req.params.productId;
+    const quantity = parseInt(req.params.quantity); 
     await Cart.updateOne(
       {
         _id: cartId,
         "products.product_id": productId,
       },
       {
-        "products.$.quantity": newQuantity,
+        "products.$.quantity": quantity,
       },
     );
-  } else {
-    const objectCart = {
-      product_id: productId,
-      quantity: quantity,
-    };
-    await Cart.updateOne(
-      {
-        _id: cartId,
-      },
-      {
-        $push: { products: objectCart },
-      },
-    );
-  }
+    req.flash("success", "Cập nhật số lượng sản phẩm trong giỏ hàng thành công!");
+    res.redirect(req.headers.referer);
 
-  req.flash("success", "Thêm sản phẩm vào giỏ hàng thành công!");
-  res.redirect(req.headers.referer);
+  } catch (error) {
+    console.error("Error updating product quantity in cart:", error);
+    req.flash(
+      "error",
+      "Đã xảy ra lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng.",
+    );
+    res.redirect(req.headers.referer);
+  }
 };
