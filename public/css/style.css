@@ -467,3 +467,37 @@
 }
 /* end alert  */
 
+/* =========================================
+   GIAO DIỆN GIỎ HÀNG (CART)
+========================================= */
+
+/* Ảnh thu nhỏ của sản phẩm trong bảng */
+.cart-img-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover; /* Chống méo ảnh */
+  border-radius: 5px;
+}
+
+/* Ô nhập số lượng */
+.cart-quantity-input {
+  width: 80px;
+}
+
+/* Khối tóm tắt đơn hàng dính ở góc phải */
+.sticky-checkout-card {
+  position: sticky;
+  top: 90px; /* Căn chỉnh khoảng cách so với mép trên màn hình */
+  z-index: 10;
+}
+
+/* Hình minh họa khi giỏ hàng trống */
+.empty-cart-img {
+  width: 150px;
+  opacity: 0.5;
+  margin-bottom: 20px;
+}
+
+/* =========================================
+  END GIAO DIỆN GIỎ HÀNG (CART)
+========================================= */

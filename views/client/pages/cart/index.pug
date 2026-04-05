@@ -7,66 +7,98 @@ block main
   +alert-success(5000)  
   +alert-error(5000)
 
-  .container
+  .container.mb-5
    
     .row.mb-3.mt-3
       .col-12
         a.btn.btn-sm.btn-outline-secondary(href="javascript:history.back()") 
           | ← Quay lại
+          
     .row
       .col-12
         +box-head("Giỏ hàng của bạn")
 
+    if cart.products.length > 0
+      .row 
+        //- ==========================================
+        //- CỘT TRÁI: BẢNG SẢN PHẨM
+        //- ==========================================
+        .col-lg-9.mb-4
+          .table-responsive
+            table.table.table-bordered(checkbox-multi)
+              thead.table-light
+                tr
+                  th.text-center
+                    input(type="checkbox" name="checkall")
+                  th STT
+                  th Ảnh
+                  th Tên sản phẩm
+                  th Giá
+                  th Số lượng
+                  th Thành tiền
+                  th Hành động
 
-    .row 
-      .col-12 
-        table.table.table-bordered
-          thead
-            tr
-              th STT
-              th Ảnh
-              th Tên sản phẩm
-              th Giá
-              th Số lượng
-              th Thành tiền
-              th Hành động
-
-          tbody
-            if cart.products.length > 0
-              .row
+              tbody
                 each item, index in cart.products
-                  tr 
+                  tr.align-middle 
+                    td.text-center
+                      input(
+                        type="checkbox" 
+                        name="id" 
+                        value=item.product_id._id
+                        data-price=item.totalPrice 
+                      )
                     td #{index + 1}
                     td 
-                      img(
+                      img.cart-img-thumbnail(
                         src=item.product_id.thumbnail, 
-                        alt=item.product_id.title, 
-                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"   
+                        alt=item.product_id.title
                       )
                     td 
-                      a(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
+                      a.text-decoration-none.fw-bold.text-dark(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
                     td #{item.product_id.newPrice} $
                     td 
-                      input.form-control(
+                      input.form-control.cart-quantity-input(
                         type="number"
                         name="quantity" 
                         value=item.quantity
                         min="1"
                         product-id=item.product_id._id
-                        style="width: 80px;"
                       )
-                    td #{item.totalPrice} $
+                    td.fw-bold.text-danger #{item.totalPrice} $
                     td 
-                      a.btn.btn-danger.btn-sm(href=`/cart/delete/${item.product_id._id}`) Xóa
+                      a.btn.btn-outline-danger.btn-sm(href=`/cart/delete/${item.product_id._id}`) Xóa
 
-              h3.text-end Tổng tiền: #{cart.totalPrice} $
+        //- ==========================================
+        //- CỘT PHẢI: THANH TOÁN
+        //- ==========================================
+        .col-lg-3
+          .card.border-0.shadow-sm.sticky-checkout-card
+            .card-body
+              h5.card-title.fw-bold.border-bottom.pb-3.mb-3 Tóm tắt đơn hàng
+              
+              .d-flex.justify-content-between.align-items-center.mb-4
+                span.text-muted Tổng tiền chọn:
+                span#total-price-selected.text-danger.fw-bold.fs-4 0 $
+              
+              a.btn.btn-success.w-100.btn-lg(href="/checkout") 
+                i.fa-solid.fa-credit-card.me-2
+                | Thanh toán ngay
 
-              div.text-end.mt-3
-                a.btn.btn-success.mb-1(href="/checkout") Thanh toán          
-            else
-              .row
-                .col-12.text-center.py-5
-                  h3 Giỏ hàng của bạn đang trống.
-                  a.btn.btn-primary.mt-3(href="/products") Tiếp tục mua sắm
+    //- Nếu giỏ hàng trống
+    else
+      .row
+        .col-12.text-center.py-5
+          h3.text-muted Giỏ hàng của bạn đang trống.
+          a.btn.btn-primary.mt-3(href="/products") 
+            i.fa-solid.fa-cart-plus.me-2
+            | Tiếp tục mua sắm
 
-  script(src="js/cart.js") 
+  //- Script ép load lại trang khi back 
+  script.
+    window.addEventListener("pageshow", function (event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
+  script(src="js/cart.js")
