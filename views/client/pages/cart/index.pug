@@ -39,7 +39,7 @@ block main
                   th Hành động
 
               tbody
-                each item, index in cart.products
+                each item, index in cart.products.slice().reverse()
                   tr.align-middle 
                     td.text-center
                       input(

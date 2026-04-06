@@ -9,7 +9,7 @@ module.exports.cartId = async (req, res, next) => {
       expires: new Date(Date.now() + expiresTime),
     });
   } else {
-    const cart = await Cart.findOne({ _id: req.cookies.cartId });
+    const cart = await Cart.findOne({ _id: req.cookies.cartId }).lean();
     cart.totalQuantity = cart.products.reduce(
       (sum, item) => sum + item.quantity,
       0,

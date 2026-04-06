@@ -59,6 +59,9 @@ block main
               action="checkout/order",
               method="POST"
             ) 
+              each item in cartDetail.products
+                input(type="hidden" name="productIds" value=item.product_id._id)
+                
               div(class="form-group mb-3") 
                 label(for="fullName") Họ và tên
                 input.form-control(
