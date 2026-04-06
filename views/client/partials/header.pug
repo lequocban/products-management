@@ -3,10 +3,10 @@ include ../mixins/sub-menu.pug
 header.header
   .container
     .row.align-items-center
-      .col-3
+      .col-2
         .inner-logo
           a(href="/")
-            img(src="/images/file.svg", alt="Logo")
+            img(src="/images/file.svg", alt="Logo" style="max-height: 50px;")
 
       .col-4
         form(action="/search" method="GET")
@@ -19,20 +19,19 @@ header.header
             )
             button.btn.btn-info(type="submit") Tìm kiếm
             
-      .col-5
+      .col-6
         .inner-menu
-          ul 
+          ul.d-flex.align-items-center.justify-content-end.mb-0.ps-0.gap-3(style="list-style:none;") 
             li
               a(
-                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark fw-bold"
                 href="/"
               ) Trang chủ
               
-
             li(class="sub-menu")
               - const pathProduct = "/products"; 
               a(
-                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark fw-bold"
                 href="/products"
               ) Sản phẩm
               +sub-menu(layoutProductsCategory, pathProduct)
@@ -40,23 +39,24 @@ header.header
             li(class="sub-menu")
               - const pathArticles = "/articles"; 
               a(
-                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark fw-bold"
                 href="/articles"
               ) Bài viết
               +sub-menu(layoutArticlesCategory, pathArticles)
 
+            //- Nút Giỏ hàng
             li
-
               a(
                 class="position-relative d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark mt-1"
                 href="/cart"
                 title="Giỏ hàng"
               )
                 i.fa-solid.fa-cart-shopping.fs-5
-
-                span.position-absolute.top-5.start-100.translate-middle.badge.rounded-pill.bg-danger(
+                span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger(
                   style="font-size: 10px; padding: 3px 5px;"
                 ) #{miniCart ? miniCart.totalQuantity : "0"}
+                
+            //- Nút Đơn hàng
             li
               a(
                 class="d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark mt-1"
@@ -64,8 +64,29 @@ header.header
                 title="Đơn hàng của tôi"
               )
                 i.fa-solid.fa-clipboard-list.fs-5
-            li 
-              if !user
-                a(href="/user/register" class="btn btn-sm btn-outline-primary ms-3") Đăng ký
-              
+             
+            if !user
+              li.ms-1
+                a(
+                  href="/user/login" 
+                  class="btn btn-outline-primary rounded-pill px-3 py-1 text-nowrap" 
+                  style="font-size: 13px; font-weight: 600; border-width: 1.5px;"
+                ) Đăng nhập
+
+              li.ms-1
+                a(
+                  href="/user/register" 
+                  class="btn btn-primary rounded-pill px-3 py-1 text-nowrap" 
+                  style="font-size: 13px; font-weight: 600;"
+                ) Đăng ký
+            
+            else
+              li
+                a(
+                  class="d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark mt-1 ms-2"
+                  href="javascript:void(0)"
+                  title="Tài khoản của tôi"
+                )
+                  i.fa-regular.fa-circle-user.fs-4
+
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
