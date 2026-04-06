@@ -64,5 +64,8 @@ header.header
                 title="Đơn hàng của tôi"
               )
                 i.fa-solid.fa-clipboard-list.fs-5
+            li 
+              if !user
+                a(href="/user/register" class="btn btn-sm btn-outline-primary ms-3") Đăng ký
               
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
