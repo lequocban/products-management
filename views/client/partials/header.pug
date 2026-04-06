@@ -50,12 +50,19 @@ header.header
               a(
                 class="position-relative d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark mt-1"
                 href="/cart"
+                title="Giỏ hàng"
               )
                 i.fa-solid.fa-cart-shopping.fs-5
 
                 span.position-absolute.top-5.start-100.translate-middle.badge.rounded-pill.bg-danger(
                   style="font-size: 10px; padding: 3px 5px;"
                 ) #{miniCart ? miniCart.totalQuantity : "0"}
-
+            li
+              a(
+                class="d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark mt-1"
+                href="/orders"
+                title="Đơn hàng của tôi"
+              )
+                i.fa-solid.fa-clipboard-list.fs-5
               
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")

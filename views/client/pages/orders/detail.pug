@@ -1,0 +1,90 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+  .container.mb-5
+    .row.mb-3.mt-3
+      .col-12
+        a.btn.btn-sm.btn-outline-secondary(href="javascript:history.back()") 
+          | ← Quay lại
+
+    .row.mb-2
+      .col-12
+        +box-head("Chi tiết đơn hàng")
+        p.text-muted Mã đơn hàng: 
+          span.fw-bold.text-dark #{order.id}
+
+    //- THÔNG TIN NGƯỜI NHẬN
+    .row.mb-4
+      .col-12
+        .card.border-0.shadow-sm
+          .card-header.bg-light
+            h5.mb-0.fw-bold 
+              i.fa-solid.fa-address-card.me-2
+              | Thông tin nhận hàng
+          .card-body
+            table.table.table-borderless.mb-0
+              tbody
+                tr
+                  td(width="20%").text-muted Họ và tên:
+                  td.fw-bold #{order.user_info.fullName}
+                tr
+                  td.text-muted Số điện thoại:
+                  td.fw-bold #{order.user_info.phone}
+                tr
+                  td.text-muted Địa chỉ:
+                  td.fw-bold #{order.user_info.address}
+
+    //- DANH SÁCH SẢN PHẨM
+    .row
+      .col-12 
+        .card.border-0.shadow-sm
+          .card-header.bg-light
+            h5.mb-0.fw-bold 
+              i.fa-solid.fa-box-open.me-2
+              | Danh sách sản phẩm
+          
+          .card-body.p-0
+            .table-responsive
+              table.table.table-bordered.mb-0
+                thead.table-light
+                  tr
+                    th.text-center STT
+                    th Ảnh
+                    th Tên sản phẩm
+                    th Giá mua
+                    th Số lượng
+                    th Thành tiền
+
+                tbody
+                  //- Tính tổng tiền hóa đơn
+                  - var totalOrder = 0
+
+                  each item, index in order.products
+                    - var newPrice = (item.price * (100 - item.discountPercentage) / 100).toFixed(2)
+                    - var totalPrice = (newPrice * item.quantity).toFixed(2)
+                    - totalOrder = (parseFloat(totalOrder) + parseFloat(totalPrice)).toFixed(2)
+
+                    tr.align-middle
+                      td.text-center #{index + 1}
+                      td 
+                        if item.product_id && item.product_id.thumbnail
+                          img(
+                            src=item.product_id.thumbnail, 
+                            alt=item.product_id.title, 
+                            style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"   
+                          )
+                      td 
+                        if item.product_id
+                          a.text-decoration-none.fw-bold.text-dark(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
+                        else 
+                          span.text-danger (Sản phẩm đã ngừng kinh doanh)
+                      td #{newPrice} $
+                      td.text-center #{item.quantity}
+                      td.fw-bold.text-danger #{totalPrice} $
+            
+            //- TỔNG CỘNG
+            .card-footer.bg-white.text-end.py-3
+              h4.mb-0
+                span.text-muted.me-3 Tổng thanh toán:
+                span.text-danger.fw-bold #{totalOrder} $

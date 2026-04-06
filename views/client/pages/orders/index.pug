@@ -1,0 +1,43 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+  .container.mb-5
+    .row.mt-4.mb-3
+      .col-12
+        +box-head("Đơn hàng của tôi")
+
+    .row 
+      .col-12 
+        if orders && orders.length > 0
+          .card.border-0.shadow-sm
+            .card-body.p-0
+              .table-responsive
+                table.table.table-hover.table-bordered.mb-0
+                  thead.table-light
+                    tr
+                      th.text-center STT
+                      th Mã đơn hàng
+                      th Ngày đặt
+                      th Tổng tiền
+                      th.text-center Hành động
+                  
+                  tbody
+                    each order, index in orders
+                      tr.align-middle
+                        td.text-center #{index + 1}
+                        td.fw-bold.text-primary #{order._id}
+                        td 
+                          //- Hiển thị ngày tháng theo chuẩn Việt Nam
+                          - var date = new Date(order.createdAt).toLocaleString("vi-VN")
+                          | #{date}
+                        td.fw-bold.text-danger #{order.totalPrice} $
+                        td.text-center
+                          a.btn.btn-sm.btn-outline-info(href=`/orders/detail/${order._id}`) 
+                            i.fa-solid.fa-eye.me-1
+                            | Xem chi tiết
+        else
+          .text-center.py-5
+            img(src="/images/empty-order.png" alt="Không có đơn hàng" style="width: 150px; opacity: 0.5; margin-bottom: 20px;")
+            h4.text-muted Bạn chưa có đơn hàng nào.
+            a.btn.btn-primary.mt-3(href="/products") Bắt đầu mua sắm ngay
