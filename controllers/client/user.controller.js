@@ -50,17 +50,23 @@ exports.loginPost = async (req, res) => {
     res.redirect(req.headers.referer);
     return;
   }
-  if(md5(req.body.password) !== user.password) {
+  if (md5(req.body.password) !== user.password) {
     req.flash("error", "Mật khẩu không chính xác!");
     res.redirect(req.headers.referer);
     return;
   }
-  if(user.status === "inactive") {
+  if (user.status === "inactive") {
     req.flash("error", "Tài khoản của bạn đã bị khóa!");
     res.redirect(req.headers.referer);
     return;
   }
   res.cookie("tokenUser", user.tokenUser);
   req.flash("success", "Đăng nhập tài khoản thành công!");
+  res.redirect("/");
+};
+
+// [GET] /user/logout
+exports.logout = (req, res) => {
+  res.clearCookie("tokenUser");
   res.redirect("/");
 };
