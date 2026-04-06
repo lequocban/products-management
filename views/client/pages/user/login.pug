@@ -35,12 +35,18 @@ block main
               .mb-4
                 label.form-label.fw-bold.mb-0(for="password") Mật khẩu
                 
-                input#password.form-control.form-control-lg.rounded-3.mt-2(
-                  type="password"
-                  name="password"
-                  required
-                  placeholder="Nhập mật khẩu..."
-                )
+                .position-relative.mt-2
+                  input#password.form-control.form-control-lg.rounded-3(
+                    type="password"
+                    name="password"
+                    required
+                    placeholder="Nhập mật khẩu..."
+                    style="padding-right: 40px;" 
+                  )
+                  span#togglePassword.position-absolute.top-50.end-0.translate-middle-y.pe-3(
+                    style="cursor: pointer; color: #6c757d;"
+                  )
+                    i.fa-regular.fa-eye.fs-5
                 .d-flex.justify-content-end.align-items-center
                   a.text-decoration-none.small.text-primary(href="/user/password/forgot") Quên mật khẩu?
 

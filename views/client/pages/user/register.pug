@@ -1,35 +1,83 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 
-block main
-  +alert-success(5000)
+block main 
   +alert-error(5000)
+  +alert-success(5000)
 
-  .container.mt-4.mb-5
+  .container.my-5
     .row.justify-content-center
-      .col-md-6
-        h1.fw-bold.mb-4.text-center Đăng ký tài khoản
+      //- Dùng col-md-8 col-lg-5 để khung form bằng đúng kích thước trang Đăng nhập
+      .col-md-8.col-lg-5
+        .card.shadow.border-0.rounded-4
+          .card-header.bg-white.text-center.pt-4.pb-2.border-bottom-0
+            h2.fw-bold.text-primary 
+              i.fa-solid.fa-user-plus.me-2
+              | Đăng ký tài khoản
+            p.text-muted.small Tạo tài khoản để trải nghiệm mua sắm tuyệt vời
 
-        form(action="/user/register" method="POST")
-          .mb-3
-            label.form-label(for="fullName") Họ và tên
-            input#fullName.form-control(type="text" name="fullName" required placeholder="Nhập họ và tên")
+          .card-body.p-4
+            form(action="/user/register" method="POST")
+              //- Họ và tên
+              .mb-3
+                label.form-label.fw-bold(for="fullName") Họ và tên
+                input#fullName.form-control.form-control-lg.rounded-3(
+                  type="text" 
+                  name="fullName" 
+                  required 
+                )
 
-          .mb-3
-            label.form-label(for="email") Email
-            input#email.form-control(type="email" name="email" required placeholder="Nhập email")
+              //- Email
+              .mb-3
+                label.form-label.fw-bold(for="email") Email
+                input#email.form-control.form-control-lg.rounded-3(
+                  type="email" 
+                  name="email" 
+                  required 
+                  placeholder="Nhập email..."
+                )
 
-          .mb-3
-            label.form-label(for="password") Mật khẩu
-            input#password.form-control(type="password" name="password" required placeholder="Nhập mật khẩu")
+              //- Mật khẩu (Có con mắt)
+              .mb-3
+                label.form-label.fw-bold(for="password") Mật khẩu
+                .position-relative
+                  input#password.form-control.form-control-lg.rounded-3(
+                    type="password"
+                    name="password"
+                    required
+                    placeholder="Nhập mật khẩu..."
+                    style="padding-right: 40px;" 
+                  )
+                  //- Đổi id thành class toggle-password để dùng chung cho nhiều nút
+                  span.toggle-password.position-absolute.top-50.end-0.translate-middle-y.pe-3(
+                    style="cursor: pointer; color: #6c757d;"
+                  )
+                    i.fa-regular.fa-eye.fs-5
 
-          .mb-3
-            label.form-label(for="confirmPassword") Xác nhận mật khẩu
-            input#confirmPassword.form-control(type="password" name="confirmPassword" required placeholder="Xác nhận mật khẩu")
+              //- Xác nhận mật khẩu (Có con mắt)
+              .mb-4
+                label.form-label.fw-bold(for="confirmPassword") Xác nhận mật khẩu
+                .position-relative
+                  input#confirmPassword.form-control.form-control-lg.rounded-3(
+                    type="password"
+                    name="confirmPassword"
+                    required
+                    placeholder="Nhập lại mật khẩu..."
+                    style="padding-right: 40px;" 
+                  )
+                  //- Dùng chung class toggle-password
+                  span.toggle-password.position-absolute.top-50.end-0.translate-middle-y.pe-3(
+                    style="cursor: pointer; color: #6c757d;"
+                  )
+                    i.fa-regular.fa-eye.fs-5
 
-          button.btn.btn-primary.w-100(type="submit") Đăng ký
+              //- Nút Submit
+              .d-grid.mt-4
+                button.btn.btn-primary.btn-lg.rounded-pill.fw-bold(type="submit") 
+                  i.fa-solid.fa-user-check.me-2
+                  | Đăng ký
 
-        //- Link đến trang đăng nhập nếu đã có tài khoản
-        .mt-3.text-center
-          span.text-muted Đã có tài khoản? 
-          a(href="/user/login" class="text-decoration-none fw-bold") Đăng nhập ngay
+          //- Footer điều hướng về trang Đăng nhập
+          .card-footer.bg-white.text-center.pb-4.border-top-0
+            span.text-muted Đã có tài khoản? 
+            a.text-primary.fw-bold.text-decoration-none.ms-1(href="/user/login") Đăng nhập ngay!
