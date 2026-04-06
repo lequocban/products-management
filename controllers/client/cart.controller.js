@@ -5,6 +5,12 @@ const productsHelper = require("../../helper/product");
 // [GET]  /cart
 module.exports.index = async (req, res) => {
   const cartId = req.cookies.cartId;
+  if (!cartId) {
+    return res.render("client/pages/cart/index", {
+      pageTitle: "Giỏ hàng",
+      cart: { products: [], totalPrice: 0 },
+    });
+  }
   const cart = await Cart.findOne({ _id: cartId }).populate(
     "products.product_id",
   );
@@ -30,6 +36,21 @@ module.exports.addPost = async (req, res) => {
     const cartId = req.cookies.cartId;
     const productId = req.params.productId;
     const quantity = parseInt(req.body.quantity);
+
+    if (!cartId) {
+      // Tạo giỏ hàng mới trong DB
+      const cart = new Cart();
+      await cart.save();
+
+      // Gán cookie cho trình duyệt
+      const expiresTime = 1000 * 60 * 60 * 24 * 365; // 1 năm
+      res.cookie("cartId", cart.id, {
+        expires: new Date(Date.now() + expiresTime),
+      });
+
+      // Cập nhật lại biến cartId bằng ID vừa tạo để dùng ở bước dưới
+      cartId = cart.id;
+    }
 
     const cart = await Cart.findOne({ _id: cartId });
 
