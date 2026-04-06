@@ -59,11 +59,7 @@ module.exports.index = async (req, res) => {
 module.exports.order = async (req, res) => {
   try {
     const cartId = req.cookies.cartId;
-    const userInfo = {
-      fullName: req.body.fullName,
-      phone: req.body.phone,
-      address: req.body.address,
-    };
+    const userInfo = req.body;
 
     // 1. Lấy danh sách ID sản phẩm từ form gửi lên
     let productIds = req.body.productIds;
@@ -109,13 +105,12 @@ module.exports.order = async (req, res) => {
     // 4. Lưu vào Database bảng Order
     const order = new Order({
       cart_id: cartId,
-      userInfo: userInfo,
+      user_info: userInfo,
       products: productsOrder,
     });
     await order.save();
 
     // 5. XÓA CÁC SẢN PHẨM ĐÃ ĐẶT KHỎI GIỎ HÀNG
-    // Sử dụng $pull của Mongoose để xóa những item có product_id nằm trong mảng productIds
     await Cart.updateOne(
       { _id: cartId },
       {
@@ -124,12 +119,42 @@ module.exports.order = async (req, res) => {
     );
 
     // 6. Chuyển hướng người dùng đến trang báo thành công
-    // Bạn có thể tạo thêm router /checkout/success/:orderId để in hóa đơn
     req.flash("success", "Đặt hàng thành công!");
     res.redirect(`/checkout/success/${order.id}`);
   } catch (error) {
     console.log(error);
     req.flash("error", "Có lỗi xảy ra, vui lòng thử lại!");
     res.redirect(req.headers.referer);
+  }
+};
+
+// [GET] /checkout/success/:orderId
+module.exports.success = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const order = await Order.findOne({ _id: orderId }).populate(
+      "products.product_id",
+      "title thumbnail",
+    );
+
+    for (const product of order.products) {
+      product.newPrice = productsHelper.priceNewProduct(product);
+      product.totalPrice = (product.newPrice * product.quantity).toFixed(2);
+    }
+
+    order.totalPrice = order.products
+      .reduce((total, item) => {
+        return total + parseFloat(item.totalPrice);
+      }, 0)
+      .toFixed(2);
+
+    res.render("client/pages/checkout/success", {
+      title: "Đặt hàng thành công",
+      order: order,
+    });
+  } catch (error) {
+    console.log(error);
+    req.flash("error", "Không tìm thấy đơn hàng!");
+    res.redirect("/");
   }
 };
