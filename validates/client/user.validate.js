@@ -45,3 +45,22 @@ module.exports.forgotPassword = (req, res, next) => {
   }
   next();
 };
+
+module.exports.resetPassword = (req, res, next) => {
+  if (!req.body.password) {
+    req.flash("error", "Vui lòng nhập mật khẩu mới!");
+    res.redirect(req.headers.referer);
+    return;
+  }
+  if (!req.body.confirmPassword) {
+    req.flash("error", "Vui lòng nhập lại mật khẩu mới!");
+    res.redirect(req.headers.referer);
+    return;
+  }
+  if (req.body.password !== req.body.confirmPassword) {
+    req.flash("error", "Mật khẩu xác nhận không khớp!");
+    res.redirect(req.headers.referer);
+    return;
+  }
+  next();
+};
