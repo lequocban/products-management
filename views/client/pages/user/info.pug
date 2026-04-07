@@ -1,0 +1,67 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+  .container.my-5
+    .row.justify-content-center
+      //- Dùng col-md-8 để Card thông tin rộng rãi hơn form đăng nhập một chút
+      .col-md-8.col-lg-6
+        .card.shadow.border-0.rounded-4
+          
+          //- KHỐI AVATAR VÀ TÊN
+          .card-header.bg-white.text-center.pt-5.pb-3.border-bottom-0
+            //- Dùng icon làm Avatar mặc định (Vì schema hiện tại chưa có trường avatar)
+            i.fa-solid.fa-circle-user.text-secondary(style="font-size: 90px;")
+            
+            h3.fw-bold.mt-3.mb-1.text-dark #{user.fullName}
+            
+            //- Hiển thị trạng thái tài khoản bằng Badge (Nhãn)
+            if user.status === "active"
+              span.badge.bg-success.rounded-pill.px-3.py-2
+                i.fa-solid.fa-check.me-1
+                | Đang hoạt động
+            else 
+              span.badge.bg-danger.rounded-pill.px-3.py-2
+                i.fa-solid.fa-lock.me-1
+                | Tạm khóa
+
+          //- KHỐI CHI TIẾT THÔNG TIN
+          .card-body.p-4.px-md-5
+            h5.fw-bold.mb-4.border-bottom.pb-2
+              i.fa-solid.fa-address-card.me-2.text-primary
+              | Thông tin chi tiết
+
+            table.table.table-borderless.mb-0
+              tbody
+                tr.align-middle
+                  td.text-muted(width="35%") 
+                    i.fa-solid.fa-signature.me-2
+                    | Họ và tên:
+                  td.fw-bold.text-dark #{user.fullName}
+                  
+                tr.align-middle
+                  td.text-muted 
+                    i.fa-solid.fa-envelope.me-2
+                    | Email:
+                  td.fw-bold.text-dark #{user.email}
+                  
+                tr.align-middle
+                  td.text-muted 
+                    i.fa-solid.fa-calendar-days.me-2
+                    | Ngày tham gia:
+                  td.fw-bold.text-dark
+                    //- Chuyển đổi định dạng ngày ISO sang ngày Việt Nam (VD: 06/04/2026)
+                    - const joinDate = new Date(user.createdAt).toLocaleDateString("vi-VN")
+                    | #{joinDate}
+
+            //- KHỐI NÚT CHỨC NĂNG
+            .d-flex.justify-content-center.gap-3.mt-5
+              //- Nút chỉnh sửa (Bạn có thể làm trang edit sau)
+              a.btn.btn-outline-primary.rounded-pill.px-4(href="/user/edit") 
+                i.fa-solid.fa-pen-to-square.me-2
+                | Cập nhật thông tin
+                
+              //- Nút đổi mật khẩu
+              a.btn.btn-outline-secondary.rounded-pill.px-4(href="/user/password/change") 
+                i.fa-solid.fa-key.me-2
+                | Đổi mật khẩu
