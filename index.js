@@ -54,6 +54,11 @@ app.use(express.static(`${__dirname}/public`));
 route(app);
 routeAdmin(app);
 
+app.use((req, res) => {
+  res.status(404).render("client/pages/errors/404", {
+    pageTitle: "Không tìm thấy trang",
+  });
+});
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
