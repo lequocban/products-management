@@ -19,6 +19,7 @@ block main
                       th.text-center STT
                       th Mã đơn hàng
                       th Ngày đặt
+                      th Trạng thái
                       th Tổng tiền
                       th.text-center Hành động
                   
@@ -31,6 +32,21 @@ block main
                           //- Hiển thị ngày tháng theo chuẩn Việt Nam
                           - var date = new Date(order.createdAt).toLocaleString("vi-VN")
                           | #{date}
+                        td
+                          if order.status == "pending"
+                            span.badge.bg-warning.text-dark Chờ xử lý
+                          else if order.status == "processing"
+                            span.badge.bg-info.text-dark Đang xử lý/Đóng gói
+                          else if order.status == "shipped"
+                            span.badge.bg-primary Đã giao vận chuyển
+                          else if order.status == "delivered"
+                            span.badge.bg-success Đã giao hàng
+                          else if order.status == "cancelled"
+                            span.badge.bg-danger Đã hủy
+                          else if order.status == "returned"
+                            span.badge.bg-dark Đã trả hàng
+                          else 
+                            span.badge.bg-secondary #{order.status}
                         td.fw-bold.text-danger #{order.totalPrice} $
                         td.text-center
                           a.btn.btn-sm.btn-outline-info(href=`/orders/detail/${order._id}`) 

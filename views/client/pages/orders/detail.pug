@@ -8,11 +8,30 @@ block main
         a.btn.btn-sm.btn-outline-secondary(href="javascript:history.back()") 
           | ← Quay lại
 
-    .row.mb-2
+    .row.mb-3
       .col-12
         +box-head("Chi tiết đơn hàng")
-        p.text-muted Mã đơn hàng: 
-          span.fw-bold.text-dark #{order.id}
+        
+        //- MÃ ĐƠN HÀNG VÀ TRẠNG THÁI
+        .d-flex.align-items-center.gap-4.mb-2
+          p.text-muted.mb-0 Mã đơn hàng: 
+            span.fw-bold.text-dark #{order._id}
+          
+          p.text-muted.mb-0 Trạng thái:
+            if order.status == "pending"
+              span.badge.bg-warning.text-dark.ms-2 Chờ xử lý
+            else if order.status == "processing"
+              span.badge.bg-info.text-dark.ms-2 Đang xử lý/Đóng gói
+            else if order.status == "shipped"
+              span.badge.bg-primary.ms-2 Đã giao vận chuyển
+            else if order.status == "delivered"
+              span.badge.bg-success.ms-2 Đã giao hàng
+            else if order.status == "cancelled"
+              span.badge.bg-danger.ms-2 Đã hủy
+            else if order.status == "returned"
+              span.badge.bg-dark.ms-2 Đã trả hàng
+            else 
+              span.badge.bg-secondary.ms-2 #{order.status}
 
     //- THÔNG TIN NGƯỜI NHẬN
     .row.mb-4
