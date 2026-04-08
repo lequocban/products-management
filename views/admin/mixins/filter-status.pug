@@ -4,3 +4,15 @@ mixin filter-status(filterStatus)
       class=`btn btn-sm ms-1 btn-outline-success ${item.class}`
       btn-status=item.status
     ) #{item.name}
+
+mixin filter-status-select(filterStatus)
+  select(
+    class="form-select form-select-sm border-success text-success fw-bold"
+    style="width: max-content;"
+    select-status
+  )
+    each item in filterStatus
+      option(
+        value=item.status
+        selected=(item.class === "active" ? true : false)
+      ) #{item.name}

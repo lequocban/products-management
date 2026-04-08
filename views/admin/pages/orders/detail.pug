@@ -1,0 +1,160 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(5000)
+  +alert-error(5000)
+
+  if(role.permissions.includes("orders_view"))
+    h1.mb-4 Chi tiết đơn hàng
+
+    .card.order-detail.shadow-sm.mb-4
+      .card-body
+        //- ==========================================
+        //- 1. THÔNG TIN CHUNG (Chia 2 cột)
+        //- ==========================================
+        .row.mb-4
+          //- Cột Trái: Thông tin khách hàng
+          .col-md-6
+            h5.fw-bold.text-primary.mb-3 
+              i.fa-solid.fa-user.me-2
+              | Thông tin khách hàng
+            table.table.table-bordered.table-sm
+              tbody
+                tr
+                  th(width="35%").bg-light Họ và tên
+                  td.fw-bold #{record.user_info.fullName}
+                tr
+                  th.bg-light Số điện thoại
+                  td #{record.user_info.phone}
+                tr
+                  th.bg-light Địa chỉ
+                  td #{record.user_info.address}
+
+          //- Cột Phải: Thông tin đơn hàng
+          .col-md-6
+            h5.fw-bold.text-primary.mb-3 
+              i.fa-solid.fa-file-invoice.me-2
+              | Thông tin đơn hàng
+            table.table.table-bordered.table-sm
+              tbody
+                tr
+                  th(width="35%").bg-light Mã đơn hàng
+                  td.text-danger.fw-bold #{record.id}
+                tr
+                  th.bg-light Ngày đặt hàng
+                  td #{new Date(record.createdAt).toLocaleString("vi-VN")}
+                tr
+                  th.bg-light Trạng thái
+                  td
+                    if record.status == "pending"
+                      span.badge.bg-warning.text-dark Chờ xử lý
+                    else if record.status == "processing"
+                      span.badge.bg-info.text-dark Đang xử lý/Đóng gói
+                    else if record.status == "shipped"
+                      span.badge.bg-primary Đã giao vận chuyển
+                    else if record.status == "delivered"
+                      span.badge.bg-success Đã giao hàng
+                    else if record.status == "cancelled"
+                      span.badge.bg-danger Đã hủy
+                    else if record.status == "returned"
+                      span.badge.bg-dark Đã trả hàng
+
+        hr.my-4
+
+        //- ==========================================
+        //- 2. DANH SÁCH SẢN PHẨM TRONG ĐƠN HÀNG
+        //- ==========================================
+        h5.fw-bold.text-primary.mb-3 
+          i.fa-solid.fa-box-open.me-2
+          | Danh sách sản phẩm
+        
+        table.table.table-bordered.table-hover.table-sm.align-middle
+          thead.table-light.text-center
+            tr
+              th STT
+              th Hình ảnh
+              th Tên sản phẩm
+              th Giá mua
+              th Số lượng
+              th Tổng cộng
+          tbody
+            - var totalOrderValue = 0
+
+            if record.products && record.products.length > 0
+              each item, index in record.products
+                //- Tính toán giá tiền cho từng món (đã bao gồm giảm giá nếu có)
+                - var newPrice = (item.price * (100 - item.discountPercentage) / 100).toFixed(2)
+                - var totalItem = (newPrice * item.quantity).toFixed(2)
+                - totalOrderValue = (parseFloat(totalOrderValue) + parseFloat(totalItem)).toFixed(2)
+
+                tr.text-center
+                  td #{index + 1}
+                  td
+                    if item.product_id && item.product_id.thumbnail
+                      img(src=item.product_id.thumbnail alt="Ảnh sản phẩm" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;")
+                  td.text-start 
+                    if item.product_id
+                      a(href=`${prefixAdmin}/products/detail/${item.product_id.id}` target="_blank" class="text-decoration-none fw-bold text-dark") #{item.product_id.title}
+                    else 
+                      span.text-danger (Sản phẩm đã bị xóa)
+                  td #{newPrice}$
+                  td #{item.quantity}
+                  td.text-danger.fw-bold #{totalItem}$
+            else 
+              tr 
+                td(colspan="6").text-center Đơn hàng không có sản phẩm nào.
+
+        //- Tổng thanh toán
+        .row.mt-3
+          .col-12.text-end
+            h4.mb-0 Tổng thanh toán: 
+              span.text-danger.fw-bold #{totalOrderValue}$
+
+        hr.my-4
+
+        //- ==========================================
+        //- 3. LỊCH SỬ CẬP NHẬT (Làm sẵn khung như yêu cầu)
+        //- ==========================================
+        .row.mb-3
+          .col-12
+            h5.fw-bold.text-primary.mb-3 
+              i.fa-solid.fa-clock-rotate-left.me-2
+              | Lịch sử cập nhật:
+
+            //- (Tạm thời check nếu bạn đã push data vào mảng updatedBy trong Schema)
+            if record.updatedBy && record.updatedBy.length > 0
+              - const history = [...record.updatedBy].reverse()
+
+              table.table.table-sm.table-bordered.mt-2
+                thead.table-light
+                  tr
+                    th Thời gian
+                    th Người cập nhật
+                tbody
+                  each item in history
+                    tr
+                      td #{new Date(item.updatedAt).toLocaleString("vi-VN")}
+                      td
+                        if item.account_id && item.account_id.fullName
+                          | #{item.account_id.fullName}
+                        else
+                          span.text-muted Không xác định
+            else
+              p.text-muted.fst-italic Chưa có lịch sử cập nhật cho đơn hàng này.
+
+        hr
+
+        //- ==========================================
+        //- 4. NÚT CHỨC NĂNG
+        //- ==========================================
+        .mt-3
+          a(
+            href=`${prefixAdmin}/orders`
+            class="btn btn-secondary ms-2 px-4"
+          ) 
+            i.fa-solid.fa-arrow-left.me-2
+            | Quay lại
+
+  else
+    h1.text-danger Bạn không có quyền truy cập

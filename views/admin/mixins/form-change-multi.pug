@@ -21,3 +21,30 @@ mixin form-change-multi(path)
           class="form-control d-none"
         )
       button(type="submit" class="btn btn-primary") Áp dụng
+
+mixin form-change-multi-order(path)
+  form(
+    action=path 
+    method="POST"
+    class="mb-3"
+    form-change-multi
+  )
+    .d-flex.align-items-start.gap-2
+      .form-group
+        select(name="type" class="form-select border-primary")
+          option(disabled selected) -- Cập nhật trạng thái --
+          option(value="pending") Chờ xử lý
+          option(value="processing") Đang xử lý/Đóng gói
+          option(value="shipped") Đã giao vận chuyển
+          option(value="delivered") Đã giao hàng
+          option(value="cancelled") Đã hủy
+          option(value="returned") Đã trả hàng
+          option(value="delete-multi") Xóa các đơn đã chọn
+      .form-group
+        input(
+          type="text"
+          name="ids"
+          value=""
+          class="form-control d-none"
+        )
+      button(type="submit" class="btn btn-primary") Áp dụng

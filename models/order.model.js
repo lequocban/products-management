@@ -15,6 +15,10 @@ const orderSchema = new mongoose.Schema(
       phone: String,
       address: String,
     },
+    status: {
+      type: String,
+      default: "pending",
+    },
     products: [
       {
         product_id: {
@@ -26,6 +30,23 @@ const orderSchema = new mongoose.Schema(
         discountPercentage: Number,
       },
     ],
+    updatedBy: [
+      {
+        account_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Account",
+        },
+        updatedAt: Date,
+      },
+    ],
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedBy: {
+      account_id: String,
+      deletedAt: Date,
+    },
   },
   {
     timestamps: true,

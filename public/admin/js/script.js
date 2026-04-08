@@ -19,6 +19,28 @@ if (btnStatus.length > 0) {
 }
 // end button status
 
+
+// TÍNH NĂNG LỌC TRẠNG THÁI (DẠNG SELECT OPTION)
+const selectStatus = document.querySelector("[select-status]");
+if (selectStatus) {
+  let url = new URL(window.location.href);
+
+  selectStatus.addEventListener("change", (e) => {
+    const status = e.target.value;
+
+    if (status) {
+      url.searchParams.set("status", status);
+    } else {
+      url.searchParams.delete("status");
+    }
+
+    // Chuyển hướng trang sang url mới
+    window.location.href = url.href;
+  });
+}
+// end TÍNH NĂNG LỌC TRẠNG THÁI (DẠNG SELECT OPTION)
+
+
 //form search
 const formSearch = document.querySelector("#form-search");
 if (formSearch) {
