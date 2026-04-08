@@ -12,6 +12,10 @@ router.get("/register", controllers.register);
 
 router.post("/register", validates.registerPost, controllers.registerPost);
 
+router.get("/register/otp", controllers.otpRegister);
+
+router.post("/register/otp", controllers.otpRegisterPost);
+
 router.get("/login", controllers.login);
 
 router.post("/login", validates.loginPost, controllers.loginPost);

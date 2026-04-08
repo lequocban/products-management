@@ -17,24 +17,108 @@ exports.register = (req, res) => {
 
 // [POST] /user/register
 exports.registerPost = async (req, res) => {
-  const existEmail = await User.findOne({
-    email: req.body.email,
-    deleted: false,
-  });
+  const { fullName, email, password } = req.body;
+
+  // 1. Kiểm tra xem email đã tồn tại trong DB chưa
+  const existEmail = await User.findOne({ email: email, deleted: false });
   if (existEmail) {
     req.flash("error", "Email đã tồn tại!");
     res.redirect(req.headers.referer);
     return;
   }
-  req.body.password = md5(req.body.password);
+
+  // 2. Hash mật khẩu và LƯU TẠM thông tin đăng ký vào Cookie (sống trong 5 phút)
+  // Việc này giúp ta KHÔNG CẦN LƯU VÀO DATABASE bảng User khi chưa xác thực
+  const hashedPassword = md5(password);
+  const registerData = { fullName, email, hashedPassword };
+  res.cookie("registerData", JSON.stringify(registerData), { maxAge: 5 * 60 * 1000 });
+
+  // 3. Tạo mã OTP và lưu vào database (Mượn bảng ForgotPassword)
+  const otp = generateHelper.generateRandomNumber(6);
+  const objectForgotPassword = {
+    email: email,
+    otp: otp,
+    expiredAt: Date.now() + 5 * 60 * 1000,
+  };
+  const forgotPassword = new ForgotPassword(objectForgotPassword);
+  await forgotPassword.save();
+
+  // 4. Gửi mail OTP
+  const subject = "Mã OTP xác thực đăng ký tài khoản";
+  const html = `
+    <p>Chào mừng <b>${fullName}</b>!</p>
+    <p>Mã OTP để hoàn tất đăng ký tài khoản của bạn là:</p>
+    <h2 style="color: #2c3e50; background: #ecf0f1; padding: 10px; display: inline-block;">${otp}</h2>
+    <p>Mã có hiệu lực trong 5 phút.</p>
+  `;
+  sendMailHelper.sendMail(email, subject, html);
+
+  // 5. Chuyển hướng qua trang nhập OTP
+  res.redirect("/user/register/otp");
+};
+
+// [GET] /user/register/otp
+exports.otpRegister = (req, res) => {
+  // Nếu không có cookie đăng ký tạm (nghĩa là khách gõ thẳng link này), đá về trang đăng ký
+  if (!req.cookies.registerData) {
+    req.flash("error", "Phiên đăng ký đã hết hạn hoặc không hợp lệ!");
+    res.redirect("/user/register");
+    return;
+  }
+
+  const registerData = JSON.parse(req.cookies.registerData);
+  
+  res.render("client/pages/user/otp-register", {
+    pageTitle: "Xác thực tài khoản",
+    email: registerData.email, // Gửi email ra view để hiển thị
+  });
+};
+
+// [POST] /user/register/otp
+exports.otpRegisterPost = async (req, res) => {
+  if (!req.cookies.registerData) {
+    req.flash("error", "Phiên đăng ký đã hết hạn!");
+    res.redirect("/user/register");
+    return;
+  }
+
+  const registerData = JSON.parse(req.cookies.registerData);
+  const email = registerData.email;
+  const otp = req.body.otp.join(""); // Ghép mảng 6 ô input thành chuỗi
+
+  // 1. Kiểm tra mã OTP
+  const result = await ForgotPassword.findOne({
+    email: email,
+    otp: otp,
+  });
+
+  if (!result) {
+    req.flash("error", "Mã OTP không hợp lệ hoặc đã hết hạn!");
+    res.redirect(req.headers.referer);
+    return;
+  }
+
+  // 2. CHÍNH THỨC TẠO TÀI KHOẢN VÀO DATABASE
   const user = new User({
-    fullName: req.body.fullName,
-    email: req.body.email,
-    password: req.body.password,
+    fullName: registerData.fullName,
+    email: registerData.email,
+    password: registerData.hashedPassword,
+    status: "active"
   });
   await user.save();
+
+  // 3. Dọn dẹp rác: Xóa OTP trong DB và Xóa Cookie lưu tạm
+  await ForgotPassword.deleteOne({ _id: result.id });
+  res.clearCookie("registerData");
+
+  // 4. Cho phép đăng nhập luôn
   res.cookie("tokenUser", user.tokenUser);
-  req.flash("success", "Đăng ký tài khoản thành công!");
+  
+  // Đồng bộ giỏ hàng và đơn hàng (logic cũ của bạn)
+  await Cart.updateOne({ _id: req.cookies.cartId }, { user_id: user.id });
+  await Order.updateMany({ cart_id: req.cookies.cartId }, { user_id: user.id });
+
+  req.flash("success", "Đăng ký và kích hoạt tài khoản thành công!");
   res.redirect("/");
 };
 
@@ -148,7 +232,7 @@ exports.otpPasswordPost = async (req, res) => {
   });
   if (!result) {
     req.flash("error", "Mã OTP không hợp lệ!");
-    res.redirect("/user/login");
+    res.redirect(req.headers.referer);
     return;
   }
 
@@ -279,6 +363,6 @@ exports.changePasswordPost = async (req, res) => {
     // 2. Bắt lỗi nếu có biến nào đó bị undefined gây sập hệ thống
     console.log("Lỗi trong quá trình đổi mật khẩu:", error);
     req.flash("error", "Đã có lỗi xảy ra, vui lòng thử lại!");
-    res.redirect("back");
+    res.redirect(req.headers.referer);
   }
 };
