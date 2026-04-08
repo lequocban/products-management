@@ -10,8 +10,15 @@ block main
           
           //- KHỐI AVATAR VÀ TÊN
           .card-header.bg-white.text-center.pt-5.pb-3.border-bottom-0
-            //- Dùng icon làm Avatar mặc định (Vì schema hiện tại chưa có trường avatar)
-            i.fa-solid.fa-circle-user.text-secondary(style="font-size: 90px;")
+            //- Kiểm tra nếu user có avatar thì hiển thị ảnh, nếu không thì dùng icon mặc định
+            if user.avatar
+              img.rounded-circle.shadow-sm.mb-2(
+                src=user.avatar
+                alt="Avatar"
+                style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #f8f9fa;"
+              )
+            else
+              i.fa-solid.fa-circle-user.text-secondary(style="font-size: 90px;")
             
             h3.fw-bold.mt-3.mb-1.text-dark #{user.fullName}
             
@@ -44,6 +51,17 @@ block main
                     i.fa-solid.fa-envelope.me-2
                     | Email:
                   td.fw-bold.text-dark #{user.email}
+
+                //- Thêm dòng hiển thị Số điện thoại
+                tr.align-middle
+                  td.text-muted 
+                    i.fa-solid.fa-phone.me-2
+                    | Số điện thoại:
+                  td.fw-bold.text-dark 
+                    if user.phone
+                      | #{user.phone}
+                    else
+                      span.text-muted.fst-italic Chưa cập nhật
                   
                 tr.align-middle
                   td.text-muted 
@@ -56,7 +74,7 @@ block main
 
             //- KHỐI NÚT CHỨC NĂNG
             .d-flex.justify-content-center.gap-3.mt-5
-              //- Nút chỉnh sửa (Bạn có thể làm trang edit sau)
+              //- Nút chỉnh sửa
               a.btn.btn-outline-primary.rounded-pill.px-4(href="/user/edit") 
                 i.fa-solid.fa-pen-to-square.me-2
                 | Cập nhật thông tin

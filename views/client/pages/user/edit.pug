@@ -1,0 +1,109 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success(5000)
+  +alert-error(5000)
+
+  .container.my-5
+    .row.justify-content-center
+      .col-md-8.col-lg-6
+        .card.shadow.border-0.rounded-4
+          .card-header.bg-white.text-center.pt-4.pb-2.border-bottom-0
+            h3.fw-bold.text-primary 
+              i.fa-solid.fa-user-pen.me-2
+              | Cập nhật thông tin
+
+          .card-body.p-4.px-md-5
+            //- LƯU Ý: Phải có enctype="multipart/form-data" để up ảnh avatar
+            form(
+              action="/user/edit?_method=PATCH"
+              method="POST"
+              enctype="multipart/form-data"
+            )
+              
+              //- KHỐI AVATAR (Có xem trước và xóa ảnh)
+              .mb-4.text-center(upload-image)
+                //- Gắn thêm class image-preview-wrapper để JS cũ nhận diện được
+                .image-preview-wrapper.position-relative.d-inline-block
+                  
+                  //- Ảnh đại diện hiển thị (Gắn thêm class image-preview)
+                  img.img-thumbnail.rounded-circle.shadow-sm.image-preview(
+                    src=(user.avatar ? user.avatar : "https://cdn-icons-png.flaticon.com/512/149/149071.png")
+                    upload-image-preview
+                    style="width: 130px; height: 130px; object-fit: cover; border: 3px solid #f8f9fa;"
+                    alt="Avatar"
+                  )
+                  
+                  //- Nút chọn ảnh (Camera) đè lên góc dưới phải
+                  label.btn.btn-sm.btn-primary.position-absolute.bottom-0.end-0.rounded-circle.shadow(
+                    for="avatar" 
+                    title="Tải ảnh lên"
+                    style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 5px; margin-right: 5px;"
+                  )
+                    i.fa-solid.fa-camera
+                  
+                  //- Nút Xóa ảnh xem trước (X) đè lên góc trên phải
+                  span.remove-image.position-absolute.top-0.end-0.rounded-circle.shadow.bg-danger.text-white(
+                    remove-image-preview 
+                    title="Hủy ảnh vừa chọn"
+                    style="width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-top: 5px; margin-right: 5px;"
+                  ) 
+                    i.fa-solid.fa-xmark
+
+                  //- Thẻ input file ẩn đi
+                  input#avatar.d-none(
+                    type="file"
+                    name="avatar"
+                    accept="image/*"
+                    upload-image-input
+                  )
+                  input#isAvatarDeleted(
+                    type="hidden" 
+                    name="isAvatarDeleted" 
+                    value="false"
+                  )
+
+              //- Họ và tên
+              .mb-3
+                label.form-label.fw-bold(for="fullName") Họ và tên
+                input#fullName.form-control.form-control-lg.rounded-3(
+                  type="text"
+                  name="fullName"
+                  value=user.fullName
+                  required
+                  placeholder="Nhập họ và tên..."
+                )
+
+              //- Email
+              .mb-3
+                label.form-label.fw-bold(for="email") Email
+                input#email.form-control.form-control-lg.rounded-3(
+                  type="email"
+                  name="email"
+                  value=user.email
+                  required
+                  placeholder="Nhập email..."
+                )
+
+              //- Số điện thoại
+              .mb-4
+                label.form-label.fw-bold(for="phone") Số điện thoại
+                input#phone.form-control.form-control-lg.rounded-3(
+                  type="text"
+                  name="phone"
+                  value=user.phone
+                  placeholder="Nhập số điện thoại..."
+                )
+
+              //- Nút Submit
+              .d-grid.mt-2
+                button.btn.btn-primary.btn-lg.rounded-pill.fw-bold(type="submit") 
+                  i.fa-solid.fa-floppy-disk.me-2
+                  | Lưu thay đổi
+                  
+          //- Footer điều hướng
+          .card-footer.bg-white.text-center.pb-4.border-top-0
+            a.btn.btn-outline-secondary.rounded-pill.px-4(href="/user/info") 
+              i.fa-solid.fa-arrow-left.me-2
+              | Hủy và Quay lại

@@ -186,3 +186,46 @@ exports.info = async (req, res) => {
     user: user,
   });
 };
+
+// [GET] /user/edit
+exports.edit = async (req, res) => {
+  const tokenUser = req.cookies.tokenUser;
+  const user = await User.findOne({ tokenUser: tokenUser, deleted: false });
+  res.render("client/pages/user/edit", {
+    pageTitle: "Chỉnh sửa thông tin tài khoản",
+    user: user,
+  });
+};
+
+// [PATCH] /user/edit
+exports.editPatch = async (req, res) => {
+  try {
+    const tokenUser = req.cookies.tokenUser;
+    const user = await User.findOne({ tokenUser: tokenUser, deleted: false }).select("-password -tokenUser");
+    if (!req.file) {
+      if (req.body.isAvatarDeleted === "true") {
+        // Trường hợp 1: Người dùng chủ động bấm X -> Xóa ảnh trong Database
+        req.body.avatar = "";
+      } else {
+        // Trường hợp 2: Người dùng không đụng gì đến ảnh -> Xóa key avatar khỏi req.body để MongoDB không update đè trường này
+        delete req.body.avatar;
+      }
+    }
+    const emailExist = await User.findOne({
+      _id: { $ne: user.id },
+      email: req.body.email,
+      deleted: false,
+    });
+    if (emailExist) {
+      req.flash("error", "Email đã tồn tại!");
+      res.redirect(req.headers.referer);
+      return;
+    }
+    await User.updateOne({ _id: user.id }, { ...req.body });
+    req.flash("success", "Cập nhật thông tin thành công!");
+    res.redirect("/user/info");
+  } catch (error) {
+    req.flash("error", "Tài khoản không tồn tại!");
+    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  }
+};
