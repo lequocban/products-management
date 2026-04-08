@@ -93,15 +93,17 @@ block main
                     
                   td 
                     a(
+                      class="btn btn-outline-primary btn-sm me-1 mb-1 glow-btn"
                       href=`${prefixAdmin}/orders/detail/${item.id}`
-                      class="btn btn-secondary btn-sm ms-1 mb-1"
-                    ) Chi tiết
+                    ) 
+                      i.bi.bi-eye-fill
                     if(role.permissions.includes("orders_delete"))
                       button(
-                        class="btn btn-danger btn-sm ms-1 mb-1"
+                        class="btn btn-outline-danger btn-sm m-0 mb-1 glow-btn"
                         data-id=item.id
                         button-delete
-                      ) Xóa
+                      ) 
+                        i.bi.bi-trash-fill
 
     +pagination(pagination)
     

@@ -55,19 +55,23 @@ mixin table-tree(items, level = 1)
           p 
             +formatDateTime(updatedHistory.updatedAt)
       td
-        a.btn.btn-secondary.btn-sm.ms-1(
+        a.btn.btn-outline-primary.btn-sm.me-1.glow-btn(
           href=`${prefixAdmin}/products-category/detail/${item.id}`
-        ) Chi tiết
+        ) 
+          i.bi.bi-eye-fill
 
         if(role.permissions.includes("products-category_edit"))
-          a.btn.btn-warning.btn-sm.ms-1(
+          a.btn.btn-outline-warning.btn-sm.me-1.glow-btn(
             href=`${prefixAdmin}/products-category/edit/${item.id}`
-          ) Sửa
+          ) 
+            i.bi.bi-pencil-square
+            
         if(role.permissions.includes("products-category_delete"))
-          button.btn.btn-danger.btn-sm.ms-1(
+          button.btn.btn-outline-danger.btn-sm.m-0.glow-btn(
             data-id=item.id
             button-delete
-          ) Xóa
+          ) 
+            i.bi.bi-trash-fill
 
     if item.children && item.children.length > 0
       +table-tree(item.children, level + 1)
@@ -129,19 +133,23 @@ mixin table-tree-article(items, level = 1)
           p 
             +formatDateTime(updatedHistory.updatedAt)
       td
-        a.btn.btn-secondary.btn-sm.ms-1(
+        a.btn.btn-outline-primary.btn-sm.me-1.glow-btn(
           href=`${prefixAdmin}/articles-category/detail/${item.id}`
-        ) Chi tiết
+        ) 
+          i.bi.bi-eye-fill
 
         if(role.permissions.includes("articles-category_edit"))
-          a.btn.btn-warning.btn-sm.ms-1(
+          a.btn.btn-outline-warning.btn-sm.me-1.glow-btn(
             href=`${prefixAdmin}/articles-category/edit/${item.id}`
-          ) Sửa
+          ) 
+            i.bi.bi-pencil-square
+            
         if(role.permissions.includes("articles-category_delete"))
-          button.btn.btn-danger.btn-sm.ms-1(
+          button.btn.btn-outline-danger.btn-sm.m-0.glow-btn(
             data-id=item.id
             button-delete
-          ) Xóa
+          ) 
+            i.bi.bi-trash-fill
 
     if item.children && item.children.length > 0
       +table-tree-article(item.children, level + 1)

@@ -20,6 +20,19 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    deletedBy: {
+      account_id: String,
+      deletedAt: Date,
+    },
+    updatedBy: [
+      {
+        account_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Account",
+        },
+        updatedAt: Date,
+      },
+    ],
   },
   {
     timestamps: true,

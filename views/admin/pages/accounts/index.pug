@@ -88,20 +88,23 @@ block main
                         +formatDateTime(updatedHistory.updatedAt)
                   td 
                     a(
-                      class="btn btn-secondary btn-sm"
+                      class="btn btn-outline-primary btn-sm me-1 glow-btn"
                       href=`${prefixAdmin}/accounts/detail/${item.id}`
-                    ) Chi tiết
+                    ) 
+                      i.bi.bi-eye-fill
                     if(role.permissions.includes("accounts_edit"))
                       a(
                         href=`${prefixAdmin}/accounts/edit/${item.id}`
-                        class="btn btn-warning btn-sm ms-1"
-                      ) Sửa
+                        class="btn btn-outline-warning btn-sm me-1 glow-btn"
+                      ) 
+                        i.bi.bi-pencil-square
                     if(role.permissions.includes("accounts_delete"))
                       button(
-                        class="btn btn-danger btn-sm ms-1"
+                        class="btn btn-outline-danger btn-sm m-0 glow-btn"
                         data-id=item.id
                         button-delete
-                      ) Xóa
+                      ) 
+                        i.bi.bi-trash-fill
             else 
               tr
                 td(colspan='4' class='text-center') Chưa có nhóm quyền nào được tạo

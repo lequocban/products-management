@@ -1,0 +1,84 @@
+extend ../../layouts/default.pug
+include ../../mixins/moment.pug
+
+block main
+  .d-flex.justify-content-between.align-items-center.mb-4
+    h1.text-glow-blue 
+      i.bi.bi-person-vcard-fill.me-2
+      | Chi tiết Người dùng
+    a(
+      href=`${prefixAdmin}/users`
+      class="btn btn-outline-secondary glow-btn"
+    )
+      i.bi.bi-arrow-left.me-2
+      | Quay lại
+      
+  if (record)
+    .row
+      .col-md-4.mb-4
+        .glass-card.h-100.text-center.p-4
+          if (record.avatar)
+            img.rounded-circle.mb-3(
+              src=record.avatar
+              style="width: 150px; height: 150px; object-fit: cover; border: 3px solid var(--neon-cyan); box-shadow: var(--neon-glow);"
+            )
+          else
+            i.bi.bi-person-circle.text-glow-blue.mb-3(style="font-size: 8rem;")
+          
+          h3.fw-bold.text-glow-purple #{record.fullName}
+          
+          .mt-4
+            if (record.status === "active")
+              span.badge.bg-success.fs-6 Hoạt động
+            else
+              span.badge.bg-danger.fs-6 Dừng hoạt động
+
+      .col-md-8.mb-4
+        .glass-card.h-100
+          .card-header 
+            i.bi.bi-info-circle-fill.me-2
+            | Thông tin cá nhân
+          .card-body.p-4
+            .row.mb-3
+              .col-sm-4
+                strong Email:
+              .col-sm-8
+                span.text-neon-cyan #{record.email}
+
+            .row.mb-3
+              .col-sm-4
+                strong Số điện thoại:
+              .col-sm-8
+                if (record.phone)
+                  span #{record.phone}
+                else
+                  span.fst-italic Chưa cập nhật
+
+            .row.mb-3
+              .col-sm-4
+                strong Token tham gia:
+              .col-sm-8
+                span.badge.bg-secondary.text-wrap.text-break #{record.tokenUser}
+
+            .row.mb-3
+              .col-sm-4
+                strong Ngày tham gia:
+              .col-sm-8
+                span #{record.createdAt ? new Date(record.createdAt).toLocaleString("vi-VN") : "Không xác định"}
+                
+        if (record.updatedBy && record.updatedBy.length > 0)
+          .glass-card.mt-4
+            .card-header
+              i.bi.bi-clock-history.me-2
+              | Lịch sử cập nhật (Admin)
+            .card-body
+              ul.list-group.list-group-flush
+                each history in record.updatedBy.reverse()
+                  if history.account_id
+                    li.list-group-item.bg-transparent.text-secondary.border-bottom.border-secondary.border-opacity-25
+                      i.bi.bi-record-circle-fill.me-2.text-glow-blue
+                      | Quản trị viên 
+                      strong.text-primary #{history.account_id.fullName} 
+                      | đã cập nhật trạng thái lúc 
+                      strong
+                        +formatDateTime(history.updatedAt)

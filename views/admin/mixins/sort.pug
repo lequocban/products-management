@@ -49,3 +49,20 @@ mixin sort-order()
       class="btn btn-danger mt-2"
       sort-clear
     ) Clear
+
+mixin sort-user()
+  div(sort)
+    select(
+      class="form-select"
+      name="sort"
+      sort-select
+    )
+      option(value="createdAt-desc") Tham gia mới nhất
+      option(value="createdAt-asc") Tham gia cũ nhất
+      option(value="fullName-asc") Tên A-Z
+      option(value="fullName-desc") Tên Z-A
+      
+    button(
+      class="btn btn-danger btn-sm mt-2"
+      sort-clear
+    ) Clear

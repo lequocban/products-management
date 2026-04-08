@@ -282,6 +282,33 @@ block main
                       input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
                 //- ==========================================
+                //- NGƯỜI DÙNG (USERS)
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3.border-top
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-users.me-2
+                      | Quản lý Người dùng
+                
+                tr(data-name='users_view').align-middle
+                  td.ps-4 Xem danh sách
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+        
+                tr(data-name='users_edit').align-middle
+                  td.ps-4 Chỉnh sửa / Thay đổi trạng thái
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                tr(data-name='users_delete').align-middle
+                  td.ps-4 Xóa
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                //- ==========================================
                 //- CÀI ĐẶT CHUNG
                 //- ==========================================
                 tr.bg-light

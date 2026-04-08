@@ -1,0 +1,152 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/moment.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/form-search.pug
+include ../../mixins/form-change-multi.pug
+include ../../mixins/sort.pug
+include ../../mixins/pagination.pug
+
+block main 
+
+  +alert-success(5000)
+  +alert-error(5000)
+
+  if(role.permissions.includes("users_view"))
+    h1.text-glow-blue.mb-4 
+      i.bi.bi-people-fill.me-2
+      | Danh sách Người dùng
+    
+    .glass-card.mb-3
+      .card-header 
+        i.bi.bi-funnel-fill.me-2
+        | Bộ lọc và Tìm kiếm
+      .card-body
+        .row
+          .col-6
+            +filter-status(filterStatus)
+          .col-6
+            +form-search(keyword)
+            
+    .glass-card.mb-3
+      .card-header Sắp xếp
+      .card-body
+        .row
+          .col-4
+            +sort-user()
+
+    .glass-card.mb-3
+      .card-header Danh sách
+      .card-body
+        .row.mb-3
+          .col-8
+            if(role.permissions.includes("users_edit"))
+              +form-change-multi-basic(`${prefixAdmin}/users/change-multi?_method=PATCH`)
+          .col-4.text-end
+            //- Nếu sau này có chức năng tạo mới
+        
+        .table-responsive
+          table.table.table-hover.table-sm(checkbox-multi)
+            thead
+              tr
+                th 
+                  input.form-check-input(type="checkbox" name="checkall")
+                th STT 
+                th Avatar
+                th Họ tên  
+                th Email
+                if(role.permissions.includes("users_edit"))
+                  th Trạng thái
+                th Cập nhật
+                th Hành động
+
+            tbody 
+              if(records.length > 0)
+                each item, index in records
+                  tr
+                    td 
+                      input.form-check-input(
+                        type="checkbox"
+                        name="id"
+                        value=item.id 
+                      )
+                    td #{pagination.limitItems * (pagination.currentPage - 1) + (index + 1)}
+                    td 
+                      if item.avatar
+                        img.rounded-circle(
+                            src=item.avatar
+                            alt=item.fullName
+                            width="40px"
+                            height="40px"
+                            style="object-fit: cover;"
+                          ) 
+                      else
+                        i.bi.bi-person-circle.fs-2.text-glow-blue
+                    td.fw-bold #{item.fullName}
+                    td #{item.email}
+                    if(role.permissions.includes("users_edit"))
+                      td
+                        if (item.status == "active")
+                          a(
+                            href="javascript:;" 
+                            data-status=item.status
+                            data-id=item.id
+                            button-change-status
+                            class="badge bg-success text-decoration-none"
+                          ) Hoạt động
+                        else 
+                          a(
+                            href="javascript:;" 
+                            data-status=item.status
+                            data-id=item.id
+                            button-change-status 
+                            class="badge bg-danger text-decoration-none"
+                          ) Dừng hoạt động
+                    td 
+                      if item.updatedBy && item.updatedBy.length > 0
+                        -const updatedHistory = item.updatedBy.slice(-1)[0]
+                        if updatedHistory && updatedHistory.account_id
+                          p.mb-0 #{updatedHistory.account_id.fullName}
+                          p.mb-0.text-secondary(style="font-size: 12px;") 
+                            +formatDateTime(updatedHistory.updatedAt)
+                    td 
+                      a(
+                        class="btn btn-outline-primary btn-sm me-1 glow-btn"
+                        href=`${prefixAdmin}/users/detail/${item.id}`
+                      ) 
+                        i.bi.bi-eye-fill
+                      
+                      if(role.permissions.includes("users_delete"))
+                        button(
+                          class="btn btn-outline-danger btn-sm m-0 glow-btn"
+                          data-id=item.id
+                          button-delete
+                        ) 
+                          i.bi.bi-trash-fill
+              else 
+                tr
+                  td(colspan='8' class='text-center text-danger fw-bold py-4') Không có dữ liệu người dùng
+                  
+        +pagination(pagination)
+
+    if(role.permissions.includes("users_edit"))
+      form(
+        action=""
+        method="POST"
+        id="form-change-status"
+        data-path=`${prefixAdmin}/users/change-status`
+      ) 
+    if(role.permissions.includes("users_delete"))
+      form(
+        action=""
+        method="POST"
+        id="form-delete-item"
+        data-path=`${prefixAdmin}/users/delete`
+      ) 
+  
+    script(src="/admin/js/user.js") 
+  else 
+    .container.d-flex.justify-content-center.align-items-center(style="height: 100vh;")
+      .glass-card.text-center.p-5
+        h1.text-glow-purple(style="font-size: 3rem;") 403
+        h3 Truy cập bị từ chối
