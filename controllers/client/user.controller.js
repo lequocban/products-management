@@ -1,6 +1,7 @@
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
 const Cart = require("../../models/cart.model");
+const Order = require("../../models/order.model");
 
 const generateHelper = require("../../helper/generate");
 const sendMailHelper = require("../../helper/sendMail");
@@ -68,8 +69,9 @@ exports.loginPost = async (req, res) => {
   res.cookie("tokenUser", user.tokenUser);
 
   // lưu user_id vào cart collection
-
   await Cart.updateOne({ _id: req.cookies.cartId }, { user_id: user.id });
+  // lưu user_id vào order collection
+  await Order.updateMany({ cart_id: req.cookies.cartId }, { user_id: user.id });
 
   req.flash("success", "Đăng nhập tài khoản thành công!");
   res.redirect("/");

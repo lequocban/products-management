@@ -5,7 +5,6 @@ const productsHelper = require("../../helper/product");
 // [GET] /orders
 module.exports.index = async (req, res) => {
   try {
-    // Vì người dùng chưa có tài khoản đăng nhập, ta dựa vào cartId (cookie) để nhận diện
     const cartId = req.cookies.cartId;
 
     // 1. Tìm tất cả đơn hàng của khách này, sắp xếp theo thời gian mới nhất (createdAt: "desc")
@@ -42,7 +41,6 @@ module.exports.index = async (req, res) => {
 // [GET] /orders/detail/:orderId
 module.exports.detail = async (req, res) => {
   try {
-    console.log("chạy qua đây")
     const orderId = req.params.orderId;
     const cartId = req.cookies.cartId;
 
