@@ -229,3 +229,56 @@ exports.editPatch = async (req, res) => {
     res.redirect(`${systemConfig.prefixAdmin}/accounts`);
   }
 };
+
+// [GET] /user/password/change
+exports.changePassword = async (req, res) => {
+  res.render("client/pages/user/change-password", {
+    pageTitle: "Xác nhận mật khẩu",
+  });
+};
+
+// [POST] /user/password/change
+exports.changePasswordPost = async (req, res) => {
+  try {
+    const tokenUser = req.cookies.tokenUser;
+    const oldPassword = req.body.oldPassword;
+
+    const user = await User.findOne({ tokenUser: tokenUser, deleted: false });
+
+    if (md5(oldPassword) !== user.password) {
+      req.flash("error", "Mật khẩu hiện tại không chính xác!");
+      res.redirect(req.headers.referer);
+      return;
+    }
+
+    const email = user.email;
+    const otp = generateHelper.generateRandomNumber(6);
+
+    const objectForgotPassword = {
+      email: email,
+      otp: otp,
+      expiredAt: Date.now() + 3 * 60 * 1000, 
+    };
+    
+    const forgotPassword = new ForgotPassword(objectForgotPassword);
+    await forgotPassword.save();
+
+    const subject = "Mã OTP xác thực đổi mật khẩu";
+    const html = `
+      <p>Chào bạn,</p>
+      <p>Bạn vừa yêu cầu đổi mật khẩu. Mã OTP xác thực của bạn là:</p>
+      <h2><b>${otp}</b></h2>
+      <p>Mã này có hiệu lực trong 3 phút. Vui lòng không chia sẻ mã này với bất kỳ ai.</p>
+    `;
+    sendMailHelper.sendMail(email, subject, html);
+
+    // Chuyển hướng sang trang OTP
+    res.redirect(`/user/password/otp?email=${email}`);
+
+  } catch (error) {
+    // 2. Bắt lỗi nếu có biến nào đó bị undefined gây sập hệ thống
+    console.log("Lỗi trong quá trình đổi mật khẩu:", error);
+    req.flash("error", "Đã có lỗi xảy ra, vui lòng thử lại!");
+    res.redirect("back");
+  }
+};

@@ -51,4 +51,8 @@ router.patch(
   controllers.editPatch,
 );
 
+router.get("/password/change", authMiddleware.requireAuth, controllers.changePassword);
+
+router.post("/password/change", authMiddleware.requireAuth, controllers.changePasswordPost);
+
 module.exports = router;
