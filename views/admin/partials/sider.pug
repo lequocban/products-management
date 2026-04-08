@@ -2,39 +2,60 @@
   .inner-menu
     ul
       li
-        a(href=`${prefixAdmin}/dashboard`) Tổng quan
+        a(href=`${prefixAdmin}/dashboard`, class=(activeMenu === 'dashboard' ? 'active' : ''))
+          i.bi.bi-grid-1x2-fill
+          | Tổng quan
 
       if(role.permissions.includes("products-category_view"))
         li
-          a(href=`${prefixAdmin}/products-category`) Danh mục sản phẩm
+          a(href=`${prefixAdmin}/products-category`, class=(activeMenu === 'products-category' ? 'active' : ''))
+            i.bi.bi-tags-fill
+            | Danh mục sản phẩm
 
       if(role.permissions.includes("products_view"))
         li
-          a(href=`${prefixAdmin}/products`) Danh sách sản phẩm
+          a(href=`${prefixAdmin}/products`, class=(activeMenu === 'products' ? 'active' : ''))
+            i.bi.bi-box-seam-fill
+            | Danh sách sản phẩm
+
       if(role.permissions.includes("orders_view"))
         li
-          a(href=`${prefixAdmin}/orders`) Đơn hàng
+          a(href=`${prefixAdmin}/orders`, class=(activeMenu === 'orders' ? 'active' : ''))
+            i.bi.bi-cart-check-fill
+            | Đơn hàng
 
       if(role.permissions.includes("articles-category_view"))
         li
-          a(href=`${prefixAdmin}/articles-category`) Danh mục bài viết
+          a(href=`${prefixAdmin}/articles-category`, class=(activeMenu === 'articles-category' ? 'active' : ''))
+            i.bi.bi-collection-fill
+            | Danh mục bài viết
 
       if(role.permissions.includes("articles_view"))
         li
-          a(href=`${prefixAdmin}/articles`) Danh sách bài viết
+          a(href=`${prefixAdmin}/articles`, class=(activeMenu === 'articles' ? 'active' : ''))
+            i.bi.bi-file-earmark-text-fill
+            | Danh sách bài viết
       
       if(role.permissions.includes("roles_view"))
         li
-          a(href=`${prefixAdmin}/roles`) Nhóm quyền
+          a(href=`${prefixAdmin}/roles`, class=(activeMenu === 'roles' ? 'active' : ''))
+            i.bi.bi-shield-lock-fill
+            | Nhóm quyền
       
       if(role.permissions.includes("roles_permissions"))
         li
-          a(href=`${prefixAdmin}/roles/permissions`) Phân quyền
+          a(href=`${prefixAdmin}/roles/permissions`, class=(activeMenu === 'permissions' ? 'active' : ''))
+            i.bi.bi-ui-checks-grid
+            | Phân quyền
 
       if(role.permissions.includes("accounts_view"))
         li
-          a(href=`${prefixAdmin}/accounts`) Tài khoản
+          a(href=`${prefixAdmin}/accounts`, class=(activeMenu === 'accounts' ? 'active' : ''))
+            i.bi.bi-people-fill
+            | Tài khoản
+
       if(role.permissions.includes("settings_general"))
         li
-          a(href=`${prefixAdmin}/settings/general`) Cài đặt chung
-      
+          a(href=`${prefixAdmin}/settings/general`, class=(activeMenu === 'settings' ? 'active' : ''))
+            i.bi.bi-gear-fill
+            | Cài đặt chung

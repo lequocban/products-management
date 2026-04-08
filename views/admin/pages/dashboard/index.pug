@@ -1,67 +1,212 @@
 extend ../../layouts/default.pug
 
 block main 
-  h1 Trang tổng quan
-  
-  .row.mt-4
-    .col-12
-      .card.mb-4
-        .card-header Thông tin tài khoản
-        .card-body
+  .d-flex.justify-content-between.align-items-center.mb-4
+    h1.text-glow-blue 
+      i.bi.bi-grid-1x2-fill.me-2
+      | Trang tổng quan
+    span.badge.bg-primary.fs-6
+      i.bi.bi-clock.me-1
+      span#current-time
+
+  .row.mb-4
+    .col-lg-4
+      .glass-card.h-100
+        .card-body.text-center.d-flex.flex-column.align-items-center.justify-content-center
           if(user.avatar)
-            img(
+            img.rounded-circle.mb-3(
               src=user.avatar
-              style="height: 100px;margin-bottom: 15px;"
+              style="width: 120px; height: 120px; object-fit: cover; border: 3px solid var(--neon-blue); box-shadow: var(--neon-glow);"
             )
+          else
+            i.bi.bi-person-circle.text-glow-blue(style="font-size: 5rem;")
 
           if(user.fullName)
-            p Họ tên: <b>#{user.fullName}</b>
-          if(user.email)
-            p Email: <b>#{user.email}</b>
-          if(user.phone)
-            p Số điện thoại: <b>#{user.phone}</b>
+            h4.text-glow-purple.mt-2 #{user.fullName}
           if(role.title)
-            p Phân quyền: <b>#{role.title}</b>
-    
-    .col-6
-      .card.mb-4
-        .card-header Danh mục sản phẩm
+            span.badge.bg-primary.mb-3 #{role.title}
+          
+          .text-start.w-100.mt-3.ps-3
+            if(user.email)
+              p.mb-2
+                i.bi.bi-envelope-at.me-2(style="color: var(--neon-cyan)")
+                | #{user.email}
+            if(user.phone)
+              p.mb-0
+                i.bi.bi-telephone.me-2(style="color: var(--neon-cyan)")
+                | #{user.phone}
+
+    .col-lg-8
+      .row.h-100
+        .col-md-6.mb-4
+          .glass-card.h-100
+            .card-body.d-flex.align-items-center
+              .bg-primary.bg-opacity-25.rounded-circle.p-3.me-3
+                i.bi.bi-box-seam-fill.fs-1.text-primary
+              div
+                h5.card-title.text-secondary Sản phẩm
+                h2.mb-0.text-glow-blue #{statistic.product.total} 
+                  span.fs-6.text-secondary tổng cộng
+                .mt-2
+                  span.text-success.me-2
+                    i.bi.bi-check-circle-fill.me-1
+                    | #{statistic.product.active}
+                  span.text-danger
+                    i.bi.bi-x-circle-fill.me-1
+                    | #{statistic.product.inactive}
+        
+        .col-md-6.mb-4
+          .glass-card.h-100
+            .card-body.d-flex.align-items-center
+              .bg-success.bg-opacity-25.rounded-circle.p-3.me-3
+                i.bi.bi-people-fill.fs-1.text-success
+              div
+                h5.card-title.text-secondary Người dùng
+                h2.mb-0.text-success #{statistic.user.total} 
+                  span.fs-6.text-secondary tổng cộng
+                .mt-2
+                  span.text-success.me-2
+                    i.bi.bi-check-circle-fill.me-1
+                    | #{statistic.user.active}
+                  span.text-danger
+                    i.bi.bi-x-circle-fill.me-1
+                    | #{statistic.user.inactive}
+                    
+        .col-md-6
+          .glass-card.h-100
+            .card-body.d-flex.align-items-center
+              .bg-warning.bg-opacity-25.rounded-circle.p-3.me-3
+                i.bi.bi-file-earmark-text-fill.fs-1.text-warning
+              div
+                h5.card-title.text-secondary Bài viết
+                h2.mb-0.text-warning #{statistic.article.total} 
+                  span.fs-6.text-secondary tổng cộng
+                .mt-2
+                  span.text-success.me-2
+                    i.bi.bi-check-circle-fill.me-1
+                    | #{statistic.article.active}
+                  span.text-danger
+                    i.bi.bi-x-circle-fill.me-1
+                    | #{statistic.article.inactive}
+                    
+        .col-md-6
+          .glass-card.h-100
+            .card-body.d-flex.align-items-center
+              .bg-danger.bg-opacity-25.rounded-circle.p-3.me-3
+                i.bi.bi-shield-lock-fill.fs-1.text-danger
+              div
+                h5.card-title.text-secondary Tài khoản Admin
+                h2.mb-0.text-danger #{statistic.account.total} 
+                  span.fs-6.text-secondary tổng cộng
+                .mt-2
+                  span.text-success.me-2
+                    i.bi.bi-check-circle-fill.me-1
+                    | #{statistic.account.active}
+                  span.text-danger
+                    i.bi.bi-x-circle-fill.me-1
+                    | #{statistic.account.inactive}
+
+  .row
+    .col-12
+      .glass-card
+        .card-header 
+          i.bi.bi-bar-chart-line-fill.me-2
+          | Biểu đồ Thống kê Trạng thái
         .card-body
-          p Số lượng: <b>#{statistic.categoryProduct.total}</b>
-          p Hoạt động: <b>#{statistic.categoryProduct.active}</b>
-          p Dừng hoạt động: <b>#{statistic.categoryProduct.inactive}</b>
-    .col-6
-      .card.mb-4
-        .card-header Sản phẩm
-        .card-body
-          p Số lượng: <b>#{statistic.product.total}</b>
-          p Hoạt động: <b>#{statistic.product.active}</b>
-          p Dừng hoạt động: <b>#{statistic.product.inactive}</b>
-    .col-6
-      .card.mb-4
-        .card-header Danh mục bài viết
-        .card-body
-          p Số lượng: <b>#{statistic.categoryArticle.total}</b>
-          p Hoạt động: <b>#{statistic.categoryArticle.active}</b>
-          p Dừng hoạt động: <b>#{statistic.categoryArticle.inactive}</b>
-    .col-6
-      .card.mb-4
-        .card-header Bài viết
-        .card-body
-          p Số lượng: <b>#{statistic.article.total}</b>
-          p Hoạt động: <b>#{statistic.article.active}</b>
-          p Dừng hoạt động: <b>#{statistic.article.inactive}</b>
-    .col-6
-      .card.mb-4
-        .card-header Tài khoản admin
-        .card-body
-          p Số lượng: <b>#{statistic.account.total}</b>
-          p Hoạt động: <b>#{statistic.account.active}</b>
-          p Dừng hoạt động: <b>#{statistic.account.inactive}</b>
-    .col-6
-      .card.mb-4
-        .card-header Tài khoản người dùng
-        .card-body
-          p Số lượng: <b>#{statistic.user.total}</b>
-          p Hoạt động: <b>#{statistic.user.active}</b>
-          p Dừng hoạt động: <b>#{statistic.user.inactive}</b>
+          canvas#dashboardChart(height="80")
+
+  //- Script to render Chart.js
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      // Time update
+      setInterval(() => {
+        const now = new Date();
+        const timeEl = document.getElementById('current-time');
+        if(timeEl) timeEl.textContent = now.toLocaleTimeString('vi-VN');
+      }, 1000);
+
+      const ctx = document.getElementById('dashboardChart');
+      if (!ctx) return;
+      
+      const chartCtx = ctx.getContext('2d');
+      // Pass Pug data to JavaScript
+      const stats = {
+        product: {
+          active: #{statistic.product.active},
+          inactive: #{statistic.product.inactive}
+        },
+        article: {
+          active: #{statistic.article.active},
+          inactive: #{statistic.article.inactive}
+        },
+        account: {
+          active: #{statistic.account.active},
+          inactive: #{statistic.account.inactive}
+        },
+        user: {
+          active: #{statistic.user.active},
+          inactive: #{statistic.user.inactive}
+        }
+      };
+
+      const chart = new Chart(chartCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Sản phẩm', 'Bài viết', 'Tài khoản Admin', 'Người dùng'],
+          datasets: [
+            {
+              label: 'Hoạt động',
+              data: [stats.product.active, stats.article.active, stats.account.active, stats.user.active],
+              backgroundColor: 'rgba(16, 185, 129, 0.6)',
+              borderColor: 'rgba(16, 185, 129, 1)',
+              borderWidth: 1,
+              borderRadius: 6
+            },
+            {
+              label: 'Dừng hoạt động',
+              data: [stats.product.inactive, stats.article.inactive, stats.account.inactive, stats.user.inactive],
+              backgroundColor: 'rgba(239, 68, 68, 0.6)',
+              borderColor: 'rgba(239, 68, 68, 1)',
+              borderWidth: 1,
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: '#f8fafc',
+                font: {
+                  family: "'Outfit', sans-serif"
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              },
+              ticks: {
+                color: '#94a3b8',
+                stepSize: 1
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              },
+              ticks: {
+                color: '#94a3b8',
+                font: {
+                  family: "'Outfit', sans-serif"
+                }
+              }
+            }
+          }
+        }
+      });
+    });

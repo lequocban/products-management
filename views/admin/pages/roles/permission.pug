@@ -6,251 +6,297 @@ block main
   +alert-error(5000)
 
   if(role.permissions.includes("roles_permissions"))
-    h1(class='mb-4') Phân quyền
+    .d-flex.justify-content-between.align-items-center.mb-4
+      h1.fw-bold.text-primary 
+        i.fa-solid.fa-shield-halved.me-2
+        | Phân quyền hệ thống
+      
+      if(records)
+        button(
+          type='submit'
+          class='btn btn-primary btn-lg rounded-pill fw-bold shadow-sm'
+          button-submit
+        ) 
+          i.fa-solid.fa-floppy-disk.me-2
+          | Cập nhật quyền
 
     if(records)
       div(data-records=records)
-      div(class='text-end')
-        button(
-          type='submit'
-          class='btn btn-primary mb-3'
-          button-submit
-        ) Cập nhật
       
-      table(
-        class='table table-hover table-sm'
-        table-permissions
-      )
-        thead 
-          tr 
-            th Tính năng
-            each item in records
-              th(class='text-center') #{item.title}
-        tbody 
-          tr(data-name="id" class="d-none")
-            td
-            each item in records  
-              td(class="text-center")
-                input(type="text" value=item.id)
+      .card.border-0.shadow-sm.rounded-4.mb-5
+        .card-body.p-0
+          .table-responsive(style="max-height: 75vh; overflow-y: auto;")
+            table(
+              class='table table-hover table-bordered mb-0'
+              table-permissions
+            )
+              //- Đóng băng header để khi cuộn vẫn thấy tên nhóm quyền
+              thead.sticky-top(style="z-index: 10; background-color: #1e293b !important; color: white;")
+                tr 
+                  th.py-3.fs-6.border-bottom-0 Tính năng quản trị
+                  each item in records
+                    th.text-center.py-3.fs-6.border-bottom-0 #{item.title}
+              
+              tbody 
+                tr(data-name="id" class="d-none")
+                  td
+                  each item in records  
+                    td.text-center
+                      input(type="text" value=item.id)
 
-          //- Product-category
-          tr 
-            td(colspan="3")
-              b Danh mục sản phẩm
-          tr(data-name='products-category_view')
-            td Xem 
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
+                //- ==========================================
+                //- DANH MỤC SẢN PHẨM
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-folder-tree.me-2
+                      | Danh mục sản phẩm
+                
+                tr(data-name='products-category_view').align-middle
+                  td.ps-4 Xem danh sách
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                tr(data-name='products-category_create').align-middle
+                  td.ps-4 Thêm mới 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                tr(data-name='products-category_edit').align-middle
+                  td.ps-4 Chỉnh sửa 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                tr(data-name='products-category_delete').align-middle
+                  td.ps-4 Xóa
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                //- ==========================================
+                //- SẢN PHẨM
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3.border-top
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-box-open.me-2
+                      | Quản lý Sản phẩm
+                
+                tr(data-name='products_view').align-middle
+                  td.ps-4 Xem danh sách
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
         
+                tr(data-name='products_create').align-middle
+                  td.ps-4 Thêm mới 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='products-category_create')
-              td Thêm mới 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='products_edit').align-middle
+                  td.ps-4 Chỉnh sửa 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='products-category_edit')
-              td Chỉnh sửa 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='products_delete').align-middle
+                  td.ps-4 Xóa
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='products-category_delete')
-            td Xóa
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
-
-          //- Product
-          tr 
-            td(colspan="3")
-              b Sản phẩm
-          tr(data-name='products_view')
-            td Xem 
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
+                //- ==========================================
+                //- ĐƠN HÀNG
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3.border-top
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-cart-shopping.me-2
+                      | Quản lý Đơn hàng
+                
+                tr(data-name='orders_view').align-middle
+                  td.ps-4 Xem danh sách
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
         
-          tr(data-name='products_create')
-              td Thêm mới 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='orders_create').align-middle
+                  td.ps-4 Thêm mới 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='products_edit')
-              td Chỉnh sửa 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='orders_edit').align-middle
+                  td.ps-4 Chỉnh sửa / Cập nhật trạng thái
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='products_delete')
-            td Xóa
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
-
-          //- orders
-          tr 
-            td(colspan="3")
-              b Đơn hàng
-          tr(data-name='orders_view')
-            td Xem 
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
-        
-          tr(data-name='orders_create')
-              td Thêm mới 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
-
-          tr(data-name='orders_edit')
-              td Chỉnh sửa 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
-
-          tr(data-name='orders_delete')
-            td Xóa
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
+                tr(data-name='orders_delete').align-middle
+                  td.ps-4 Xóa
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
             
-          //- articles-category
-          tr 
-            td(colspan="3")
-              b Danh mục bài viết
-          tr(data-name='articles-category_view')
-            td Xem 
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
+                //- ==========================================
+                //- DANH MỤC BÀI VIẾT
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3.border-top
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-layer-group.me-2
+                      | Danh mục Bài viết
+                
+                tr(data-name='articles-category_view').align-middle
+                  td.ps-4 Xem danh sách
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                tr(data-name='articles-category_create').align-middle
+                  td.ps-4 Thêm mới 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                tr(data-name='articles-category_edit').align-middle
+                  td.ps-4 Chỉnh sửa 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                tr(data-name='articles-category_delete').align-middle
+                  td.ps-4 Xóa
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                //- ==========================================
+                //- BÀI VIẾT
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3.border-top
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-newspaper.me-2
+                      | Quản lý Bài viết
+                
+                tr(data-name='articles_view').align-middle
+                  td.ps-4 Xem danh sách
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
         
+                tr(data-name='articles_create').align-middle
+                  td.ps-4 Thêm mới 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='articles-category_create')
-              td Thêm mới 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='articles_edit').align-middle
+                  td.ps-4 Chỉnh sửa 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='articles-category_edit')
-              td Chỉnh sửa 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='articles_delete').align-middle
+                  td.ps-4 Xóa
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='articles-category_delete')
-            td Xóa
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
-
-          //- articles
-          tr 
-            td(colspan="3")
-              b Bài viết
-          tr(data-name='articles_view')
-            td Xem 
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
+                //- ==========================================
+                //- NHÓM QUYỀN
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3.border-top
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-users-gear.me-2
+                      | Nhóm quyền (Roles)
+                
+                tr(data-name='roles_view').align-middle
+                  td.ps-4 Xem danh sách
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
         
-          tr(data-name='articles_create')
-              td Thêm mới 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='roles_create').align-middle
+                  td.ps-4 Thêm mới 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='articles_edit')
-              td Chỉnh sửa 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='roles_edit').align-middle
+                  td.ps-4 Chỉnh sửa 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='articles_delete')
-            td Xóa
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
+                tr(data-name='roles_delete').align-middle
+                  td.ps-4 Xóa
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          //- Roles
-          tr 
-            td(colspan="3")
-              b Nhóm quyền
-          tr(data-name='roles_view')
-            td Xem 
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
+                tr(data-name='roles_permissions').align-middle
+                  td.ps-4 Phân quyền
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
+
+                //- ==========================================
+                //- TÀI KHOẢN ADMIN
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3.border-top
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-user-shield.me-2
+                      | Danh sách Tài khoản Admin
+                
+                tr(data-name='accounts_view').align-middle
+                  td.ps-4 Xem danh sách
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
         
+                tr(data-name='accounts_create').align-middle
+                  td.ps-4 Thêm mới 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='roles_create')
-              td Thêm mới 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='accounts_edit').align-middle
+                  td.ps-4 Chỉnh sửa 
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='roles_edit')
-              td Chỉnh sửa 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
+                tr(data-name='accounts_delete').align-middle
+                  td.ps-4 Xóa
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='roles_delete')
-            td Xóa
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
+                //- ==========================================
+                //- CÀI ĐẶT CHUNG
+                //- ==========================================
+                tr.bg-light
+                  td(colspan=(records.length + 1)).py-3.border-top
+                    h5.mb-0.fw-bold.text-primary
+                      i.fa-solid.fa-gear.me-2
+                      | Cài đặt hệ thống
+                
+                tr(data-name='settings_general').align-middle
+                  td.ps-4 Cài đặt chung
+                  each item in records
+                    td.text-center
+                      input.form-check-input(type='checkbox' style='width: 1.2rem; height: 1.2rem; cursor: pointer;')
 
-          tr(data-name='roles_permissions')
-            td Phân quyền
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
-
-          //- Accounts
-          tr 
-            td(colspan="3")
-              b Danh sách tài khoản
-          tr(data-name='accounts_view')
-            td Xem 
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
-        
-
-          tr(data-name='accounts_create')
-              td Thêm mới 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
-
-          tr(data-name='accounts_edit')
-              td Chỉnh sửa 
-              each item in records
-                td(class='text-center')
-                  input(type='checkbox')
-
-          tr(data-name='accounts_delete')
-            td Xóa
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
-
-          //- Setting
-          tr 
-            td(colspan="3")
-              b Cài đặt chung
-          tr(data-name='settings_general')
-            td Cài đặt 
-            each item in records
-              td(class='text-center')
-                input(type='checkbox')
-        
-
-
+    //- Form ẩn để JS submit dữ liệu
     form(
       class="d-none"
       id="form-change-permissions"
@@ -266,4 +312,8 @@ block main
 
     script(src="/admin/js/role.js") 
   else 
-    h1 Bạn không có quyền truy cập
+    .text-center.mt-5
+      h1.text-danger.fw-bold 
+        i.fa-solid.fa-triangle-exclamation.me-2
+        | Truy cập bị từ chối
+      p.text-muted Bạn không có quyền truy cập vào trang Phân quyền hệ thống.

@@ -3,14 +3,29 @@ header.header
     .row.align-items-center
       .col-3
         .inner-logo 
-          a(href=`${prefixAdmin}/dashboard`) ADMIN
+          a(href=`${prefixAdmin}/dashboard`) 
+            i.bi.bi-boxes.me-2
+            | NEON ADMIN
       .col-9
-        div(class="text-end")
+        div(class="text-end d-flex justify-content-end align-items-center")
+          .user-info.d-none.d-md-flex.align-items-center.me-3.text-secondary
+            if (user.avatar)
+              img.rounded-circle.me-2(src=user.avatar, width="32", height="32", style="object-fit: cover; border: 1px solid var(--neon-blue);")
+            else
+              i.bi.bi-person-circle.me-2.fs-4.text-glow-blue
+            span.fw-500 Xin chào, 
+            span.text-primary.ms-1 #{user.fullName}
+          
           a(
             href=`${prefixAdmin}/my-account`
-            class="btn btn-primary btn-sm ms-2"
-          ) #{user.fullName}
+            class="btn btn-primary bg-transparent text-primary border-primary btn-sm ms-2"
+          ) 
+            i.bi.bi-person-badge.me-1
+            | Tài khoản
+            
           a(
             href=`${prefixAdmin}/auth/logout`
             class="btn btn-danger btn-sm ms-2"
-          ) Đăng xuất
+          ) 
+            i.bi.bi-box-arrow-right.me-1
+            | Đăng xuất
