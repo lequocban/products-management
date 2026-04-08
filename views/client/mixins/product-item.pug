@@ -1,17 +1,14 @@
 mixin product-item(item)
   .col-4.mb-4 
-    .product-item
-      .inner-image
+    .product-item.glass-card.shadow-lg.rounded-4.overflow-hidden.border-0(style="transition: all 0.3s; padding: 0;")
+      .inner-image.position-relative
         a(href=`/products/detail/${item.slug}`)
-          img(src=item.thumbnail, alt=item.title)
+          img.img-fluid.w-100(src=item.thumbnail, alt=item.title, style="object-fit: cover; aspect-ratio: 4/3;")
           if(item.featured == "1")
-            .inner-featured Nổi bật
-      .inner-content
-        h3.inner-title 
-          a(
-            class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark"
-            href=`/products/detail/${item.slug}`
-          ) #{item.title}
-        .inner-price-new #{item.newPrice}$
-        .inner-price-old #{item.price}$
-        .inner-discount -#{item.discountPercentage}%
+            .inner-featured.badge.bg-info.position-absolute(style="top: 10px; right: 10px;") Nổi bật
+      .inner-content.p-3
+        h3.inner-title.mb-2 
+          a.cyber-text.text-decoration-none.fw-bold(href=`/products/detail/${item.slug}`) #{item.title}
+        .inner-price-new.text-success.fw-bold.fs-5 #{item.newPrice}$
+        .inner-price-old.text-muted.text-decoration-line-through #{item.price}$
+        .inner-discount.badge.bg-danger.mt-2 -#{item.discountPercentage}%

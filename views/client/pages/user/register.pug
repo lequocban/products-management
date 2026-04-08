@@ -5,13 +5,13 @@ block main
   +alert-error(5000)
   +alert-success(5000)
 
-  .container.my-5
+  .container.my-5.cyber-wrapper.rounded-5
     .row.justify-content-center
       //- Dùng col-md-8 col-lg-5 để khung form bằng đúng kích thước trang Đăng nhập
       .col-md-8.col-lg-5
-        .card.shadow.border-0.rounded-4
+        .glass-card.shadow-lg.rounded-5.overflow-hidden
           .card-header.bg-white.text-center.pt-4.pb-2.border-bottom-0
-            h2.fw-bold.text-primary 
+            h2.cyber-text.fw-bold 
               i.fa-solid.fa-user-plus.me-2
               | Đăng ký tài khoản
             p.text-muted.small Tạo tài khoản để trải nghiệm mua sắm tuyệt vời
@@ -19,65 +19,64 @@ block main
           .card-body.p-4
             form(action="/user/register" method="POST")
               //- Họ và tên
-              .mb-3
-                label.form-label.fw-bold(for="fullName") Họ và tên
-                input#fullName.form-control.form-control-lg.rounded-3(
+              .form-floating.mb-3
+                input#fullName.form-control.cyber-input.rounded-4(
                   type="text" 
                   name="fullName" 
                   required 
+                  placeholder="Nhập họ và tên..."
                 )
+                label.fw-bold(for="fullName") Họ và tên
 
               //- Email
-              .mb-3
-                label.form-label.fw-bold(for="email") Email
-                input#email.form-control.form-control-lg.rounded-3(
+              .form-floating.mb-3
+                input#email.form-control.cyber-input.rounded-4(
                   type="email" 
                   name="email" 
                   required 
                   placeholder="Nhập email..."
                 )
+                label.fw-bold(for="email") Email
 
               //- Mật khẩu (Có con mắt)
-              .mb-3
-                label.form-label.fw-bold(for="password") Mật khẩu
-                .position-relative
-                  input#password.form-control.form-control-lg.rounded-3(
-                    type="password"
-                    name="password"
-                    required
-                    placeholder="Nhập mật khẩu..."
-                    style="padding-right: 40px;" 
-                  )
-                  //- Đổi id thành class toggle-password để dùng chung cho nhiều nút
-                  span.toggle-password.position-absolute.top-50.end-0.translate-middle-y.pe-3(
-                    style="cursor: pointer; color: #6c757d;"
-                  )
-                    i.fa-regular.fa-eye.fs-5
+              .form-floating.mb-3.position-relative
+                input#password.form-control.cyber-input.rounded-4(
+                  type="password"
+                  name="password"
+                  required
+                  placeholder="Nhập mật khẩu..."
+                  style="padding-right: 50px;" 
+                )
+                label.fw-bold(for="password") Mật khẩu
+                //- Đổi id thành class toggle-password để dùng chung cho nhiều nút
+                span.toggle-password.position-absolute.top-50.end-0.translate-middle-y.pe-3(
+                  style="cursor: pointer; color: #adb5bd; z-index: 5;"
+                )
+                  i.fa-regular.fa-eye.fs-5
 
               //- Xác nhận mật khẩu (Có con mắt)
-              .mb-4
-                label.form-label.fw-bold(for="confirmPassword") Xác nhận mật khẩu
-                .position-relative
-                  input#confirmPassword.form-control.form-control-lg.rounded-3(
-                    type="password"
-                    name="confirmPassword"
-                    required
-                    placeholder="Nhập lại mật khẩu..."
-                    style="padding-right: 40px;" 
-                  )
-                  //- Dùng chung class toggle-password
-                  span.toggle-password.position-absolute.top-50.end-0.translate-middle-y.pe-3(
-                    style="cursor: pointer; color: #6c757d;"
-                  )
-                    i.fa-regular.fa-eye.fs-5
+              .form-floating.mb-4.position-relative
+                input#confirmPassword.form-control.cyber-input.rounded-4(
+                  type="password"
+                  name="confirmPassword"
+                  required
+                  placeholder="Nhập lại mật khẩu..."
+                  style="padding-right: 50px;" 
+                )
+                label.fw-bold(for="confirmPassword") Xác nhận mật khẩu
+                //- Dùng chung class toggle-password
+                span.toggle-password.position-absolute.top-50.end-0.translate-middle-y.pe-3(
+                  style="cursor: pointer; color: #adb5bd; z-index: 5;"
+                )
+                  i.fa-regular.fa-eye.fs-5
 
               //- Nút Submit
               .d-grid.mt-4
-                button.btn.btn-primary.btn-lg.rounded-pill.fw-bold(type="submit") 
+                button.btn.btn-cyber.btn-lg.rounded-pill.fw-bold(type="submit") 
                   i.fa-solid.fa-user-check.me-2
                   | Đăng ký
 
           //- Footer điều hướng về trang Đăng nhập
           .card-footer.bg-white.text-center.pb-4.border-top-0
             span.text-muted Đã có tài khoản? 
-            a.text-primary.fw-bold.text-decoration-none.ms-1(href="/user/login") Đăng nhập ngay!
+            a.cyber-text.fw-bold.text-decoration-none.ms-1(href="/user/login") Đăng nhập ngay!

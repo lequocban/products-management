@@ -3,7 +3,7 @@ include ../../mixins/box-head.pug
 include ../../mixins/article-layout.pug
 
 block main
-  .container.my-4
+  .container.my-4.cyber-wrapper.rounded-5
     .row
       //- =========================================
       //- CỘT TRÁI (Nội dung chính - Chiếm 8/12 cột)
@@ -31,10 +31,10 @@ block main
       //- CỘT PHẢI (Sidebar - Chiếm 4/12 cột)
       //- =========================================
       .col-lg-3
-        .sidebar-new-articles.ms-auto(style="position: sticky; top: 100px; z-index: 10;")
-          .card.border-0.shadow-sm
-            .card-header.bg-primary.text-white.py-3
-              h5.mb-0.fw-bold 
+        .sidebar-new-articles.ms-auto.glass-card.shadow-lg.rounded-5(style="position: sticky; top: 100px; z-index: 10;")
+          .card.border-0.overflow-hidden(style="background: transparent;")
+            .card-header.py-3.border-bottom(style="background: transparent; border-color: rgba(255,255,255,0.1) !important;")
+              h5.mb-0.cyber-text.fw-bold 
                 i.fa-regular.fa-newspaper.me-2
                 | Tin tức mới nhất
             
@@ -54,7 +54,7 @@ block main
                       
                       //- Tiêu đề & Ngày đăng
                       div
-                        h6.mb-1.text-dark.fw-bold(
+                        h6.mb-1.text-light.fw-bold(
                           style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 14px;"
                         ) #{item.title}
                         

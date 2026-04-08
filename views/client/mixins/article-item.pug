@@ -1,6 +1,6 @@
 mixin article-item(item)
   .col-md-4.mb-4
-    .article-item.card.h-100.border-0.shadow-sm
+    .article-item.card.glass-card.h-100.border-0.shadow-sm
       //- Khối ảnh đại diện
       .inner-image.position-relative
         a(href=`/articles/detail/${item.slug}`)
@@ -17,12 +17,12 @@ mixin article-item(item)
       .card-body
         //- Hiển thị danh mục (yêu cầu controller phải populate)
         if item.article_category_id && item.article_category_id.title
-          span.badge.bg-light.text-primary.border.mb-2 #{item.article_category_id.title}
+          span.badge.border.mb-2(style="border-color: rgba(255,255,255,0.2) !important; color: var(--cyber-blue);") #{item.article_category_id.title}
           
         //- Tiêu đề bài viết
         h3.card-title.h5.fw-bold.mt-1
           a(
-            class="text-dark text-decoration-none"
+            class="text-light text-decoration-none"
             href=`/articles/detail/${item.slug}`
             style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"
           ) #{item.title}

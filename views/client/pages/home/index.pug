@@ -6,9 +6,9 @@ include ../../mixins/alert.pug
 block main
   +alert-success(3000)
   +alert-error(3000)
-  h1 Trang chủ
+  h1.cyber-text.text-center.mt-4.mb-4 Trang chủ
 
-  .section-products-featured.my-5
+  .section-products-featured.my-5.cyber-wrapper.rounded-5(style="background: rgba(255,255,255,0.05); padding: 2rem 0; border: 1px solid var(--glass-border);")
     .container 
       .row
         .col-12
@@ -17,7 +17,7 @@ block main
       +product-grid(productsFeatured) 
   
 
-  .section-products-featured.my-5
+  .section-products-featured.my-5.cyber-wrapper.rounded-5(style="background: rgba(255,255,255,0.05); padding: 2rem 0; border: 1px solid var(--glass-border);")
     .container 
       .row
         .col-12

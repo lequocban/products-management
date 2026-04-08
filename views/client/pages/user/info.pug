@@ -2,25 +2,25 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 
 block main 
-  .container.my-5
+  .container.my-5.cyber-wrapper.rounded-5
     .row.justify-content-center
       //- Dùng col-md-8 để Card thông tin rộng rãi hơn form đăng nhập một chút
       .col-md-8.col-lg-6
-        .card.shadow.border-0.rounded-4
+        .glass-card.shadow-lg.rounded-5.overflow-hidden
           
           //- KHỐI AVATAR VÀ TÊN
-          .card-header.bg-white.text-center.pt-5.pb-3.border-bottom-0
+          .card-header.text-center.pt-5.pb-3.border-bottom-0(style="background: transparent;")
             //- Kiểm tra nếu user có avatar thì hiển thị ảnh, nếu không thì dùng icon mặc định
             if user.avatar
-              img.rounded-circle.shadow-sm.mb-2(
+              img.rounded-circle.shadow-lg.mb-2(
                 src=user.avatar
                 alt="Avatar"
-                style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #f8f9fa;"
+                style="width: 120px; height: 120px; object-fit: cover; border: 4px solid var(--cyber-blue);"
               )
             else
-              i.fa-solid.fa-circle-user.text-secondary(style="font-size: 90px;")
+              i.fa-solid.fa-circle-user.text-secondary(style="font-size: 90px; color: var(--cyber-blue) !important;")
             
-            h3.fw-bold.mt-3.mb-1.text-dark #{user.fullName}
+            h3.cyber-text.fw-bold.mt-3.mb-1 #{user.fullName}
             
             //- Hiển thị trạng thái tài khoản bằng Badge (Nhãn)
             if user.status === "active"
@@ -34,40 +34,40 @@ block main
 
           //- KHỐI CHI TIẾT THÔNG TIN
           .card-body.p-4.px-md-5
-            h5.fw-bold.mb-4.border-bottom.pb-2
-              i.fa-solid.fa-address-card.me-2.text-primary
+            h5.fw-bold.mb-4.border-bottom.pb-2(style="border-color: rgba(255,255,255,0.1) !important;")
+              i.fa-solid.fa-address-card.me-2(style="color: var(--cyber-pink);")
               | Thông tin chi tiết
 
-            table.table.table-borderless.mb-0
+            table.table.table-borderless.mb-0.text-light(style="background: transparent;")
               tbody
                 tr.align-middle
-                  td.text-muted(width="35%") 
+                  td.text-light(width="35%") 
                     i.fa-solid.fa-signature.me-2
                     | Họ và tên:
-                  td.fw-bold.text-dark #{user.fullName}
+                  td.fw-bold.text-light #{user.fullName}
                   
                 tr.align-middle
-                  td.text-muted 
+                  td.text-light 
                     i.fa-solid.fa-envelope.me-2
                     | Email:
-                  td.fw-bold.text-dark #{user.email}
+                  td.fw-bold.text-light #{user.email}
 
                 //- Thêm dòng hiển thị Số điện thoại
                 tr.align-middle
-                  td.text-muted 
+                  td.text-light 
                     i.fa-solid.fa-phone.me-2
                     | Số điện thoại:
-                  td.fw-bold.text-dark 
+                  td.fw-bold.text-light 
                     if user.phone
                       | #{user.phone}
                     else
-                      span.text-muted.fst-italic Chưa cập nhật
+                      span.text-light.fst-italic Chưa cập nhật
                   
                 tr.align-middle
-                  td.text-muted 
+                  td.text-light 
                     i.fa-solid.fa-calendar-days.me-2
                     | Ngày tham gia:
-                  td.fw-bold.text-dark
+                  td.fw-bold.text-light
                     //- Chuyển đổi định dạng ngày ISO sang ngày Việt Nam (VD: 06/04/2026)
                     - const joinDate = new Date(user.createdAt).toLocaleDateString("vi-VN")
                     | #{joinDate}
@@ -75,11 +75,11 @@ block main
             //- KHỐI NÚT CHỨC NĂNG
             .d-flex.justify-content-center.gap-3.mt-5
               //- Nút chỉnh sửa
-              a.btn.btn-outline-primary.rounded-pill.px-4(href="/user/edit") 
+              a.btn.btn-outline-light.rounded-pill.px-4.border-2(href="/user/edit") 
                 i.fa-solid.fa-pen-to-square.me-2
                 | Cập nhật thông tin
                 
               //- Nút đổi mật khẩu
-              a.btn.btn-outline-secondary.rounded-pill.px-4(href="/user/password/change") 
+              a.btn.btn-outline-secondary.rounded-pill.px-4.text-white.border-secondary(href="/user/password/change") 
                 i.fa-solid.fa-key.me-2
                 | Đổi mật khẩu

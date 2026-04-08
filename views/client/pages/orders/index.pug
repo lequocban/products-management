@@ -2,7 +2,7 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 
 block main 
-  .container.mb-5
+  .container.mb-5.cyber-wrapper.rounded-5
     .row.mt-4.mb-3
       .col-12
         +box-head("Đơn hàng của tôi")
@@ -10,11 +10,11 @@ block main
     .row 
       .col-12 
         if orders && orders.length > 0
-          .card.border-0.shadow-sm
+          .glass-card.shadow-lg.rounded-5.overflow-hidden
             .card-body.p-0
               .table-responsive
-                table.table.table-hover.table-bordered.mb-0
-                  thead.table-light
+                table.table.text-white.mb-0(style="background: transparent;")
+                  thead(style="border-bottom: 2px solid var(--cyber-blue);")
                     tr
                       th.text-center STT
                       th Mã đơn hàng
@@ -25,9 +25,10 @@ block main
                   
                   tbody
                     each order, index in orders
-                      tr.align-middle
+                      tr.align-middle(style="border-bottom: 1px solid rgba(255,255,255,0.1);")
                         td.text-center #{index + 1}
-                        td.fw-bold.text-primary #{order._id}
+                        td
+                          span.cyber-text.fw-bold #{order._id}
                         td 
                           //- Hiển thị ngày tháng theo chuẩn Việt Nam
                           - var date = new Date(order.createdAt).toLocaleString("vi-VN")

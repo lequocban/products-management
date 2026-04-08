@@ -2,62 +2,67 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 
 block main 
-  .container.mb-5
+  .container.mb-5.cyber-wrapper.rounded-5
     
     //- KHỐI 1: LỜI CẢM ƠN & THÔNG BÁO THÀNH CÔNG
     .row.mt-5.mb-4
       .col-12
-        .alert.alert-success.text-center.py-4
-          i.fa-solid.fa-circle-check.mb-3(style="font-size: 50px;")
-          h2.fw-bold Đặt hàng thành công!
+        .alert.glass-card.shadow-lg.text-center.py-4.border-info.rounded-5
+          i.fa-solid.fa-circle-check.mb-3(style="font-size: 50px; color: var(--cyber-blue);")
+          h2.cyber-text.fw-bold Đặt hàng thành công!
           p.mb-1 Cảm ơn bạn đã mua sắm tại hệ thống của chúng tôi.
           p Đơn hàng của bạn đang được xử lý và sẽ được giao trong thời gian sớm nhất.
           
           //- Mã đơn hàng chính là ID của document trong MongoDB
           p.mt-3.mb-0
             | Mã đơn hàng: 
-            span.fw-bold.text-dark #{order.id}
+            span.cyber-text.fw-bold #{order.id}
 
     //- KHỐI 2: THÔNG TIN NGƯỜI NHẬN
     .row.mb-4
       .col-12
-        .card.border-0.shadow-sm
-          .card-header.bg-light
-            h5.mb-0.fw-bold 
+        //- Đổi sang rounded-4 để góc bớt gắt, vẫn giữ overflow-hidden
+        .glass-card.border-0.shadow-lg.rounded-4.overflow-hidden
+          //- Thêm px-4 và pt-4 để đẩy tiêu đề lùi vào trong
+          .card-header.border-0.px-4.pt-4(style="background: transparent;")
+            h5.mb-0.cyber-text.fw-bold 
               i.fa-solid.fa-address-card.me-2
               | Thông tin nhận hàng
-          .card-body
-            table.table.table-borderless.mb-0
+          //- Thêm px-4 để đẩy nội dung lùi vào trong
+          .card-body.px-4
+            table.table.table-borderless.text-white.mb-0
               tbody
                 tr
-                  td(width="20%").text-muted Họ và tên:
+                  td(width="20%").text-light.ps-0 Họ và tên:
                   td.fw-bold #{order.user_info.fullName}
                 tr
-                  td.text-muted Số điện thoại:
+                  td.text-light.ps-0 Số điện thoại:
                   td.fw-bold #{order.user_info.phone}
                 tr
-                  td.text-muted Địa chỉ giao hàng:
+                  td.text-light.ps-0 Địa chỉ giao hàng:
                   td.fw-bold #{order.user_info.address}
 
     //- KHỐI 3: CHI TIẾT HÓA ĐƠN
     .row
       .col-12 
-        .card.border-0.shadow-sm
-          .card-header.bg-light
-            h5.mb-0.fw-bold 
+        .glass-card.border-0.shadow-lg.rounded-4.overflow-hidden
+          //- Thêm px-4 để đẩy tiêu đề lùi vào trong
+          .card-header.border-0.pt-4.px-4(style="background: transparent;")
+            h5.mb-0.cyber-text.fw-bold 
               i.fa-solid.fa-box-open.me-2
               | Chi tiết đơn hàng
           
+          //- Vẫn giữ p-0 để bảng full chiều ngang, nhưng thêm px-4 cho bảng
           .card-body.p-0
-            .table-responsive
-              table.table.table-bordered.mb-0
-                thead.table-light
+            .table-responsive.px-4.pb-3
+              table.table.table-hover.text-white.mb-0(style="background: transparent;")
+                thead(style="border-bottom: 2px solid var(--cyber-blue);")
                   tr
                     th.text-center STT
                     th Ảnh
                     th Tên sản phẩm
                     th Giá mua
-                    th Số lượng
+                    th.text-center Số lượng
                     th Thành tiền
 
                 tbody
@@ -79,13 +84,13 @@ block main
                         //- Kiểm tra nếu product_id được populate thành công thì mới in ảnh
                         if item.product_id && item.product_id.thumbnail
                           img(
-                            src=item.product_id.thumbnail, 
-                            alt=item.product_id.title, 
+                            src=item.product_id.thumbnail
+                            alt=item.product_id.title
                             style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"   
                           )
                       td 
                         if item.product_id
-                          a.text-decoration-none.fw-bold.text-dark(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
+                          a.cyber-text.text-decoration-none.fw-bold(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
                         else 
                           span.text-danger (Sản phẩm đã bị xóa)
                       
@@ -93,14 +98,18 @@ block main
                       td.text-center #{item.quantity}
                       td.fw-bold.text-danger #{totalPrice} $
             
-            //- Tổng tiền thanh toán
-            .card-footer.bg-white.text-end.py-3
+            //- Thêm px-4 để đẩy chữ Tổng cộng lùi vào trong
+            .card-footer.text-end.py-3.px-4.border-0(style="background: transparent; border-top: 1px solid rgba(255,255,255,0.1) !important;")
               h4.mb-0
-                span.text-muted.me-3 Tổng cộng:
+                span.text-light.me-3 Tổng cộng:
                 span.text-danger.fw-bold #{totalOrder} $
 
     //- KHỐI 4: NÚT ĐIỀU HƯỚNG
     .row.mt-4
       .col-12.text-center
-        a.btn.btn-outline-primary.me-2(href="/products") Tiếp tục mua sắm
-        a.btn.btn-primary(href="/") Về trang chủ
+        a.btn.btn-outline-light.me-2.rounded-pill(href="/products") 
+          i.fa-solid.fa-bag-shopping.me-2
+          | Tiếp tục mua sắm
+        a.btn.btn-cyber.rounded-pill(href="/") 
+          i.fa-solid.fa-house.me-2
+          | Về trang chủ

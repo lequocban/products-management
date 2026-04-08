@@ -5,24 +5,24 @@ block main
   +alert-error(5000)
   +alert-success(5000)
 
-  .container.my-5
+  .container.my-5.cyber-wrapper.rounded-5
     .row.justify-content-center
       .col-md-6.col-lg-5
-        .card.shadow.border-0.rounded-4
+        .glass-card.shadow-lg.rounded-5.overflow-hidden
           .card-body.p-4.p-md-5
-            h3.fw-bold.text-center.text-primary.mb-4 
+            h3.fw-bold.text-center.cyber-text.mb-4 
               i.fa-solid.fa-envelope-circle-check.me-2
               | Xác thực đăng ký
             
-            p.text-center.text-muted Một mã OTP đã được gửi đến email: <br>
-              b.text-dark #{email}
+            p.text-center.text-light Một mã OTP đã được gửi đến email: <br>
+              b.text-white #{email}
             
             form(action="/user/register/otp" method="POST")
               .form-group.mb-4.mt-4
                 label.mb-3.fw-bold Nhập mã OTP (6 số)
                 .d-flex.justify-content-center.gap-2.mb-4
                   - for (var i = 0; i < 6; i++)
-                    input.form-control.form-control-lg.text-center.otp-input.rounded-3(
+                    input.form-control.cyber-input.text-center.otp-input.rounded-3(
                       type="text"
                       name="otp" 
                       maxlength="1"
@@ -32,6 +32,6 @@ block main
                       style="width: 45px; height: 55px; font-size: 20px; font-weight: bold;"
                     )
               
-              button(type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold") 
+              button(type="submit" class="btn btn-cyber btn-lg w-100 rounded-pill fw-bold text-white") 
                 | Kích hoạt tài khoản
   script(src="/js/otp.js") 

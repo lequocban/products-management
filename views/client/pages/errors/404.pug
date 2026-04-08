@@ -1,18 +1,18 @@
 extends ../../layouts/default.pug
 
 block main 
-  .container.my-5.py-5
+  .container.my-5.py-5.cyber-wrapper.rounded-5
     .row.justify-content-center.align-items-center
-      .col-md-8.text-center
+      .col-md-8.text-center.glass-card.p-5.rounded-5.shadow-lg
         //- Khối số 404 khổng lồ
-        h1.fw-bold.text-primary(style="font-size: 120px; text-shadow: 2px 2px 10px rgba(0,0,0,0.1); line-height: 1;") 404
+        h1.fw-bold.cyber-text(style="font-size: 120px; text-shadow: 2px 2px 10px rgba(0,240,255,0.5); line-height: 1;") 404
         
         //- Icon cảnh báo thân thiện
         .mb-4.mt-3
           i.fa-solid.fa-face-frown-open.text-warning(style="font-size: 60px;")
         
         //- Tiêu đề lỗi
-        h2.fw-bold.mb-3 Ôi không! Không tìm thấy trang.
+        h2.fw-bold.mb-3.text-white Ôi không! Không tìm thấy trang.
         
         //- Lời giải thích
         p.text-muted.fs-5.mb-5
@@ -23,11 +23,11 @@ block main
         //- Khối nút điều hướng
         .d-flex.justify-content-center.gap-3
           //- Nút Lùi lại trang trước
-          a.btn.btn-outline-secondary.btn-lg.rounded-pill.px-4(href="javascript:history.back()") 
+          a.btn.btn-outline-light.btn-lg.rounded-pill.px-4(href="javascript:history.back()") 
             i.fa-solid.fa-arrow-left.me-2
             | Quay lại
             
           //- Nút Về thẳng trang chủ
-          a.btn.btn-primary.btn-lg.rounded-pill.px-4(href="/") 
+          a.btn.btn-cyber.btn-lg.rounded-pill.px-4(href="/") 
             i.fa-solid.fa-house.me-2
             | Về Trang chủ

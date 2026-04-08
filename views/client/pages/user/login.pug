@@ -5,14 +5,14 @@ block main
   +alert-error(5000)
   +alert-success(5000)
 
-  .container.my-5
+  .container.my-5.cyber-wrapper.rounded-5
     .row.justify-content-center
       //- Ép khung form chỉ chiếm 5/12 cột màn hình máy tính để không bị bè ngang quá to
       .col-md-8.col-lg-5
-        .card.shadow.border-0.rounded-4
+        .glass-card.shadow-lg.rounded-5.overflow-hidden
           .card-header.bg-white.text-center.pt-4.pb-2.border-bottom-0
             //- Icon và Tiêu đề
-            h2.fw-bold.text-primary 
+            h2.cyber-text.fw-bold 
               i.fa-solid.fa-circle-user.me-2
               | Đăng nhập
           
@@ -22,41 +22,40 @@ block main
               method="POST"
             )
               //- Ô nhập Email
-              .mb-3
-                label.form-label.fw-bold(for="email") Email
-                input#email.form-control.form-control-lg.rounded-3(
+              .form-floating.mb-3
+                input#email.form-control.cyber-input.rounded-4(
                   type="email"
                   name="email"
                   required
                   placeholder="Nhập email..."
                 )
+                label.fw-bold(for="email") Email
               
               //- Ô nhập Mật khẩu
-              .mb-4
-                label.form-label.fw-bold.mb-0(for="password") Mật khẩu
+              .form-floating.mb-4.position-relative
+                input#password.form-control.cyber-input.rounded-4(
+                  type="password"
+                  name="password"
+                  required
+                  placeholder="Nhập mật khẩu..."
+                  style="padding-right: 50px;" 
+                )
+                label.fw-bold(for="password") Mật khẩu
+                span.toggle-password.position-absolute.top-50.end-0.translate-middle-y.pe-3(
+                  style="cursor: pointer; color: #adb5bd; z-index: 5;"
+                )
+                  i.fa-regular.fa-eye.fs-5
                 
-                .position-relative.mt-2
-                  input#password.form-control.form-control-lg.rounded-3(
-                    type="password"
-                    name="password"
-                    required
-                    placeholder="Nhập mật khẩu..."
-                    style="padding-right: 40px;" 
-                  )
-                  span.toggle-password.position-absolute.top-50.end-0.translate-middle-y.pe-3(
-                    style="cursor: pointer; color: #6c757d;"
-                  )
-                    i.fa-regular.fa-eye.fs-5
-                .d-flex.justify-content-end.align-items-center
-                  a.text-decoration-none.small.text-primary(href="/user/password/forgot") Quên mật khẩu?
+              .d-flex.justify-content-end.align-items-center.mb-3
+                a.text-decoration-none.small.cyber-text(href="/user/password/forgot") Quên mật khẩu?
 
               //- Nút Submit
               .d-grid.mt-4
-                button.btn.btn-primary.btn-lg.rounded-pill.fw-bold(type="submit") 
+                button.btn.btn-cyber.btn-lg.rounded-pill.fw-bold(type="submit") 
                   i.fa-solid.fa-arrow-right-to-bracket.me-2
                   | Đăng nhập
 
           //- Footer của Card: Điều hướng sang trang Đăng ký
           .card-footer.bg-white.text-center.pb-4.border-top-0
             span.text-muted Chưa có tài khoản? 
-            a.text-primary.fw-bold.text-decoration-none.ms-1(href="/user/register") Đăng ký ngay!
+            a.cyber-text.fw-bold.text-decoration-none.ms-1(href="/user/register") Đăng ký ngay!

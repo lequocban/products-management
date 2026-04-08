@@ -4,23 +4,17 @@
 ========================================= */
 .header {
   /* Gradient Gravity Blue */
-  background: linear-gradient(
-    135deg,
-    #0066ff 0%,
-    #3a7bff 35%,
-    #7b61ff 70%,
-    #a855f7 100%
-  );
-
+  background: rgba(11, 12, 16, 0.8) !important; /* Cyber dark ngả mờ */
+  
   /* Glass effect */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 
   /* Viền mờ sang */
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 
   /* Đổ bóng nổi */
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 25px rgba(0, 240, 255, 0.1);
 
   padding: 15px 0;
 
@@ -58,7 +52,7 @@
 
 /* --- Chỉnh màu và font cho Link Menu --- */
 .header .inner-menu > ul > li > a {
-  color: #2b2b2b !important; 
+  color: #f0f0f0 !important; 
   font-weight: 600;
   font-size: 15px;
   text-transform: uppercase; /* In hoa chữ menu nhìn chuyên nghiệp hơn */
@@ -69,18 +63,18 @@
 
 /* --- Hiệu ứng Hover chuyển xanh --- */
 .header .inner-menu > ul > li > a:hover {
-  color: #007bff !important; /* Màu xanh dương (hoặc bạn có thể đổi mã màu khớp 100% với logo) */
+  color: var(--cyber-blue) !important; /* Màu xanh dương (hoặc bạn có thể đổi mã màu khớp 100% với logo) */
 }
 
 /* Nếu bạn có menu con đang mở (active), bạn có thể dùng CSS này để tô xanh nó luôn */
 .header .inner-menu > ul > li:hover > a {
-  color: #007bff !important;
+  color: var(--cyber-blue) !important;
 }
 /* end header  */
 
 /* footer  */
 .footer {
-  background: #333;
+  background: rgba(11, 12, 16, 0.8) !important;
   color: #fff;
   text-align: center;
   padding: 10px;
@@ -98,7 +92,8 @@
   margin-bottom: 0;
   font-size: 28px;
   font-weight: 600;
-  color: green;
+  color: var(--cyber-blue);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
 }
 
 /* end box head  */
@@ -153,13 +148,13 @@
 .product-item .inner-content .inner-price-new {
   font-size: 18px;
   font-weight: 600;
-  color: green;
+  color: var(--cyber-blue);
 }
 
 .product-item .inner-content .inner-price-old {
   font-size: 18px;
   font-weight: 600;
-  color: red;
+  color: rgba(255, 255, 255, 0.4);
   text-decoration: line-through;
 }
 
@@ -311,22 +306,21 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  background: #f0f8ff; 
+  background: rgba(11, 12, 16, 0.95); 
+  backdrop-filter: blur(10px);
   min-width: 220px; /* Chiều rộng thoáng hơn */
   display: none;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); /* Đổ bóng mềm mại tạo chiều sâu */
+  box-shadow: 0 8px 16px rgba(0, 240, 255, 0.2); /* Đổ bóng mềm mại tạo chiều sâu */
   border-radius: 8px; /* Bo góc hiện đại */
 
   /* Tạo viền bao quanh toàn bộ khối menu */
-  border: 1px solid #ccc; 
-  /* Đổ bóng nhẹ một chút cho menu không bị bẹp */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255,255,255,0.1); 
 }
 
 /* --- Các mục con (li) --- */
 .sub-menu ul li {
   position: relative;
-  border-bottom: 1px solid #ccc; /* Đường viền ngăn cách mờ nhẹ */
+  border-bottom: 1px solid rgba(255,255,255,0.05); /* Đường viền ngăn cách mờ nhẹ */
 }
 
 /* Xóa đường viền ở thẻ li cuối cùng cho gọn */
@@ -344,9 +338,12 @@
 ========================================= */
 
 /* 1. Hiệu ứng cho từng dòng (li) khi hover */
+.sub-menu ul li a {
+  color: #fff !important;
+}
 .sub-menu ul li a:hover {
-  background-color: #f8f9fa; /* Đổi nền thành xám cực nhạt */
-  color: #0d6efd; /* Chữ đổi sang màu xanh (giống Bootstrap) */
+  background-color: rgba(255, 255, 255, 0.1); /* Đổi nền thành xám cực nhạt */
+  color: var(--cyber-blue) !important; /* Chữ đổi sang màu xanh (giống Bootstrap) */
   padding-left: 24px; /* Chữ trượt nhẹ sang phải một chút tạo điểm nhấn */
 }
 
@@ -373,10 +370,10 @@
 
 /* 1. Tách bạch các Thẻ Bài Viết (Card) */
 .article-item.card {
-  border: 1px solid #eaeaea !important; /* Viền xám rất nhạt bao quanh */
+  border: 1px solid rgba(255,255,255,0.1) !important; /* Viền xám rất nhạt bao quanh */
   border-radius: 10px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important; /* Bóng mờ nhẹ tách khỏi nền */
+  background-color: transparent !important;
+  box-shadow: 0 2px 10px rgba(0, 240, 255, 0.1) !important; /* Bóng mờ nhẹ tách khỏi nền */
   transition: all 0.3s ease;
 }
 
@@ -401,9 +398,11 @@
 
 /* Tách bạch từng dòng tin tức trong Sidebar */
 .sidebar-new-articles .list-group-item {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   border-left: none;
   border-right: none;
+  background-color: transparent !important;
+  color: #fff !important;
   transition: background-color 0.2s ease;
 }
 
@@ -413,7 +412,7 @@
 }
 
 .sidebar-new-articles .list-group-item:hover {
-  background-color: #f8f9fa; /* Màu nền đổi nhẹ khi hover vào 1 tin */
+  background-color: rgba(255, 255, 255, 0.1) !important; /* Màu nền đổi nhẹ khi hover vào 1 tin */
 }
 
 /* Thu nhỏ lại chữ trong Sidebar để cân đối với cột col-lg-3 */
@@ -424,10 +423,10 @@
 
 /* 3. Tách biệt khu vực "Bài viết nổi bật" và "Danh sách" */
 .section-featured {
-  background-color: #f8f9fa; /* Nền xám cực nhạt cho khu vực nổi bật */
+  background-color: rgba(255, 255, 255, 0.03) !important; /* Nền tối nhạt cho khu vực nổi bật */
   border-radius: 12px;
   padding: 25px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 /* end articles */
 
@@ -491,13 +490,131 @@
   z-index: 10;
 }
 
-/* Hình minh họa khi giỏ hàng trống */
-.empty-cart-img {
-  width: 150px;
-  opacity: 0.5;
-  margin-bottom: 20px;
+/* =========================================
+   FUTURISTIC UI THEME (BLUE/PINK)
+========================================= */
+:root {
+  --cyber-blue: #00f0ff;
+  --cyber-pink: #ff003c;
+  --cyber-dark: #0b0c10;
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.15);
+  --glass-blur: blur(12px);
 }
 
-/* =========================================
-  END GIAO DIỆN GIỎ HÀNG (CART)
-========================================= */
+body {
+  background-color: var(--cyber-dark) !important;
+  color: #f0f0f0 !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body > main {
+  flex: 1;
+}
+
+.cyber-wrapper {
+  background: var(--cyber-dark) radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.15), transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(255, 0, 60, 0.15), transparent 40%);
+  color: #fff;
+  border-radius: 1.5rem;
+  padding: 3rem 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+}
+
+.glass-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  color: #fff !important;
+}
+
+.glass-card table, .glass-card .table, .glass-card td, .glass-card th, .glass-card tr, .glass-card tbody, .glass-card thead {
+  background-color: transparent !important;
+  color: #f0f0f0 !important;
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: transparent;
+  --bs-table-hover-bg: rgba(255,255,255,0.05);
+}
+
+.glass-card .bg-white {
+  background-color: transparent !important;
+}
+
+.glass-card .text-dark,
+.glass-card .text-muted,
+.glass-card h2, .glass-card h3, .glass-card h5 {
+  color: #e0e0e0 !important;
+}
+
+/* Futuristic inputs */
+.cyber-input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  transition: all 0.3s ease;
+}
+
+.cyber-input:focus {
+  border-color: var(--cyber-blue) !important;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Form floating label adjustments */
+.form-floating > label {
+  color: #adb5bd;
+}
+
+.form-floating > .cyber-input:focus ~ label,
+.form-floating > .cyber-input:not(:placeholder-shown) ~ label {
+  color: var(--cyber-blue) !important;
+  background: transparent !important;
+}
+
+/* Buttons */
+.btn-cyber {
+  background: linear-gradient(45deg, var(--cyber-blue), var(--cyber-pink));
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-cyber::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(45deg, var(--cyber-pink), var(--cyber-blue));
+  z-index: -1;
+  transition: opacity 0.3s;
+  opacity: 0;
+  border-radius: inherit;
+}
+
+.btn-cyber:hover::before {
+  opacity: 1;
+}
+
+.btn-cyber:hover {
+  box-shadow: 0 0 25px rgba(255, 0, 60, 0.6);
+  transform: translateY(-2px);
+}
+
+.cyber-text {
+  background: linear-gradient(45deg, var(--cyber-blue), var(--cyber-pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: bold;
+}

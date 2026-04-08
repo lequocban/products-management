@@ -20,8 +20,8 @@ const togglePasswords = document.querySelectorAll(".toggle-password");
 if (togglePasswords.length > 0) {
   togglePasswords.forEach((button) => {
     button.addEventListener("click", function () {
-      // 1. Tìm ô input nằm ngay trước cái nút con mắt này
-      const passwordInput = this.previousElementSibling;
+      // 1. TÌm thẻ input trong cùng phần tử cha
+      const passwordInput = this.parentElement.querySelector("input");
 
       if (passwordInput) {
         // 2. Chuyển đổi type
@@ -43,7 +43,6 @@ if (togglePasswords.length > 0) {
   });
 }
 // END TÍNH NĂNG ẨN / HIỆN MẬT KHẨU
-
 
 // TÍNH NĂNG PREVIEW ẢNH UPLOAD VÀ XÓA VỀ MẶC ĐỊNH
 const uploadImage = document.querySelector("[upload-image]");

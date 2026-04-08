@@ -5,12 +5,12 @@ block main
   +alert-success(5000)
   +alert-error(5000)
 
-  .container.my-5
+  .container.my-5.cyber-wrapper.rounded-5
     .row.justify-content-center
       .col-md-8.col-lg-6
-        .card.shadow.border-0.rounded-4
+        .glass-card.shadow-lg.rounded-5.overflow-hidden
           .card-header.bg-white.text-center.pt-4.pb-2.border-bottom-0
-            h3.fw-bold.text-primary 
+            h3.cyber-text.fw-bold 
               i.fa-solid.fa-user-pen.me-2
               | Cập nhật thông tin
 
@@ -28,10 +28,10 @@ block main
                 .image-preview-wrapper.position-relative.d-inline-block
                   
                   //- Ảnh đại diện hiển thị (Gắn thêm class image-preview)
-                  img.img-thumbnail.rounded-circle.shadow-sm.image-preview(
+                  img.img-thumbnail.rounded-circle.shadow-lg.image-preview(
                     src=(user.avatar ? user.avatar : "https://cdn-icons-png.flaticon.com/512/149/149071.png")
                     upload-image-preview
-                    style="width: 130px; height: 130px; object-fit: cover; border: 3px solid #f8f9fa;"
+                    style="width: 130px; height: 130px; object-fit: cover; border: 3px solid var(--cyber-blue); background: rgba(0,0,0,0.3);"
                     alt="Avatar"
                   )
                   
@@ -65,45 +65,45 @@ block main
                   )
 
               //- Họ và tên
-              .mb-3
-                label.form-label.fw-bold(for="fullName") Họ và tên
-                input#fullName.form-control.form-control-lg.rounded-3(
+              .form-floating.mb-3
+                input#fullName.form-control.cyber-input.rounded-4(
                   type="text"
                   name="fullName"
                   value=user.fullName
                   required
                   placeholder="Nhập họ và tên..."
                 )
+                label.fw-bold(for="fullName") Họ và tên
 
               //- Email
-              .mb-3
-                label.form-label.fw-bold(for="email") Email
-                input#email.form-control.form-control-lg.rounded-3(
+              .form-floating.mb-3
+                input#email.form-control.cyber-input.rounded-4(
                   type="email"
                   name="email"
                   value=user.email
                   required
                   placeholder="Nhập email..."
                 )
+                label.fw-bold(for="email") Email
 
               //- Số điện thoại
-              .mb-4
-                label.form-label.fw-bold(for="phone") Số điện thoại
-                input#phone.form-control.form-control-lg.rounded-3(
+              .form-floating.mb-4
+                input#phone.form-control.cyber-input.rounded-4(
                   type="text"
                   name="phone"
                   value=user.phone
                   placeholder="Nhập số điện thoại..."
                 )
+                label.fw-bold(for="phone") Số điện thoại
 
               //- Nút Submit
               .d-grid.mt-2
-                button.btn.btn-primary.btn-lg.rounded-pill.fw-bold(type="submit") 
+                button.btn.btn-cyber.btn-lg.rounded-pill.fw-bold(type="submit") 
                   i.fa-solid.fa-floppy-disk.me-2
                   | Lưu thay đổi
                   
           //- Footer điều hướng
           .card-footer.bg-white.text-center.pb-4.border-top-0
-            a.btn.btn-outline-secondary.rounded-pill.px-4(href="/user/info") 
+            a.btn.btn-outline-light.rounded-pill.px-4(href="/user/info") 
               i.fa-solid.fa-arrow-left.me-2
               | Hủy và Quay lại

@@ -6,55 +6,62 @@ block main
   +alert-success(5000)  
   +alert-error(5000)
 
-  .container.my-3 
+  .container.my-3.cyber-wrapper.rounded-5 
     .row.mb-3.mt-3
       .col-12
-        a.btn.btn-sm.btn-outline-secondary(href="javascript:history.back()") 
-          | ← Quay lại
+        a.btn.btn-sm.btn-outline-light.rounded-pill(href="javascript:history.back()") 
+          i.fa-solid.fa-arrow-left.me-2
+          | Quay lại
     .row 
       .col-12
         +box-head("Đặt hàng")
 
     .row 
       .col-12 
-        table.table.table-bordered
-          thead
-            tr
-              th STT
-              th Ảnh
-              th Tên sản phẩm
-              th Giá
-              th Số lượng
-              th Thành tiền
-
-          tbody
-            if cartDetail.products.length > 0
-              each item, index in cartDetail.products
-                tr 
-                  td #{index + 1}
-                  td 
-                    img(
-                      src=item.product_id.thumbnail, 
-                      alt=item.product_id.title, 
-                      style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"   
-                    )
-                  td  #{item.product_id.title}
-                  td #{item.product_id.newPrice} $
-                  td #{item.quantity}
-                  td #{item.totalPrice} $
-
-            else
+        .table-responsive.glass-card.shadow-lg.rounded-5.overflow-hidden
+          //- Thêm class text-center vào thẻ table để căn giữa toàn bộ dữ liệu mặc định
+          table.table.table-hover.text-white.mb-0.text-center(style="background: transparent;")
+            thead(style="border-bottom: 2px solid var(--cyber-blue);")
               tr
-                td(colspan="8").text-center.py-5
-                  h3 Đơn hàng của bạn đang trống.
+                //- Chia tỉ lệ width (%) cho các cột để dàn đều không gian
+                th(width="5%") STT
+                th(width="15%") Ảnh
+                //- Cột tên sản phẩm thường dài nên để width lớn nhất và căn lề trái
+                th.text-start(width="35%") Tên sản phẩm
+                th(width="15%") Giá
+                th(width="15%") Số lượng
+                th(width="15%") Thành tiền
+
+            tbody
+              if cartDetail.products.length > 0
+                each item, index in cartDetail.products
+                  tr.align-middle(style="border-bottom: 1px solid rgba(255,255,255,0.1);") 
+                    td #{index + 1}
+                    td 
+                      img(
+                        src=item.product_id.thumbnail
+                        alt=item.product_id.title
+                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"   
+                      )
+                    //- Thêm text-start để chữ lề trái cho đồng bộ với tiêu đề
+                    td.text-start
+                      span.cyber-text.fw-bold #{item.product_id.title}
+                    td #{item.product_id.newPrice} $
+                    td #{item.quantity}
+                    td #{item.totalPrice} $
+
+              else
+                tr
+                  td(colspan="6").text-center.py-5
+                    h3 Đơn hàng của bạn đang trống.
 
         if cartDetail.products.length > 0
-          h3(class="text-end") Tổng cộng: #{cartDetail.totalPrice} $
+          h3(class="text-end mt-4 mb-2 pe-3") Tổng cộng: #{cartDetail.totalPrice} $
       
     if cartDetail.products.length > 0
       .row
         .col-12
-          .card.p-4.my-4 
+          .glass-card.p-4.my-4.rounded-5.shadow-lg 
             form(
               action="checkout/order",
               method="POST"
@@ -62,29 +69,37 @@ block main
               each item in cartDetail.products
                 input(type="hidden" name="productIds" value=item.product_id._id)
                 
-              div(class="form-group mb-3") 
-                label(for="fullName") Họ và tên
-                input.form-control(
+              .form-floating.mb-3 
+                input.form-control.cyber-input.rounded-4(
                   type="text"
                   name="fullName" 
                   id="fullName"
+                  placeholder="Họ và tên"
                   required
                 )
-              div(class="form-group mb-3") 
-                label(for="phone") Số điện thoại
-                input.form-control(
+                label.fw-bold(for="fullName") Họ và tên
+
+              .form-floating.mb-3 
+                input.form-control.cyber-input.rounded-4(
                   type="text"
                   name="phone" 
                   id="phone"
+                  placeholder="Số điện thoại"
                   required
                 )
-              div(class="form-group mb-3") 
-                label(for="address") Địa chỉ
-                input.form-control(
+                label.fw-bold(for="phone") Số điện thoại
+
+              .form-floating.mb-4 
+                input.form-control.cyber-input.rounded-4(
                   type="text"
                   name="address" 
                   id="address"
+                  placeholder="Địa chỉ"
                   required
                 )
-              div(class="form-group")
-                button.btn.btn-success(type="submit") Đặt hàng  
+                label.fw-bold(for="address") Địa chỉ
+
+              .d-grid
+                button.btn.btn-cyber.btn-lg.rounded-pill.fw-bold(type="submit") 
+                  i.fa-solid.fa-check-double.me-2
+                  | Đặt hàng  

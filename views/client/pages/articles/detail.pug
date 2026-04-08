@@ -1,19 +1,20 @@
 extends ../../layouts/default.pug
 
 block main
-  .container.mt-4.mb-5
+  .container.mt-4.mb-5.cyber-wrapper.rounded-5
 
     .row.mb-3
       .col-12
-        a.btn.btn-sm.btn-outline-secondary(href="javascript:history.back()") 
-          | ← Quay lại
+        a.btn.btn-sm.btn-outline-light.rounded-pill(href="javascript:history.back()") 
+          i.fa-solid.fa-arrow-left.me-2
+          | Quay lại
 
     .row.justify-content-center
       //- Cột hiển thị bài viết (thu hẹp lại một chút để chữ không bị dàn quá dài, dễ đọc hơn)
-      .col-md-10.col-lg-8
+      .col-md-10.col-lg-8.glass-card.p-4.rounded-5.shadow-lg
         
         //- Tiêu đề bài viết
-        h1.article-title.fw-bold.mb-3 #{article.title}
+        h1.article-title.fw-bold.mb-3.cyber-text #{article.title}
 
         //- Thông tin phụ: Ngày đăng & Phân loại (nếu đã được populate từ Controller)
         .article-meta.text-muted.mb-4.pb-3.border-bottom.d-flex.align-items-center
@@ -23,7 +24,7 @@ block main
               | #{new Date(article.createdBy.createdAt).toLocaleDateString("vi-VN")}
           
           if article.article_category_id && article.article_category_id.title
-            span.badge.bg-light.text-dark.border
+            span.badge.border.text-white(style="background: rgba(255,255,255,0.1); border-color: var(--cyber-blue) !important;")
               | #{article.article_category_id.title}
 
         //- Ảnh đại diện bài viết (Thumbnail)

@@ -14,10 +14,10 @@ block main
         
         //- MÃ ĐƠN HÀNG VÀ TRẠNG THÁI
         .d-flex.align-items-center.gap-4.mb-2
-          p.text-muted.mb-0 Mã đơn hàng: 
-            span.fw-bold.text-dark #{order._id}
+          p.text-light.mb-0 Mã đơn hàng: 
+            span.fw-bold.text-light #{order._id}
           
-          p.text-muted.mb-0 Trạng thái:
+          p.text-light.mb-0 Trạng thái:
             if order.status == "pending"
               span.badge.bg-warning.text-dark.ms-2 Chờ xử lý
             else if order.status == "processing"
@@ -36,43 +36,51 @@ block main
     //- THÔNG TIN NGƯỜI NHẬN
     .row.mb-4
       .col-12
-        .card.border-0.shadow-sm
-          .card-header.bg-light
-            h5.mb-0.fw-bold 
+        //- Đổi sang rounded-4 để góc bớt gắt
+        .glass-card.border-0.shadow-sm.rounded-4.overflow-hidden
+          //- Thêm px-4 và pt-4 để đẩy tiêu đề lùi vào trong
+          .card-header.px-4.pt-4(style="background: transparent; border-bottom: 2px solid var(--cyber-blue);")
+            h5.mb-0.fw-bold.text-light 
               i.fa-solid.fa-address-card.me-2
               | Thông tin nhận hàng
-          .card-body
-            table.table.table-borderless.mb-0
+          
+          //- Thêm px-4 để đẩy bảng nội dung lùi vào trong
+          .card-body.px-4
+            table.table.table-borderless.mb-0.text-light
               tbody
                 tr
-                  td(width="20%").text-muted Họ và tên:
+                  //- Thêm ps-0 để chữ thẳng hàng với tiêu đề phía trên
+                  td(width="20%").text-light.ps-0 Họ và tên:
                   td.fw-bold #{order.user_info.fullName}
                 tr
-                  td.text-muted Số điện thoại:
+                  td.text-light.ps-0 Số điện thoại:
                   td.fw-bold #{order.user_info.phone}
                 tr
-                  td.text-muted Địa chỉ:
+                  td.text-light.ps-0 Địa chỉ:
                   td.fw-bold #{order.user_info.address}
 
     //- DANH SÁCH SẢN PHẨM
     .row
       .col-12 
-        .card.border-0.shadow-sm
-          .card-header.bg-light
-            h5.mb-0.fw-bold 
+        //- Đổi sang rounded-4
+        .glass-card.border-0.shadow-sm.rounded-4.overflow-hidden
+          //- Thêm px-4 và pt-4
+          .card-header.px-4.pt-4(style="background: transparent; border-bottom: 2px solid var(--cyber-blue);")
+            h5.mb-0.fw-bold.text-light 
               i.fa-solid.fa-box-open.me-2
               | Danh sách sản phẩm
           
           .card-body.p-0
-            .table-responsive
-              table.table.table-bordered.mb-0
-                thead.table-light
-                  tr
+            //- Thêm px-4 và pb-3 vào thẻ bao bọc bảng để tạo khoảng trống 2 bên và phía dưới
+            .table-responsive.px-4.pb-3
+              table.table.text-white.mb-0(style="background: transparent;")
+                thead
+                  tr(style="border-bottom: 2px solid var(--cyber-blue);")
                     th.text-center STT
                     th Ảnh
                     th Tên sản phẩm
                     th Giá mua
-                    th Số lượng
+                    th.text-center Số lượng
                     th Thành tiền
 
                 tbody
@@ -89,13 +97,13 @@ block main
                       td 
                         if item.product_id && item.product_id.thumbnail
                           img(
-                            src=item.product_id.thumbnail, 
-                            alt=item.product_id.title, 
+                            src=item.product_id.thumbnail
+                            alt=item.product_id.title
                             style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"   
                           )
                       td 
                         if item.product_id
-                          a.text-decoration-none.fw-bold.text-dark(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
+                          a.text-decoration-none.fw-bold.text-light(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
                         else 
                           span.text-danger (Sản phẩm đã ngừng kinh doanh)
                       td #{newPrice} $
@@ -103,7 +111,8 @@ block main
                       td.fw-bold.text-danger #{totalPrice} $
             
             //- TỔNG CỘNG
-            .card-footer.bg-white.text-end.py-3
+            //- Thêm px-4 để đẩy chữ lùi vào trong thẳng hàng với bảng
+            .card-footer.text-end.py-3.px-4(style="background: transparent; border-top: 1px solid rgba(255,255,255,0.1);")
               h4.mb-0
-                span.text-muted.me-3 Tổng thanh toán:
+                span.text-light.me-3 Tổng thanh toán:
                 span.text-danger.fw-bold #{totalOrder} $

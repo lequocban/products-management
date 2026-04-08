@@ -1,37 +1,37 @@
 include ../mixins/sub-menu.pug
 
-header.header
+header.header.glass-card.border-0.shadow-lg.sticky-top(style="z-index: 1050; border-bottom: 1px solid rgba(255,255,255,0.1) !important;")
   .container
     .row.align-items-center
       .col-2
         .inner-logo
           a(href="/")
-            img(src=settingGeneral.WebsiteLogo, alt="Logo" style="max-height: 50px;")
+            img.bg-light.rounded-4.p-1.shadow(src=settingGeneral.WebsiteLogo, alt="Logo" style="max-height: 50px;")
 
       .col-4
         form(action="/search" method="GET")
           .input-group
-            input.form-control(
+            input.form-control.cyber-input(
               type="text"
               placeholder="Nhập từ khóa..."
               name="keyword"
               value=keyword
             )
-            button.btn.btn-info(type="submit") Tìm kiếm
+            button.btn.btn-cyber(type="submit") Tìm kiếm
             
       .col-6
         .inner-menu
           ul.d-flex.align-items-center.justify-content-end.mb-0.ps-0.gap-3(style="list-style:none;") 
             li
               a(
-                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark fw-bold"
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-light fw-bold"
                 href="/"
               ) Trang chủ
               
             li(class="sub-menu")
               - const pathProduct = "/products"; 
               a(
-                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark fw-bold"
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-light fw-bold"
                 href="/products"
               ) Sản phẩm
               +sub-menu(layoutProductsCategory, pathProduct)
@@ -39,7 +39,7 @@ header.header
             li(class="sub-menu")
               - const pathArticles = "/articles"; 
               a(
-                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark fw-bold"
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-light fw-bold"
                 href="/articles"
               ) Bài viết
               +sub-menu(layoutArticlesCategory, pathArticles)
@@ -47,7 +47,7 @@ header.header
             //- Nút Giỏ hàng
             li
               a(
-                class="position-relative d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark mt-1"
+                class="position-relative d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-light mt-1"
                 href="/cart"
                 title="Giỏ hàng"
               )
@@ -59,7 +59,7 @@ header.header
             //- Nút Đơn hàng
             li
               a(
-                class="d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-dark mt-1"
+                class="d-inline-block link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover text-light mt-1"
                 href="/orders"
                 title="Đơn hàng của tôi"
               )
@@ -69,14 +69,14 @@ header.header
               li.ms-1
                 a(
                   href="/user/login" 
-                  class="btn btn-outline-primary rounded-pill px-3 py-1 text-nowrap" 
+                  class="btn btn-outline-light rounded-pill px-3 py-1 text-nowrap" 
                   style="font-size: 13px; font-weight: 600; border-width: 1.5px;"
                 ) Đăng nhập
 
               li.ms-1
                 a(
                   href="/user/register" 
-                  class="btn btn-primary rounded-pill px-3 py-1 text-nowrap" 
+                  class="btn btn-cyber rounded-pill px-3 py-1 text-nowrap" 
                   style="font-size: 13px; font-weight: 600;"
                 ) Đăng ký
             
@@ -84,7 +84,7 @@ header.header
               li.dropdown.ms-4
                 //- Nút bấm (Icon User)
                 a(
-                  class="d-inline-block text-dark mt-1"
+                  class="d-inline-block text-light mt-1"
                   href="#"
                   role="button"
                   data-bs-toggle="dropdown"
@@ -95,16 +95,16 @@ header.header
 
                 //- Menu xổ xuống 
                 //- (Dùng dropdown-menu-end để menu mở canh lề phải, không bị tràn ra ngoài màn hình)
-                ul.dropdown-menu.dropdown-menu-end.shadow.border-0.mt-2
+                ul.dropdown-menu.dropdown-menu-end.glass-card.shadow-lg.border-0.mt-2
                   //- Thông tin tài khoản
                   li
-                    a.dropdown-item.py-2(href="/user/info") 
-                      i.fa-regular.fa-id-badge.me-2.text-primary
+                    a.dropdown-item.py-2.text-light(href="/user/info") 
+                      i.fa-regular.fa-id-badge.me-2.text-info
                       | Thông tin tài khoản
                       
                   //- Đường kẻ ngang phân cách
                   li
-                    hr.dropdown-divider.my-1
+                    hr.dropdown-divider.my-1(style="border-color: rgba(255,255,255,0.1);")
                     
                   //- Nút Đăng xuất (Đổi màu đỏ cảnh báo)
                   li

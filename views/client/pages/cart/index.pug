@@ -7,12 +7,13 @@ block main
   +alert-success(5000)  
   +alert-error(5000)
 
-  .container.mb-5
+  .container.mb-5.cyber-wrapper.rounded-5
    
     .row.mb-3.mt-3
       .col-12
-        a.btn.btn-sm.btn-outline-secondary(href="javascript:history.back()") 
-          | ← Quay lại
+        a.btn.btn-sm.btn-outline-light.rounded-pill(href="javascript:history.back()") 
+          i.fa-solid.fa-arrow-left.me-2
+          | Quay lại
           
     .row
       .col-12
@@ -24,9 +25,9 @@ block main
         //- CỘT TRÁI: BẢNG SẢN PHẨM
         //- ==========================================
         .col-lg-9.mb-4
-          .table-responsive
-            table.table.table-bordered(checkbox-multi)
-              thead.table-light
+          .table-responsive.glass-card.shadow-lg.rounded-5.overflow-hidden
+            table.table.table-hover.text-white.mb-0(style="background: transparent;" checkbox-multi)
+              thead(style="border-bottom: 2px solid var(--cyber-blue);")
                 tr
                   th.text-center
                     input(type="checkbox" name="checkall")
@@ -40,7 +41,7 @@ block main
 
               tbody
                 each item, index in cart.products.slice().reverse()
-                  tr.align-middle 
+                  tr.align-middle(style="border-bottom: 1px solid rgba(255,255,255,0.1);") 
                     td.text-center
                       input(
                         type="checkbox" 
@@ -55,10 +56,10 @@ block main
                         alt=item.product_id.title
                       )
                     td 
-                      a.text-decoration-none.fw-bold.text-dark(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
+                      a.cyber-text.text-decoration-none.fw-bold(href=`/products/detail/${item.product_id.slug}`) #{item.product_id.title}
                     td #{item.product_id.newPrice} $
                     td 
-                      input.form-control.cart-quantity-input(
+                      input.form-control.cyber-input.cart-quantity-input.rounded-3.text-center(
                         type="number"
                         name="quantity" 
                         value=item.quantity
@@ -67,21 +68,21 @@ block main
                       )
                     td.fw-bold.text-danger #{item.totalPrice} $
                     td 
-                      a.btn.btn-outline-danger.btn-sm(href=`/cart/delete/${item.product_id._id}`) Xóa
+                      a.btn.btn-outline-danger.btn-sm.rounded-pill(href=`/cart/delete/${item.product_id._id}`) Xóa
 
         //- ==========================================
         //- CỘT PHẢI: THANH TOÁN
         //- ==========================================
         .col-lg-3
-          .card.border-0.shadow-sm.sticky-checkout-card
-            .card-body
-              h5.card-title.fw-bold.border-bottom.pb-3.mb-3 Tóm tắt đơn hàng
+          .glass-card.shadow-lg.rounded-5.sticky-checkout-card.border-0
+            .card-body.p-4
+              h5.card-title.fw-bold.border-bottom.pb-3.mb-3(style="border-color: rgba(255,255,255,0.1) !important;") Tóm tắt đơn hàng
               
               .d-flex.justify-content-between.align-items-center.mb-4
-                span.text-muted Tổng tiền chọn:
+                span.text-light Tổng tiền chọn:
                 span#total-price-selected.text-danger.fw-bold.fs-4 0 $
               
-              a.btn.btn-success.w-100.btn-lg(href="/checkout") 
+              a.btn.btn-cyber.w-100.btn-lg.rounded-pill(href="/checkout") 
                 i.fa-solid.fa-credit-card.me-2
                 | Thanh toán ngay
 
