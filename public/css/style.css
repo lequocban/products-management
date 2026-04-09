@@ -628,7 +628,6 @@ body > main {
   min-height: 500px;
   margin: 0 auto;
   
-  /* Áp dụng hiệu ứng kính mờ (Glassmorphism) */
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -641,7 +640,7 @@ body > main {
   overflow: hidden;
 }
 
-.inner-body {
+.chat .inner-body {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
@@ -650,7 +649,7 @@ body > main {
   gap: 15px;
 }
 
-/* Tùy chỉnh thanh cuộn cho mượt với nền tối */
+
 .inner-body::-webkit-scrollbar {
   width: 6px;
 }
@@ -678,7 +677,7 @@ body > main {
 
 .inner-outgoing .inner-name {
   text-align: right;
-  color: var(--cyber-blue); /* Nhấn nhá tên người gửi bằng màu xanh */
+  color: var(--cyber-blue); 
 }
 
 .inner-content {
@@ -690,7 +689,6 @@ body > main {
   color: #ffffff;
 }
 
-/* Tin nhắn người khác gửi đến (Nền tối, viền sáng mờ) */
 .inner-incoming .inner-content {
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -698,7 +696,6 @@ body > main {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Tin nhắn mình gửi đi (Nổi bật, phát sáng nhẹ) */
 .inner-outgoing .inner-content {
   background: linear-gradient(135deg, var(--cyber-blue), #007bb5);
   color: var(--cyber-dark); /* Chữ màu tối để nổi trên nền neon */
@@ -707,9 +704,6 @@ body > main {
   box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
 }
 
-/* =========================================
-   KHU VỰC NHẬP TIN NHẮN (FOOTER CHAT)
-========================================= */
 .inner-foot {
   border-top: 1px solid var(--glass-border);
   padding: 15px;
