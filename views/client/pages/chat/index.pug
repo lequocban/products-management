@@ -15,17 +15,27 @@ block main
       .col-12 
         .chat
           .inner-body
-            .inner-name Nguyễn Văn A
-            .inner-content
-              p.incoming Xin chào! Bạn khỏe không?
-              p.outgoing.inner-outgoing Mình khỏe, cảm ơn bạn! Còn bạn thì sao?
-              p.incoming Mình cũng bình thường. Cuối tuần này bạn có rảnh không?
-              p.outgoing.inner-outgoing Có thể, mình chưa có kế hoạch gì cụ thể.
-              p.incoming Vậy chúng ta đi cà phê nhé?
-              p.outgoing.inner-outgoing Được thôi! Hẹn gặp bạn sau.
+            each chat in chats
+              div(class=(chat.user_id.id == user.id) ? "inner-outgoing" :"inner-incoming")
+                if chat.user_id.id != user.id
+                  .inner-name #{chat.user_id.fullName}
+                .inner-content
+                  | #{chat.content}
+              //- p.incoming Xin chào! Bạn khỏe không?
+              //- p.outgoing.inner-outgoing Mình khỏe, cảm ơn bạn! Còn bạn thì sao?
+              //- p.incoming Mình cũng bình thường. Cuối tuần này bạn có rảnh không?
+              //- p.outgoing.inner-outgoing Có thể, mình chưa có kế hoạch gì cụ thể.
+              //- p.incoming Vậy chúng ta đi cà phê nhé?
+              //- p.outgoing.inner-outgoing Được thôi! Hẹn gặp bạn sau.
           .inner-foot
             form.inner-form(action="" method="post")
-              input(type="text" placeholder="Nhập tin nhắn..." name="message" required)
+              input(
+                type="text" 
+                placeholder="Nhập tin nhắn..." 
+                name="content" 
+                autocomplete="off" 
+                required
+              )
               button(type="submit")
                 i.fas.fa-paper-plane
                 | Gửi
