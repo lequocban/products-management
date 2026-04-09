@@ -8,6 +8,8 @@ const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const moment = require("moment");
+const http = require("http");
+const { Server } = require("socket.io");
 
 require("dotenv").config();
 
@@ -25,6 +27,16 @@ app.use(methodOverride("_method"));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
+
+// socket io
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log("a user connected: ", socket.id);
+});
+// end socket io
+
 
 //express flash
 app.use(cookieParser("le quoc ban dep trai"));
@@ -59,6 +71,6 @@ app.use((req, res) => {
     pageTitle: "Không tìm thấy trang",
   });
 });
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
