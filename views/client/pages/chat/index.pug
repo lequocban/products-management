@@ -1,0 +1,31 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success(5000)  
+  +alert-error(5000)
+
+  .container.my-3.cyber-wrapper.rounded-5 
+    .row 
+      .col-12
+        +box-head("Chat")
+
+    .row 
+      .col-12 
+        .chat
+          .inner-body
+            .inner-name Nguyễn Văn A
+            .inner-content
+              p.incoming Xin chào! Bạn khỏe không?
+              p.outgoing.inner-outgoing Mình khỏe, cảm ơn bạn! Còn bạn thì sao?
+              p.incoming Mình cũng bình thường. Cuối tuần này bạn có rảnh không?
+              p.outgoing.inner-outgoing Có thể, mình chưa có kế hoạch gì cụ thể.
+              p.incoming Vậy chúng ta đi cà phê nhé?
+              p.outgoing.inner-outgoing Được thôi! Hẹn gặp bạn sau.
+          .inner-foot
+            form.inner-form(action="" method="post")
+              input(type="text" placeholder="Nhập tin nhắn..." name="message" required)
+              button(type="submit")
+                i.fas.fa-paper-plane
+                | Gửi
