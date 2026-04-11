@@ -832,4 +832,66 @@ body > main {
   visibility: visible;
   opacity: 1;
 }
-/* end emoji-picker */
+.inner-list-typing {
+  align-self: flex-start;
+  max-width: 75%;
+}
+
+/* Biến box-typing thành cột dọc để đẩy tên lên trên, đẩy dấu 3 chấm xuống dưới */
+.box-typing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Định dạng tên giống hệt tin nhắn thường */
+.box-typing .inner-name {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+/* Áp dụng khung nền (bubble) thẳng vào thẻ chứa 3 chấm */
+.inner-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 14px 18px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.inner-dots span {
+  width: 6px;
+  height: 6px;
+  background-color: var(--cyber-blue);
+  border-radius: 50%;
+  display: inline-block;
+  animation: cyberTyping 1.4s infinite ease-in-out both;
+}
+
+.inner-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.inner-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes cyberTyping {
+  0%, 80%, 100% {
+    transform: scale(0.4);
+    opacity: 0.3;
+    box-shadow: none;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 8px var(--cyber-blue);
+  }
+}
+/* end chat page */
