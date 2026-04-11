@@ -21,21 +21,23 @@ block main
                   .inner-name #{chat.user_id.fullName}
                 .inner-content
                   | #{chat.content}
-              //- p.incoming Xin chào! Bạn khỏe không?
-              //- p.outgoing.inner-outgoing Mình khỏe, cảm ơn bạn! Còn bạn thì sao?
-              //- p.incoming Mình cũng bình thường. Cuối tuần này bạn có rảnh không?
-              //- p.outgoing.inner-outgoing Có thể, mình chưa có kế hoạch gì cụ thể.
-              //- p.incoming Vậy chúng ta đi cà phê nhé?
-              //- p.outgoing.inner-outgoing Được thôi! Hẹn gặp bạn sau.
+
           .inner-foot
             form.inner-form(action="" method="post")
-              input(
-                type="text" 
-                placeholder="Nhập tin nhắn..." 
-                name="content" 
-                autocomplete="off" 
-                required
-              )
+              
+              .input-wrapper
+                input(
+                  type="text" 
+                  placeholder="Nhập tin nhắn..." 
+                  name="content" 
+                  autocomplete="off" 
+                )
+                span.button-icon
+                  i.fa-regular.fa-face-smile 
+              
               button(type="submit")
                 i.fas.fa-paper-plane
                 | Gửi
+  
+  div(class="tooltip" role="tooltip")
+    emoji-picker

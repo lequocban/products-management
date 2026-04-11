@@ -5,7 +5,7 @@
 .header {
   /* Gradient Gravity Blue */
   background: rgba(11, 12, 16, 0.8) !important; /* Cyber dark ngả mờ */
-  
+
   /* Glass effect */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -52,7 +52,7 @@
 
 /* --- Chỉnh màu và font cho Link Menu --- */
 .header .inner-menu > ul > li > a {
-  color: #f0f0f0 !important; 
+  color: #f0f0f0 !important;
   font-weight: 600;
   font-size: 15px;
   text-transform: uppercase; /* In hoa chữ menu nhìn chuyên nghiệp hơn */
@@ -63,7 +63,9 @@
 
 /* --- Hiệu ứng Hover chuyển xanh --- */
 .header .inner-menu > ul > li > a:hover {
-  color: var(--cyber-blue) !important; /* Màu xanh dương (hoặc bạn có thể đổi mã màu khớp 100% với logo) */
+  color: var(
+    --cyber-blue
+  ) !important; /* Màu xanh dương (hoặc bạn có thể đổi mã màu khớp 100% với logo) */
 }
 
 /* Nếu bạn có menu con đang mở (active), bạn có thể dùng CSS này để tô xanh nó luôn */
@@ -121,9 +123,9 @@
 
 .product-item .inner-image .inner-featured {
   position: absolute;
-  top: 10px;    
-  right: 10px;  
-  
+  top: 10px;
+  right: 10px;
+
   background-color: #00b4d8; /* Màu đỏ cam nổi bật, thu hút sự chú ý */
   color: #ffffff; /* Chữ màu trắng */
   padding: 4px 12px; /* Tạo vùng đệm cho chữ dễ đọc */
@@ -132,7 +134,7 @@
   border-radius: 20px; /* Bo góc tròn trịa hình viên thuốc */
   box-shadow: 0 4px 8px rgba(0, 180, 216, 0.4); /* Đổ bóng cùng tone màu đỏ để tạo hiệu ứng phát sáng nhẹ */
   z-index: 10; /* Đảm bảo huy hiệu không bị ảnh đè lên */
-  
+
   text-transform: uppercase; /* In hoa chữ NỔI BẬT */
   letter-spacing: 0.5px; /* Giãn chữ một chút cho sang trọng */
 }
@@ -198,7 +200,7 @@
 }
 
 .new-price {
-  color: #007bff; 
+  color: #007bff;
   font-weight: bold;
   font-size: 24px;
 }
@@ -243,7 +245,7 @@
 
 /* 3. Huy hiệu Nổi bật (Xanh ngọc) */
 .badge-featured {
-  background-color: #00b4d8; 
+  background-color: #00b4d8;
   color: #ffffff;
   padding: 4px 12px;
   font-weight: 600;
@@ -306,7 +308,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  background: rgba(11, 12, 16, 0.95); 
+  background: rgba(11, 12, 16, 0.95);
   backdrop-filter: blur(10px);
   min-width: 220px; /* Chiều rộng thoáng hơn */
   display: none;
@@ -314,13 +316,13 @@
   border-radius: 8px; /* Bo góc hiện đại */
 
   /* Tạo viền bao quanh toàn bộ khối menu */
-  border: 1px solid rgba(255,255,255,0.1); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* --- Các mục con (li) --- */
 .sub-menu ul li {
   position: relative;
-  border-bottom: 1px solid rgba(255,255,255,0.05); /* Đường viền ngăn cách mờ nhẹ */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Đường viền ngăn cách mờ nhẹ */
 }
 
 /* Xóa đường viền ở thẻ li cuối cùng cho gọn */
@@ -330,7 +332,7 @@
 
 /* --- Vùng đệm chữ bên trong --- */
 .sub-menu ul li a {
-  padding: 12px 18px; 
+  padding: 12px 18px;
 }
 
 /* =========================================
@@ -343,7 +345,9 @@
 }
 .sub-menu ul li a:hover {
   background-color: rgba(255, 255, 255, 0.1); /* Đổi nền thành xám cực nhạt */
-  color: var(--cyber-blue) !important; /* Chữ đổi sang màu xanh (giống Bootstrap) */
+  color: var(
+    --cyber-blue
+  ) !important; /* Chữ đổi sang màu xanh (giống Bootstrap) */
   padding-left: 24px; /* Chữ trượt nhẹ sang phải một chút tạo điểm nhấn */
 }
 
@@ -370,7 +374,7 @@
 
 /* 1. Tách bạch các Thẻ Bài Viết (Card) */
 .article-item.card {
-  border: 1px solid rgba(255,255,255,0.1) !important; /* Viền xám rất nhạt bao quanh */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important; /* Viền xám rất nhạt bao quanh */
   border-radius: 10px;
   background-color: transparent !important;
   box-shadow: 0 2px 10px rgba(0, 240, 255, 0.1) !important; /* Bóng mờ nhẹ tách khỏi nền */
@@ -398,7 +402,7 @@
 
 /* Tách bạch từng dòng tin tức trong Sidebar */
 .sidebar-new-articles .list-group-item {
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   border-left: none;
   border-right: none;
   background-color: transparent !important;
@@ -412,7 +416,12 @@
 }
 
 .sidebar-new-articles .list-group-item:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important; /* Màu nền đổi nhẹ khi hover vào 1 tin */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ) !important; /* Màu nền đổi nhẹ khi hover vào 1 tin */
 }
 
 /* Thu nhỏ lại chữ trong Sidebar để cân đối với cột col-lg-3 */
@@ -423,7 +432,12 @@
 
 /* 3. Tách biệt khu vực "Bài viết nổi bật" và "Danh sách" */
 .section-featured {
-  background-color: rgba(255, 255, 255, 0.03) !important; /* Nền tối nhạt cho khu vực nổi bật */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.03
+  ) !important; /* Nền tối nhạt cho khu vực nổi bật */
   border-radius: 12px;
   padding: 25px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -516,14 +530,20 @@ body > main {
 }
 
 .cyber-wrapper {
-  background: var(--cyber-dark) radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.15), transparent 40%),
-              radial-gradient(circle at 90% 80%, rgba(255, 0, 60, 0.15), transparent 40%);
+  background:
+    var(--cyber-dark)
+      radial-gradient(
+        circle at 10% 20%,
+        rgba(0, 240, 255, 0.15),
+        transparent 40%
+      ),
+    radial-gradient(circle at 90% 80%, rgba(255, 0, 60, 0.15), transparent 40%);
   color: #fff;
   border-radius: 1.5rem;
   padding: 3rem 1rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .glass-card {
@@ -535,12 +555,18 @@ body > main {
   color: #fff !important;
 }
 
-.glass-card table, .glass-card .table, .glass-card td, .glass-card th, .glass-card tr, .glass-card tbody, .glass-card thead {
+.glass-card table,
+.glass-card .table,
+.glass-card td,
+.glass-card th,
+.glass-card tr,
+.glass-card tbody,
+.glass-card thead {
   background-color: transparent !important;
   color: #f0f0f0 !important;
   --bs-table-bg: transparent;
   --bs-table-striped-bg: transparent;
-  --bs-table-hover-bg: rgba(255,255,255,0.05);
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
 }
 
 .glass-card .bg-white {
@@ -549,7 +575,9 @@ body > main {
 
 .glass-card .text-dark,
 .glass-card .text-muted,
-.glass-card h2, .glass-card h3, .glass-card h5 {
+.glass-card h2,
+.glass-card h3,
+.glass-card h5 {
   color: #e0e0e0 !important;
 }
 
@@ -591,9 +619,12 @@ body > main {
 }
 
 .btn-cyber::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: linear-gradient(45deg, var(--cyber-pink), var(--cyber-blue));
   z-index: -1;
   transition: opacity 0.3s;
@@ -619,7 +650,6 @@ body > main {
   font-weight: bold;
 }
 
-
 /* CSS CHAT PAGE */
 .chat {
   width: 100%;
@@ -627,14 +657,12 @@ body > main {
   height: 60vh;
   min-height: 500px;
   margin: 0 auto;
-  
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   box-shadow: var(--glass-shadow);
-  
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -649,10 +677,10 @@ body > main {
   gap: 15px;
 }
 
-
 .inner-body::-webkit-scrollbar {
   width: 6px;
 }
+
 .inner-body::-webkit-scrollbar-thumb {
   background: rgba(0, 240, 255, 0.3);
   border-radius: 10px;
@@ -677,7 +705,7 @@ body > main {
 
 .inner-outgoing .inner-name {
   text-align: right;
-  color: var(--cyber-blue); 
+  color: var(--cyber-blue);
 }
 
 .inner-content {
@@ -698,7 +726,7 @@ body > main {
 
 .inner-outgoing .inner-content {
   background: linear-gradient(135deg, var(--cyber-blue), #007bb5);
-  color: var(--cyber-dark); /* Chữ màu tối để nổi trên nền neon */
+  color: var(--cyber-dark);
   font-weight: 600;
   border-bottom-right-radius: 4px;
   box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
@@ -712,29 +740,67 @@ body > main {
 
 .inner-form {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  align-items: center;
 }
 
-.inner-form input {
+.input-wrapper {
   flex: 1;
-  padding: 12px 20px;
+  display: flex;
+  align-items: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 25px;
-  outline: none;
-  color: #ffffff;
-  font-size: 1rem;
+  padding: 5px 8px 5px 20px;
   transition: all 0.3s ease;
 }
 
-.inner-form input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.inner-form input:focus {
+.input-wrapper:focus-within {
   border-color: var(--cyber-blue);
   box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
   background: rgba(255, 255, 255, 0.1);
+}
+
+.input-wrapper input {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: #ffffff;
+  font-size: 1rem;
+  padding: 8px 0;
+  box-shadow: none !important;
+}
+
+.input-wrapper input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input-wrapper .button-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.input-wrapper .button-icon:hover {
+  color: var(--cyber-blue);
+  background: rgba(0, 240, 255, 0.1);
+  transform: scale(1.1);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+}
+
+.input-wrapper .button-icon:active {
+  transform: scale(0.95);
 }
 
 .inner-form button {
@@ -757,4 +823,13 @@ body > main {
   box-shadow: 0 0 25px rgba(255, 0, 60, 0.6);
   transform: translateY(-2px);
 }
-/* END CHAT PAGE */
+
+.tooltip {
+  visibility: hidden;
+}
+
+.tooltip.shown {
+  visibility: visible;
+  opacity: 1;
+}
+/* end emoji-picker */
