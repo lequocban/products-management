@@ -1,9 +1,10 @@
 import * as Popper from "https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js";
 
-// Khai báo biến toàn cục để dùng chung cho cả form submit và keyup
+// Khai báo biến toàn cục
 var timeOutTyping;
+// TÌM THEO TEXTAREA THAY VÌ INPUT
 const chatInput = document.querySelector(
-  ".chat .inner-form input[name='content']",
+  ".chat .inner-form textarea[name='content']",
 );
 
 // show typing
@@ -21,7 +22,44 @@ const showTyping = () => {
   }, 3000);
 };
 
-// CLIENT_SEND_MESSAGE
+// AUTO RESIZE TEXTAREA VÀ XỬ LÝ ENTER
+if (chatInput) {
+  // 1. Tự động co giãn chiều cao
+  chatInput.addEventListener("input", function () {
+    this.style.height = "24px";
+    this.style.height = this.scrollHeight + "px";
+    if (this.scrollHeight > 120) {
+      this.style.overflowY = "auto";
+    } else {
+      this.style.overflowY = "hidden";
+    }
+    const chatBody = document.querySelector(".chat .inner-body");
+    if (chatBody) {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+  });
+
+  // 2. Gửi tin nhắn bằng Enter
+  chatInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Ngăn xuống dòng
+
+      const content = this.value;
+      if (content.trim() !== "") {
+        socket.emit("CLIENT_SEND_MESSAGE", content);
+        this.value = "";
+
+        // Reset lại khung chữ về 1 dòng
+        this.style.height = "24px";
+
+        socket.emit("CLIENT_SEND_TYPING", "hidden");
+        clearTimeout(timeOutTyping);
+      }
+    }
+  });
+}
+
+// CLIENT_SEND_MESSAGE (Khi nhấn nút gửi chuột)
 const formSendData = document.querySelector(".chat .inner-form");
 if (formSendData) {
   formSendData.addEventListener("submit", function (e) {
@@ -32,7 +70,9 @@ if (formSendData) {
       socket.emit("CLIENT_SEND_MESSAGE", content);
       e.target.elements.content.value = "";
 
-      // Hủy typing ngay lập tức và xóa luôn bộ đếm ngược
+      // Reset lại chiều cao textarea
+      if (chatInput) chatInput.style.height = "24px";
+
       socket.emit("CLIENT_SEND_TYPING", "hidden");
       clearTimeout(timeOutTyping);
     }
@@ -81,6 +121,9 @@ if (emojiPicker && chatInput) {
     chatInput.setSelectionRange(end, end);
     chatInput.focus();
     showTyping();
+
+    // Kích hoạt sự kiện input để textarea tự co giãn khi thả emoji
+    chatInput.dispatchEvent(new Event("input"));
   });
 }
 
@@ -95,13 +138,14 @@ if (buttonIcon) {
 }
 // end emoji-picker
 
-// SERVER_RETURN_TYPING
 // SỰ KIỆN GÕ PHÍM (TYPING)
 if (chatInput) {
   chatInput.addEventListener("keyup", () => {
     showTyping();
   });
 }
+
+// SERVER_RETURN_TYPING
 const elementListTyping = document.querySelector(".chat .inner-list-typing");
 
 if (elementListTyping) {
@@ -111,7 +155,6 @@ if (elementListTyping) {
     );
 
     if (data.type === "show") {
-      // NẾU ĐANG GÕ: Kiểm tra nếu chưa có thì mới tạo mới
       if (!existTyping) {
         const boxTyping = document.createElement("div");
         boxTyping.classList.add("box-typing");
@@ -126,12 +169,10 @@ if (elementListTyping) {
 
         elementListTyping.appendChild(boxTyping);
 
-        // Tự động cuộn xuống đáy để nhìn thấy dấu 3 chấm đang nhảy
         const bodyChat = document.querySelector(".chat .inner-body");
         bodyChat.scrollTop = bodyChat.scrollHeight;
       }
     } else {
-      // NGỪNG GÕ HOẶC GỬI XONG
       if (existTyping) {
         elementListTyping.removeChild(existTyping);
       }

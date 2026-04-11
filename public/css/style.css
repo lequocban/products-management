@@ -715,6 +715,7 @@ body > main {
   line-height: 1.4;
   display: inline-block;
   color: #ffffff;
+  white-space: pre-wrap;
 }
 
 .inner-incoming .inner-content {
@@ -741,17 +742,17 @@ body > main {
 .inner-form {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: flex-end; /* Đẩy các nút xuống dưới cùng khi ô chữ cao lên */
 }
 
 .input-wrapper {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* Icon và chữ nằm sát đáy khi kéo giãn */
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 25px;
-  padding: 5px 8px 5px 20px;
+  border-radius: 20px; /* Bo góc mượt hơn cho nhiều dòng */
+  padding: 8px 12px 8px 20px;
   transition: all 0.3s ease;
 }
 
@@ -761,18 +762,29 @@ body > main {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.input-wrapper input {
+/* CHUYỂN TỪ INPUT SANG TEXTAREA */
+.input-wrapper textarea {
   flex: 1;
   background: transparent !important;
   border: none !important;
   outline: none !important;
   color: #ffffff;
   font-size: 1rem;
-  padding: 8px 0;
+  padding: 0;
   box-shadow: none !important;
+
+  align-self: center;
+
+  /* Xử lý co giãn chiều cao */
+  height: 24px;
+  resize: none;
+  overflow-y: hidden;
+  min-height: 24px;
+  max-height: 120px; /* Giới hạn 5 dòng */
+  line-height: 1.5;
 }
 
-.input-wrapper input::placeholder {
+.input-wrapper textarea::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -790,6 +802,7 @@ body > main {
   background: transparent;
   flex-shrink: 0;
   margin-left: 10px;
+  margin-bottom: -5px; /* Ép icon mặt cười nằm gọn dưới đáy */
 }
 
 .input-wrapper .button-icon:hover {
@@ -817,6 +830,7 @@ body > main {
   gap: 8px;
   box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
   transition: all 0.3s ease;
+  margin-bottom: 2px; /* Căn nút gửi thẳng hàng với ô text */
 }
 
 .inner-form button:hover {
@@ -883,7 +897,9 @@ body > main {
 }
 
 @keyframes cyberTyping {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.4);
     opacity: 0.3;
     box-shadow: none;
