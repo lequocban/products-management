@@ -19,8 +19,13 @@ block main
               div(class=(chat.user_id.id == user.id) ? "inner-outgoing" :"inner-incoming")
                 if chat.user_id.id != user.id
                   .inner-name #{chat.user_id.fullName}
-                .inner-content
-                  | #{chat.content}
+                if (chat.content)
+                  .inner-content
+                    | #{chat.content}
+                if (chat.images)
+                  .inner-images
+                    each image in chat.images
+                      img(src=image)
             div(class="inner-list-typing")
 
           .inner-foot
@@ -33,6 +38,8 @@ block main
                 )
                 span.button-icon
                   i.fa-regular.fa-face-smile 
+                  
+              div(class="custom-file-container" data-upload-id="upload-images")
               
               button(type="submit")
                 i.fas.fa-paper-plane

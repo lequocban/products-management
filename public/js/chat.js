@@ -2,6 +2,7 @@ import * as Popper from "https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm
 
 // Khai báo biến toàn cục
 var timeOutTyping;
+
 // TÌM THEO TEXTAREA THAY VÌ INPUT
 const chatInput = document.querySelector(
   ".chat .inner-form textarea[name='content']",
@@ -22,6 +23,16 @@ const showTyping = () => {
   }, 3000);
 };
 
+// file-upload-with-preview
+const upload = new FileUploadWithPreview.FileUploadWithPreview(
+  "upload-images",
+  {
+    multiple: true,
+    maxFileCount: 6,
+  },
+);
+// file-upload-with-preview
+
 // AUTO RESIZE TEXTAREA VÀ XỬ LÝ ENTER
 if (chatInput) {
   // 1. Tự động co giãn chiều cao
@@ -40,17 +51,24 @@ if (chatInput) {
   });
 
   // 2. Gửi tin nhắn bằng Enter
-  chatInput.addEventListener("keydown", function (e) {
+  chatInput.addEventListener("keydown", async (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // Ngăn xuống dòng
 
-      const content = this.value;
-      if (content.trim() !== "") {
-        socket.emit("CLIENT_SEND_MESSAGE", content);
-        this.value = "";
+      const content = chatInput.value;
+      const images = upload.cachedFileArray || []; // Lấy ảnh nếu có
+
+      if (content.trim() !== "" || images.length > 0 || content) {
+        socket.emit("CLIENT_SEND_MESSAGE", {
+          content: content,
+          images: images,
+        });
+
+        chatInput.value = "";
+        upload.resetPreviewPanel(); // Xóa ảnh đã chọn trên màn hình
 
         // Reset lại khung chữ về 1 dòng
-        this.style.height = "24px";
+        chatInput.style.height = "24px";
 
         socket.emit("CLIENT_SEND_TYPING", "hidden");
         clearTimeout(timeOutTyping);
@@ -62,13 +80,20 @@ if (chatInput) {
 // CLIENT_SEND_MESSAGE (Khi nhấn nút gửi chuột)
 const formSendData = document.querySelector(".chat .inner-form");
 if (formSendData) {
-  formSendData.addEventListener("submit", function (e) {
+  formSendData.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const content = e.target.elements.content.value;
-    if (content.trim() !== "") {
-      socket.emit("CLIENT_SEND_MESSAGE", content);
+    const images = upload.cachedFileArray || [];
+    const imagesBuffer = [];
+
+    if (content.trim() !== "" || images.length > 0 || content) {
+      socket.emit("CLIENT_SEND_MESSAGE", {
+        content: content,
+        images: images,
+      });
       e.target.elements.content.value = "";
+      upload.resetPreviewPanel();
 
       // Reset lại chiều cao textarea
       if (chatInput) chatInput.style.height = "24px";
@@ -94,9 +119,26 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
     div.classList.add("inner-incoming");
     htmlFullName = `<div class="inner-name">${data.fullName}</div>`;
   }
+
+  let htmlContent = "";
+  let htmlImages = "";
+
+  if (data.content) {
+    htmlContent = `<div class="inner-content">${data.content}</div>`;
+  }
+
+  if (data.images && data.images.length > 0) {
+    htmlImages += `<div class="inner-images">`;
+    for (const img of data.images) {
+      htmlImages += `<img src="${img}">`;
+    }
+    htmlImages += `</div>`;
+  }
+
   div.innerHTML = `
   ${htmlFullName}
-  <div class="inner-content">${data.content}</div>
+  ${htmlContent}
+  ${htmlImages}
   `;
 
   body.insertBefore(div, boxTyping);

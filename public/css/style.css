@@ -733,6 +733,25 @@ body > main {
   box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
 }
 
+.chat .inner-body .inner-images img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  background: #efefef;
+  padding: 10px;
+  margin: 0 5px 5px 0;
+  border-radius: 5px;
+}
+
+.chat .inner-body .inner-outgoing .inner-images {
+  margin-left: auto;
+  text-align: right;
+}
+
+.chat .inner-body .inner-outgoing .inner-images img {
+  margin: 0 0 5px 5px;
+}
+
 .inner-foot {
   border-top: 1px solid var(--glass-border);
   padding: 15px;

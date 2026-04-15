@@ -47,12 +47,17 @@
           a(href=`${prefixAdmin}/roles/permissions`, class=(activeMenu === 'permissions' ? 'active' : ''))
             i.bi.bi-ui-checks-grid
             | Phân quyền
-
+      if(role.permissions.includes("users_view"))
+        li
+          a(href=`${prefixAdmin}/users`, class=(activeMenu === 'users' ? 'active' : ''))
+            i.bi.bi-person-lines-fill
+            | Người dùng
+            
       if(role.permissions.includes("accounts_view"))
         li
           a(href=`${prefixAdmin}/accounts`, class=(activeMenu === 'accounts' ? 'active' : ''))
             i.bi.bi-people-fill
-            | Tài khoản
+            | Tài khoản Admin
 
       if(role.permissions.includes("settings_general"))
         li

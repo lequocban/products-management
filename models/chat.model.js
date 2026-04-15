@@ -8,7 +8,7 @@ const chatSchema = new mongoose.Schema(
     },
     rom_chat_id: String,
     content: String,
-    image: Array,
+    images: Array,
     deleted: {
       type: Boolean,
       default: false,
