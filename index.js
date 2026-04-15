@@ -17,6 +17,7 @@ database.connect();
 
 const route = require("./routes/client/index.route");
 const routeAdmin = require("./routes/admin/index.route");
+const chatSocket = require("./sockets/client/chat.socket");
 
 const systemConfig = require("./config/system.js");
 const { patch } = require("./routes/client/products.route.js");
@@ -30,9 +31,12 @@ app.use(bodyParser.urlencoded());
 
 // socket io
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  maxHttpBufferSize: 2e7,
+});
 
 global._io = io;
+chatSocket(io);
 
 // end socket io
 

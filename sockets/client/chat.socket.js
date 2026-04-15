@@ -2,41 +2,83 @@ const Chat = require("../../models/chat.model");
 
 const uploadToCloudinary = require("../../helper/uploadToCloudinary");
 
-module.exports = async (res) => {
-  const userId = res.locals.user.id;
-  const fullName = res.locals.user.fullName;
-
-  _io.once("connection", (socket) => {
+module.exports = (io) => {
+  io.on("connection", (socket) => {
     socket.on("CLIENT_SEND_MESSAGE", async (data) => {
-      console.log("Dữ liệu nhận từ client:", data);
-      const images = [];
-      for (const imageBuffer of data.images) {
-        const link = await uploadToCloudinary(imageBuffer);
-        images.push(link);
+      try {
+        const userId = data.userId;
+        const fullName = data.fullName;
+        const content = typeof data.content === "string" ? data.content : "";
+
+        if (!userId) {
+          socket.emit("SERVER_MESSAGE_ERROR", {
+            message: "Thiếu thông tin người gửi.",
+          });
+          return;
+        }
+
+        const images = [];
+        const rawImages = Array.isArray(data.images) ? data.images : [];
+
+        for (const rawImage of rawImages) {
+          let imageBuffer = null;
+
+          if (Buffer.isBuffer(rawImage)) {
+            imageBuffer = rawImage;
+          } else if (Array.isArray(rawImage)) {
+            imageBuffer = Buffer.from(rawImage);
+          } else if (
+            rawImage &&
+            rawImage.type === "Buffer" &&
+            Array.isArray(rawImage.data)
+          ) {
+            imageBuffer = Buffer.from(rawImage.data);
+          }
+
+          if (!imageBuffer) {
+            continue;
+          }
+
+          const link = await uploadToCloudinary(imageBuffer);
+          images.push(link);
+        }
+
+        if (content.trim() === "" && images.length === 0) {
+          return;
+        }
+
+        // lưu vào db
+        const chat = new Chat({
+          user_id: userId,
+          content: content,
+          images: images,
+        });
+        await chat.save();
+
+        // trả về client
+        io.emit("SERVER_RETURN_MESSAGE", {
+          userId: userId,
+          fullName: fullName,
+          content: content,
+          images: images,
+        });
+      } catch (error) {
+        console.error("Lỗi gửi tin nhắn:", error);
+        socket.emit("SERVER_MESSAGE_ERROR", {
+          message: "Gửi tin nhắn thất bại, vui lòng thử lại.",
+        });
       }
-
-      // lưu vào db
-      const chat = new Chat({
-        user_id: userId,
-        content: data.content,
-        images: images,
-      });
-      await chat.save();
-
-      // trả về client
-      _io.emit("SERVER_RETURN_MESSAGE", {
-        userId: userId,
-        fullName: fullName,
-        content: data.content,
-        images: images,
-      });
     });
 
-    socket.on("CLIENT_SEND_TYPING", (type) => {
+    socket.on("CLIENT_SEND_TYPING", (data) => {
+      if (!data || !data.userId || !data.fullName) {
+        return;
+      }
+
       socket.broadcast.emit("SERVER_RETURN_TYPING", {
-        userId: userId,
-        fullName: fullName,
-        type: type,
+        userId: data.userId,
+        fullName: data.fullName,
+        type: data.type,
       });
     });
   });

@@ -2,6 +2,10 @@ import * as Popper from "https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm
 
 // Khai báo biến toàn cục
 var timeOutTyping;
+const chatElement = document.querySelector(".chat");
+const myId = chatElement?.getAttribute("my-id");
+const myFullName = chatElement?.getAttribute("my-full-name");
+const maxTotalImageSize = 20 * 1024 * 1024;
 
 // TÌM THEO TEXTAREA THAY VÌ INPUT
 const chatInput = document.querySelector(
@@ -10,16 +14,32 @@ const chatInput = document.querySelector(
 
 // show typing
 const showTyping = () => {
-  if (chatInput.value.trim() === "") {
-    socket.emit("CLIENT_SEND_TYPING", "hidden");
+  if (!myId || !myFullName) {
     return;
   }
 
-  socket.emit("CLIENT_SEND_TYPING", "show");
+  if (chatInput.value.trim() === "") {
+    socket.emit("CLIENT_SEND_TYPING", {
+      userId: myId,
+      fullName: myFullName,
+      type: "hidden",
+    });
+    return;
+  }
+
+  socket.emit("CLIENT_SEND_TYPING", {
+    userId: myId,
+    fullName: myFullName,
+    type: "show",
+  });
   clearTimeout(timeOutTyping);
 
   timeOutTyping = setTimeout(() => {
-    socket.emit("CLIENT_SEND_TYPING", "hidden");
+    socket.emit("CLIENT_SEND_TYPING", {
+      userId: myId,
+      fullName: myFullName,
+      type: "hidden",
+    });
   }, 3000);
 };
 
@@ -32,6 +52,68 @@ const upload = new FileUploadWithPreview.FileUploadWithPreview(
   },
 );
 // file-upload-with-preview
+
+const getSelectedImages = () => {
+  return Array.isArray(upload.cachedFileArray) ? upload.cachedFileArray : [];
+};
+
+const resetMessageComposer = () => {
+  if (chatInput) {
+    chatInput.value = "";
+    chatInput.style.height = "24px";
+  }
+
+  upload.resetPreviewPanel();
+  upload.cachedFileArray = [];
+};
+
+const sendMessage = async (contentRaw) => {
+  const content = contentRaw || "";
+  const images = getSelectedImages();
+
+  if (content.trim() === "" && images.length === 0) {
+    return;
+  }
+
+  if (!myId || !myFullName) {
+    console.error("Không có thông tin người dùng để gửi tin nhắn.");
+    return;
+  }
+
+  const totalImageSize = images.reduce((sum, file) => sum + (file.size || 0), 0);
+  if (totalImageSize > maxTotalImageSize) {
+    console.error("Tổng dung lượng ảnh vượt quá 20MB.");
+    return;
+  }
+
+  try {
+    const imageBuffers = await Promise.all(
+      images.map(async (file) => {
+        const arrayBuffer = await file.arrayBuffer();
+        return Array.from(new Uint8Array(arrayBuffer));
+      }),
+    );
+
+    socket.emit("CLIENT_SEND_MESSAGE", {
+      userId: myId,
+      fullName: myFullName,
+      content: content,
+      images: imageBuffers,
+    });
+
+    resetMessageComposer();
+    socket.emit("CLIENT_SEND_TYPING", {
+      userId: myId,
+      fullName: myFullName,
+      type: "hidden",
+    });
+    clearTimeout(timeOutTyping);
+  } catch (error) {
+    console.error("Không thể xử lý ảnh trước khi gửi:", error);
+    upload.resetPreviewPanel();
+    upload.cachedFileArray = [];
+  }
+};
 
 // AUTO RESIZE TEXTAREA VÀ XỬ LÝ ENTER
 if (chatInput) {
@@ -55,24 +137,7 @@ if (chatInput) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // Ngăn xuống dòng
 
-      const content = chatInput.value;
-      const images = upload.cachedFileArray || []; // Lấy ảnh nếu có
-
-      if (content.trim() !== "" || images.length > 0 || content) {
-        socket.emit("CLIENT_SEND_MESSAGE", {
-          content: content,
-          images: images,
-        });
-
-        chatInput.value = "";
-        upload.resetPreviewPanel(); // Xóa ảnh đã chọn trên màn hình
-
-        // Reset lại khung chữ về 1 dòng
-        chatInput.style.height = "24px";
-
-        socket.emit("CLIENT_SEND_TYPING", "hidden");
-        clearTimeout(timeOutTyping);
-      }
+      await sendMessage(chatInput.value);
     }
   });
 }
@@ -84,30 +149,13 @@ if (formSendData) {
     e.preventDefault();
 
     const content = e.target.elements.content.value;
-    const images = upload.cachedFileArray || [];
-    const imagesBuffer = [];
-
-    if (content.trim() !== "" || images.length > 0 || content) {
-      socket.emit("CLIENT_SEND_MESSAGE", {
-        content: content,
-        images: images,
-      });
-      e.target.elements.content.value = "";
-      upload.resetPreviewPanel();
-
-      // Reset lại chiều cao textarea
-      if (chatInput) chatInput.style.height = "24px";
-
-      socket.emit("CLIENT_SEND_TYPING", "hidden");
-      clearTimeout(timeOutTyping);
-    }
+    await sendMessage(content);
   });
 }
 // END_CLIENT_SEND_MESSAGE
 
 // SERVER_RETURN_MESSAGE
 socket.on("SERVER_RETURN_MESSAGE", (data) => {
-  const myId = document.querySelector("[my-id]").getAttribute("my-id");
   const body = document.querySelector(".chat .inner-body");
   const boxTyping = document.querySelector(".chat .inner-list-typing");
 
@@ -150,6 +198,10 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
   }
 });
 // end SERVER_RETURN_MESSAGE
+
+socket.on("SERVER_MESSAGE_ERROR", (data) => {
+  console.error(data.message);
+});
 
 // auto scroll and  preview image
 const chatBody = document.querySelector(".chat .inner-body");
