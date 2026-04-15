@@ -752,6 +752,26 @@ body > main {
   margin: 0 0 5px 5px;
 }
 
+.chat .inner-preview-images {
+  position: relative;
+}
+.chat .inner-preview-images .label-container {
+  display: none;
+}
+.chat .inner-preview-images .input-container {
+  display: none;
+}
+
+.chat .inner-preview-images .image-preview {
+  height: auto;
+  padding: 0;
+  border-radius: 0;
+}
+.chat .inner-preview-images .image-preview-item {
+  width: 90px;
+  background-size: contain;
+}
+
 .inner-foot {
   border-top: 1px solid var(--glass-border);
   padding: 15px;
