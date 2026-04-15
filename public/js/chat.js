@@ -143,15 +143,21 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
 
   body.insertBefore(div, boxTyping);
   body.scrollTop = body.scrollHeight;
+
+  const boxImage = div.querySelector(".inner-images");
+  if (boxImage) {
+    const gallery = new Viewer(boxImage);
+  }
 });
 // end SERVER_RETURN_MESSAGE
 
-// auto scroll
+// auto scroll and  preview image
 const chatBody = document.querySelector(".chat .inner-body");
 if (chatBody) {
+  const gallery = new Viewer(chatBody);
   chatBody.scrollTop = chatBody.scrollHeight;
 }
-// end auto scroll
+// end auto scroll and  preview image
 
 // emoji-picker
 const emojiPicker = document.querySelector("emoji-picker");
@@ -222,3 +228,8 @@ if (elementListTyping) {
   });
 }
 // END SERVER_RETURN_TYPING
+
+
+// preview image
+
+// end preview image
