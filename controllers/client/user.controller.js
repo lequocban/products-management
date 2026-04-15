@@ -9,14 +9,14 @@ const sendMailHelper = require("../../helper/sendMail");
 const md5 = require("md5");
 
 // [GET] /user/register
-exports.register = (req, res) => {
+module.exports.register = (req, res) => {
   res.render("client/pages/user/register", {
     pageTitle: "Đăng ký tài khoản",
   });
 };
 
 // [POST] /user/register
-exports.registerPost = async (req, res) => {
+module.exports.registerPost = async (req, res) => {
   const { fullName, email, password } = req.body;
 
   // 1. Kiểm tra xem email đã tồn tại trong DB chưa
@@ -58,7 +58,7 @@ exports.registerPost = async (req, res) => {
 };
 
 // [GET] /user/register/otp
-exports.otpRegister = (req, res) => {
+module.exports.otpRegister = (req, res) => {
   // Nếu không có cookie đăng ký tạm (nghĩa là khách gõ thẳng link này), đá về trang đăng ký
   if (!req.cookies.registerData) {
     req.flash("error", "Phiên đăng ký đã hết hạn hoặc không hợp lệ!");
@@ -75,7 +75,7 @@ exports.otpRegister = (req, res) => {
 };
 
 // [POST] /user/register/otp
-exports.otpRegisterPost = async (req, res) => {
+module.exports.otpRegisterPost = async (req, res) => {
   if (!req.cookies.registerData) {
     req.flash("error", "Phiên đăng ký đã hết hạn!");
     res.redirect("/user/register");
@@ -123,14 +123,14 @@ exports.otpRegisterPost = async (req, res) => {
 };
 
 // [GET] /user/login
-exports.login = (req, res) => {
+module.exports.login = (req, res) => {
   res.render("client/pages/user/login", {
     pageTitle: "Đăng nhập tài khoản",
   });
 };
 
 // [POST] /user/login
-exports.loginPost = async (req, res) => {
+module.exports.loginPost = async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
     deleted: false,
@@ -162,20 +162,20 @@ exports.loginPost = async (req, res) => {
 };
 
 // [GET] /user/logout
-exports.logout = (req, res) => {
+module.exports.logout = (req, res) => {
   res.clearCookie("tokenUser");
   res.redirect("/");
 };
 
 // [GET] /user/password/forgot
-exports.forgotPassword = (req, res) => {
+module.exports.forgotPassword = (req, res) => {
   res.render("client/pages/user/forgot-password", {
     pageTitle: "Quên mật khẩu",
   });
 };
 
 // [POST] /user/password/forgot
-exports.forgotPasswordPost = async (req, res) => {
+module.exports.forgotPasswordPost = async (req, res) => {
   const email = req.body.email;
   const user = await User.findOne({
     email: email,
@@ -213,7 +213,7 @@ exports.forgotPasswordPost = async (req, res) => {
 };
 
 // [GET] /user/password/otp
-exports.otpPassword = (req, res) => {
+module.exports.otpPassword = (req, res) => {
   const email = req.query.email;
   res.render("client/pages/user/otp-password", {
     pageTitle: "Nhập mã OTP",
@@ -222,7 +222,7 @@ exports.otpPassword = (req, res) => {
 };
 
 // [POST] /user/password/otp
-exports.otpPasswordPost = async (req, res) => {
+module.exports.otpPasswordPost = async (req, res) => {
   const email = req.body.email;
   const otp = req.body.otp.join("");
 
@@ -245,14 +245,14 @@ exports.otpPasswordPost = async (req, res) => {
 };
 
 // [GET] /user/password/reset
-exports.resetPassword = (req, res) => {
+module.exports.resetPassword = (req, res) => {
   res.render("client/pages/user/reset-password", {
     pageTitle: "Đặt lại mật khẩu",
   });
 };
 
 // [POST] /user/password/reset
-exports.resetPasswordPost = async (req, res) => {
+module.exports.resetPasswordPost = async (req, res) => {
   const password = req.body.password;
   const tokenUser = req.cookies.tokenUser;
 
@@ -262,7 +262,7 @@ exports.resetPasswordPost = async (req, res) => {
 };
 
 // [GET] /user/info
-exports.info = async (req, res) => {
+module.exports.info = async (req, res) => {
   const tokenUser = req.cookies.tokenUser;
   const user = await User.findOne({ tokenUser: tokenUser, deleted: false });
   res.render("client/pages/user/info", {
@@ -272,7 +272,7 @@ exports.info = async (req, res) => {
 };
 
 // [GET] /user/edit
-exports.edit = async (req, res) => {
+module.exports.edit = async (req, res) => {
   const tokenUser = req.cookies.tokenUser;
   const user = await User.findOne({ tokenUser: tokenUser, deleted: false });
   res.render("client/pages/user/edit", {
@@ -282,7 +282,7 @@ exports.edit = async (req, res) => {
 };
 
 // [PATCH] /user/edit
-exports.editPatch = async (req, res) => {
+module.exports.editPatch = async (req, res) => {
   try {
     const tokenUser = req.cookies.tokenUser;
     const user = await User.findOne({ tokenUser: tokenUser, deleted: false }).select("-password -tokenUser");
@@ -315,14 +315,14 @@ exports.editPatch = async (req, res) => {
 };
 
 // [GET] /user/password/change
-exports.changePassword = async (req, res) => {
+module.exports.changePassword = async (req, res) => {
   res.render("client/pages/user/change-password", {
     pageTitle: "Xác nhận mật khẩu",
   });
 };
 
 // [POST] /user/password/change
-exports.changePasswordPost = async (req, res) => {
+module.exports.changePasswordPost = async (req, res) => {
   try {
     const tokenUser = req.cookies.tokenUser;
     const oldPassword = req.body.oldPassword;
