@@ -40,3 +40,18 @@ if (lstBtnRefuseFriends.length > 0) {
   });
 }
 // end refuse add friend
+
+
+// accept friend
+const lstBtnAcceptFriends = document.querySelectorAll("[btn-accept-friend]");
+if (lstBtnAcceptFriends.length > 0) {
+  lstBtnAcceptFriends.forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      btn.closest(".box-user").classList.add("accepted");
+      const userId = btn.getAttribute("btn-accept-friend");
+
+      socket.emit("CLIENT_ACCEPT_FRIEND", userId);
+    });
+  });
+}
+// end accept friend

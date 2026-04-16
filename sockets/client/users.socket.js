@@ -7,7 +7,6 @@ module.exports = (res) => {
     const myUserId = res.locals.user.id;
     // gửi yêu cầu kết bạn
     socket.on("CLIENT_ADD_FRIEND", async (userId) => {
-
       // thêm id của a vào acceptFriends của b
       const existUserAcpFr = await User.findOne({
         _id: userId,
@@ -83,6 +82,39 @@ module.exports = (res) => {
         await User.updateOne(
           { _id: userId },
           { $pull: { requestFriends: myUserId } },
+        );
+      }
+    });
+
+    // chấp nhận yêu cầu kết bạn
+    socket.on("CLIENT_ACCEPT_FRIEND", async (userId) => {
+      // xóa id của b khỏi acceptFriends của a + thêm {user_id, room_chat_id} của b vào friends của a
+      const existUserAcpFr = await User.findOne({
+        _id: myUserId,
+        acceptFriends: userId,
+      });
+      if (existUserAcpFr) {
+        await User.updateOne(
+          { _id: myUserId },
+          {
+            $push: { friendList: { user_id: userId, room_chat_id: " " } },
+            $pull: { acceptFriends: userId },
+          },
+        );
+      }
+
+      // xóa id của a khỏi requestFriends của b
+      const existUserReqFr = await User.findOne({
+        _id: userId,
+        requestFriends: myUserId,
+      });
+      if (existUserReqFr) {
+        await User.updateOne(
+          { _id: userId },
+          {
+            $push: { friendList: { user_id: myUserId, room_chat_id: " " } },
+            $pull: { requestFriends: myUserId },
+          },
         );
       }
     });

@@ -14,12 +14,17 @@ module.exports.notFriends = async (req, res) => {
   );
   const requestFriends = myUser.requestFriends || [];
   const acceptFriends = myUser.acceptFriends || [];
+  const friendIds = await User.distinct("friendList.user_id", {
+    _id: userId,
+  });
 
   const users = await User.find({
     $and: [
       { _id: { $ne: userId } },
       { _id: { $nin: requestFriends } },
       { _id: { $nin: acceptFriends } },
+      { _id: { $nin: friendIds } },
+
     ],
     deleted: false,
     status: "active",
