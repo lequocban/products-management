@@ -30,3 +30,26 @@ module.exports.notFriends = async (req, res) => {
     users: users,
   });
 };
+
+// [GET] /users/requests
+module.exports.requests = async (req, res) => {
+  // socket
+  usersSocket(res);
+  // end socket
+  const userId = res.locals.user.id;
+  const myUser = await User.findOne({ _id: userId }).select(
+    "-password -tokenUser",
+  );
+  const requestFriends = myUser.requestFriends || [];
+
+  const users = await User.find({
+    _id: { $in: requestFriends },
+    deleted: false,
+    status: "active",
+  }).select("id fullName avatar");
+  console.log(users);
+  res.render("client/pages/users/requests", {
+    pageTitle: "Danh sách yêu cầu kết bạn",
+    users: users,
+  });
+};

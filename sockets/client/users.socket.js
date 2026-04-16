@@ -5,7 +5,7 @@ const uploadToCloudinary = require("../../helper/uploadToCloudinary");
 module.exports = (res) => {
   _io.once("connection", (socket) => {
     const myUserId = res.locals.user.id;
-
+    // gửi yêu cầu kết bạn
     socket.on("CLIENT_ADD_FRIEND", async (userId) => {
       console.log(myUserId); // a: myId
       console.log(userId); // b: id of user I want to add friend
@@ -31,6 +31,36 @@ module.exports = (res) => {
         await User.updateOne(
           { _id: myUserId },
           { $push: { requestFriends: userId } },
+        );
+      }
+    });
+
+    // hủy gửi yêu cầu kết bạn
+    socket.on("CLIENT_CANCEL_FRIEND", async (userId) => {
+      console.log(myUserId); // a: myId
+      console.log(userId); // b: id of user I want to cancel friend request
+
+      // xóa id của a khỏi acceptFriends của b
+      const existUserAcpFr = await User.findOne({
+        _id: userId,
+        acceptFriends: myUserId,
+      });
+      if (existUserAcpFr) {
+        await User.updateOne(
+          { _id: userId },
+          { $pull: { acceptFriends: myUserId } },
+        );
+      }
+
+      // xóa id của b khỏi requestFriends của a
+      const existUserReqFr = await User.findOne({
+        _id: myUserId,
+        requestFriends: userId,
+      });
+      if (existUserReqFr) {
+        await User.updateOne(
+          { _id: myUserId },
+          { $pull: { requestFriends: userId } },
         );
       }
     });
