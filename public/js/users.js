@@ -1,4 +1,22 @@
 // hàm
+const sendRequestAddFriend = async (btn) => {
+  btn.addEventListener("click", async (e) => {
+    btn.closest(".box-user").classList.add("add");
+    const userId = btn.getAttribute("btn-add-friend");
+
+    socket.emit("CLIENT_ADD_FRIEND", userId);
+  });
+};
+
+const cancelRequestAddFriend = async (btn) => {
+  btn.addEventListener("click", async (e) => {
+    btn.closest(".box-user").classList.remove("add");
+    const userId = btn.getAttribute("btn-cancel-friend");
+
+    socket.emit("CLIENT_CANCEL_FRIEND", userId);
+  });
+};
+
 const refuseFriend = async (btn) => {
   btn.addEventListener("click", async (e) => {
     btn.closest(".box-user").classList.add("refuse");
@@ -22,12 +40,7 @@ const acceptFriend = async (btn) => {
 const lstBtnAddFriends = document.querySelectorAll("[btn-add-friend]");
 if (lstBtnAddFriends.length > 0) {
   lstBtnAddFriends.forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
-      btn.closest(".box-user").classList.add("add");
-      const userId = btn.getAttribute("btn-add-friend");
-
-      socket.emit("CLIENT_ADD_FRIEND", userId);
-    });
+    sendRequestAddFriend(btn);
   });
 }
 // end send request add friend
@@ -36,12 +49,7 @@ if (lstBtnAddFriends.length > 0) {
 const lstBtnCancelFriends = document.querySelectorAll("[btn-cancel-friend]");
 if (lstBtnCancelFriends.length > 0) {
   lstBtnCancelFriends.forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
-      btn.closest(".box-user").classList.remove("add");
-      const userId = btn.getAttribute("btn-cancel-friend");
-
-      socket.emit("CLIENT_CANCEL_FRIEND", userId);
-    });
+    cancelRequestAddFriend(btn);
   });
 }
 // end cancel add friend
@@ -76,14 +84,17 @@ socket.on("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", (data) => {
 
 // SERVER_RETURN_INFO_ACCEPT_FRIEND
 socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
+  // trang lời mời kết bạn
   const dataUsersAccept = document.querySelector(`[data-users-accept]`);
-  const userId = dataUsersAccept.getAttribute("data-users-accept");
-  if (userId === data.userId) {
-    // vẽ giao diện
-    const newBoxUser = document.createElement("div");
-    newBoxUser.classList.add("col-6");
-    newBoxUser.setAttribute("user-id", data.infoUserA._id);
-    newBoxUser.innerHTML = `
+  if (dataUsersAccept) {
+    const userId = dataUsersAccept.getAttribute("data-users-accept");
+
+    if (userId === data.userId) {
+      // vẽ giao diện
+      const newBoxUser = document.createElement("div");
+      newBoxUser.classList.add("col-6");
+      newBoxUser.setAttribute("user-id", data.infoUserA._id);
+      newBoxUser.innerHTML = `
       <div class="box-user">
           <div class="inner-avatar">
             <img
@@ -121,32 +132,113 @@ socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
           </div>
       </div>
     `;
-    dataUsersAccept.appendChild(newBoxUser);
-    // end vẽ giao diện
+      dataUsersAccept.appendChild(newBoxUser);
+      // end vẽ giao diện
 
-    // sự kiện xóa lời mời
-    const btnRefuseFriend = newBoxUser.querySelector("[btn-refuse-friend]");
-    refuseFriend(btnRefuseFriend);
-    // end sự kiện xóa lời mời
+      // sự kiện xóa lời mời
+      const btnRefuseFriend = newBoxUser.querySelector("[btn-refuse-friend]");
+      refuseFriend(btnRefuseFriend);
+      // end sự kiện xóa lời mời
 
-    // sự kiện chấp nhận lời mời
-    const btnAcceptFriend = newBoxUser.querySelector("[btn-accept-friend]");
-    acceptFriend(btnAcceptFriend);
-    // end sự kiện chấp nhận lời mời
+      // sự kiện chấp nhận lời mời
+      const btnAcceptFriend = newBoxUser.querySelector("[btn-accept-friend]");
+      acceptFriend(btnAcceptFriend);
+      // end sự kiện chấp nhận lời mời
+    }
   }
+  // end trang lời mời kết bạn
+
+  // trang danh sách người dùng
+  const dataUsersNotFriends = document.querySelector(
+    `[data-users-not-friends]`,
+  );
+  if (dataUsersNotFriends) {
+    const userId = dataUsersNotFriends.getAttribute("data-users-not-friends");
+    if (userId === data.userId) {
+      // xóa a khỏi giao diện b
+      const boxUserA = document.querySelector(
+        `[user-id="${data.infoUserA._id}"]`,
+      );
+      if (boxUserA) {
+        dataUsersNotFriends.removeChild(boxUserA);
+      }
+    }
+  }
+  // end trang danh sách người dùng
 });
 // end SERVER_RETURN_INFO_ACCEPT_FRIEND
 
 // SERVER_RETURN_USER_ID_CANCEL_FRIEND
 socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
+  // trang lời mời kết bạn
   const dataUsersAccept = document.querySelector(`[data-users-accept]`);
-  const userId = dataUsersAccept.getAttribute("data-users-accept");
-  if (userId === data.userId) {
-    // xóa a khỏi giao diện b
-    const boxUserA = document.querySelector(`[user-id="${data.cancelUserId}"]`);
-    if (boxUserA) {
-      dataUsersAccept.removeChild(boxUserA);
+  if (dataUsersAccept) {
+    const userId = dataUsersAccept.getAttribute("data-users-accept");
+    if (userId === data.userId) {
+      // xóa a khỏi giao diện b
+      const boxUserA = document.querySelector(
+        `[user-id="${data.cancelUser._id}"]`,
+      );
+      if (boxUserA) {
+        dataUsersAccept.removeChild(boxUserA);
+      }
     }
   }
+  // end trang lời mời kết bạn
+
+  // trang danh sách người dùng
+  const dataUsersNotFriends = document.querySelector(
+    `[data-users-not-friends]`,
+  );
+  if (dataUsersNotFriends) {
+    const userId = dataUsersNotFriends.getAttribute("data-users-not-friends");
+    console.log(data.cancelUser);
+    if (userId === data.userId) {
+      // vẽ giao diện
+      const newBoxUser = document.createElement("div");
+      newBoxUser.classList.add("col-6");
+      newBoxUser.setAttribute("user-id", data.cancelUser._id);
+
+      newBoxUser.innerHTML = `
+         <div class="box-user">
+          <div class="inner-avatar">
+            <img
+                src=${data.cancelUser.avatar}
+                alt=${data.cancelUser.fullName}
+            />
+          </div>
+          <div class="inner-info">
+            <div class="inner-name">${data.cancelUser.fullName}</div>
+            <div class="inner-buttons">
+                <button
+                  class="btn btn-sm btn-primary mr-1"
+                  btn-add-friend=${data.cancelUser._id}
+                >
+                  Kết bạn</button
+                ><button
+                  class="btn btn-sm btn-secondary mr-1"
+                  btn-cancel-friend=${data.cancelUser._id}
+                >
+                  Hủy
+                </button>
+            </div>
+          </div>
+      </div>
+      `;
+      dataUsersNotFriends.appendChild(newBoxUser);
+      // end vẽ giao diện
+      
+      // sự kiện gửi lời mời kết bạn
+      const btnAddFriend = newBoxUser.querySelector("[btn-add-friend]");
+      sendRequestAddFriend(btnAddFriend);
+      // end sự kiện gửi lời mời kết bạn
+
+      // sự kiện hủy lời mời kết bạn
+      const btnCancelFriend = newBoxUser.querySelector("[btn-cancel-friend]");
+      cancelRequestAddFriend(btnCancelFriend);
+      // end sự kiện hủy lời mời kết bạn
+    }
+  }
+  // end trang danh sách người dùng
 });
 // end SERVER_RETURN_USER_ID_CANCEL_FRIEND

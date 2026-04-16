@@ -85,9 +85,12 @@ module.exports = (res) => {
         lengthAcpFr: lengthAcpFr,
       });
       // lấy userId của a trả về cho b khi hủy lời mời
+      const myInfo = await User.findOne({
+        _id: myUserId,
+      }).select("id fullName avatar");
       socket.broadcast.emit("SERVER_RETURN_USER_ID_CANCEL_FRIEND", {
         userId: userId,
-        cancelUserId: myUserId,
+        cancelUser: myInfo,
       });
     });
 
