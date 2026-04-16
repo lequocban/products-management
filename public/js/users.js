@@ -12,7 +12,6 @@ if (lstBtnAddFriends.length > 0) {
 }
 // end send request add friend
 
-
 // cancel add friend
 const lstBtnCancelFriends = document.querySelectorAll("[btn-cancel-friend]");
 if (lstBtnCancelFriends.length > 0) {
@@ -41,7 +40,6 @@ if (lstBtnRefuseFriends.length > 0) {
 }
 // end refuse add friend
 
-
 // accept friend
 const lstBtnAcceptFriends = document.querySelectorAll("[btn-accept-friend]");
 if (lstBtnAcceptFriends.length > 0) {
@@ -55,3 +53,13 @@ if (lstBtnAcceptFriends.length > 0) {
   });
 }
 // end accept friend
+
+// SERVER_RETURN_LENGTH_ACCEPT_FRIEND
+socket.on("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", (data) => {
+  const badgeUserAccept = document.querySelector(`[badge-user-accept]`);
+  const userId = badgeUserAccept.getAttribute("badge-user-accept");
+  if (userId === data.userId) {
+    badgeUserAccept.innerHTML = data.lengthAcpFr;
+  }
+});
+// end SERVER_RETURN_LENGTH_ACCEPT_FRIEND
