@@ -7,6 +7,15 @@ const refuseFriend = async (btn) => {
     socket.emit("CLIENT_REFUSE_FRIEND", userId);
   });
 };
+
+const acceptFriend = async (btn) => {
+  btn.addEventListener("click", async (e) => {
+    btn.closest(".box-user").classList.add("accepted");
+    const userId = btn.getAttribute("btn-accept-friend");
+
+    socket.emit("CLIENT_ACCEPT_FRIEND", userId);
+  });
+};
 // end hàm
 
 // send request add friend
@@ -50,12 +59,7 @@ if (lstBtnRefuseFriends.length > 0) {
 const lstBtnAcceptFriends = document.querySelectorAll("[btn-accept-friend]");
 if (lstBtnAcceptFriends.length > 0) {
   lstBtnAcceptFriends.forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
-      btn.closest(".box-user").classList.add("accepted");
-      const userId = btn.getAttribute("btn-accept-friend");
-
-      socket.emit("CLIENT_ACCEPT_FRIEND", userId);
-    });
+    acceptFriend(btn);
   });
 }
 // end accept friend
@@ -123,6 +127,11 @@ socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
     const btnRefuseFriend = newBoxUser.querySelector("[btn-refuse-friend]");
     refuseFriend(btnRefuseFriend);
     // end sự kiện xóa lời mời
+
+    // sự kiện chấp nhận lời mời
+    const btnAcceptFriend = newBoxUser.querySelector("[btn-accept-friend]");
+    acceptFriend(btnAcceptFriend);
+    // end sự kiện chấp nhận lời mời
   }
 });
 // end SERVER_RETURN_INFO_ACCEPT_FRIEND
