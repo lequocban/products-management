@@ -47,9 +47,30 @@ module.exports.requests = async (req, res) => {
     deleted: false,
     status: "active",
   }).select("id fullName avatar");
-  console.log(users);
   res.render("client/pages/users/requests", {
-    pageTitle: "Danh sách yêu cầu kết bạn",
+    pageTitle: "Yêu cầu kết bạn",
+    users: users,
+  });
+};
+
+// [GET] /users/accept
+module.exports.accept = async (req, res) => {
+  // socket
+  usersSocket(res);
+  // end socket
+  const userId = res.locals.user.id;
+  const myUser = await User.findOne({ _id: userId }).select(
+    "-password -tokenUser",
+  );
+  const acceptFriends = myUser.acceptFriends || [];
+
+  const users = await User.find({
+    _id: { $in: acceptFriends },
+    deleted: false,
+    status: "active",
+  }).select("id fullName avatar");
+  res.render("client/pages/users/accept", {
+    pageTitle: "Lời mời kết bạn",
     users: users,
   });
 };

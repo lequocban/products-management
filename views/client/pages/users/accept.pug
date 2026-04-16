@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+  .container.my-3.cyber-wrapper.rounded-5 
+    
+    include ../../partials/list-btn-user.pug
+
+    .row 
+      .col-12
+        +box-head("Lời mời kết bạn")
+        
+    .row
+      each user in users
+        .col-6
+          div(class="box-user add")
+            div(class="inner-avatar")
+              img(
+                src=( user.avatar ? user.avatar : "/images/user-default.jpg")
+                alt=user.fullName
+              )
+            div(class="inner-info")
+              div(class="inner-name") #{user.fullName}
+              div(class="inner-buttons")
+                button(
+                  class="btn btn-sm btn-primary ms-1"
+                  btn-accept-friend=user.id
+                ) Chấp nhận
+                button(
+                  class="btn btn-sm btn-secondary ms-1"
+                  btn-refuse-friend=user.id
+                ) Từ chối
+                button(
+                  class="btn btn-sm btn-secondary ms-1"
+                  btn-deleted-friend
+                  disabled
+                ) Đã xóa
+
+block script
+  script(type="module" src="/js/users.js")
