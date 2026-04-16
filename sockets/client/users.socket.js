@@ -39,6 +39,15 @@ module.exports = (res) => {
         userId: userId,
         lengthAcpFr: lengthAcpFr,
       });
+
+      // lấy thông tin a gửi cho b
+      const infoUserA = await User.findOne({
+        _id: myUserId,
+      }).select("id fullName avatar");
+      socket.broadcast.emit("SERVER_RETURN_INFO_ACCEPT_FRIEND", {
+        userId: userId,
+        infoUserA: infoUserA,
+      });
     });
 
     // hủy gửi yêu cầu kết bạn
