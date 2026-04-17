@@ -8,6 +8,38 @@ const myFullName = chatElement?.getAttribute("my-full-name");
 const roomChatId = chatElement?.getAttribute("room-chat-id");
 const maxTotalImageSize = 20 * 1024 * 1024;
 
+const refreshRoomOnlineCounter = () => {
+  const onlineCounter = document.querySelector("[room-online-counter]");
+  if (!onlineCounter) {
+    return;
+  }
+
+  const onlineMembers = document.querySelectorAll(
+    ".room-user-item [room-user-status][status='online']",
+  );
+  onlineCounter.textContent = onlineMembers.length;
+};
+
+const updateRoomMemberStatus = (userId, status) => {
+  const statusElement = document.querySelector(
+    `.room-user-item[user-id="${userId}"] [room-user-status]`,
+  );
+
+  if (!statusElement) {
+    return;
+  }
+
+  statusElement.setAttribute("status", status);
+  statusElement.setAttribute("room-user-status", status);
+
+  const statusText = statusElement.querySelector(".room-user-status-text");
+  if (statusText) {
+    statusText.textContent = status === "online" ? "Đang online" : "Offline";
+  }
+
+  refreshRoomOnlineCounter();
+};
+
 if (roomChatId) {
   const joinCurrentRoom = () => {
     socket.emit("CLIENT_JOIN_ROOM", roomChatId);
@@ -179,6 +211,10 @@ if (formSendData) {
 socket.on("SERVER_RETURN_MESSAGE", (data) => {
   const body = document.querySelector(".chat .inner-body");
   const boxTyping = document.querySelector(".chat .inner-list-typing");
+  const emptyState = body?.querySelector(".chat-empty");
+  if (emptyState) {
+    emptyState.remove();
+  }
 
   const div = document.createElement("div");
   let htmlFullName = "";
@@ -222,6 +258,14 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
 
 socket.on("SERVER_MESSAGE_ERROR", (data) => {
   console.error(data.message);
+});
+
+socket.on("SERVER_RETURN_USER_ONLINE", (userId) => {
+  updateRoomMemberStatus(userId, "online");
+});
+
+socket.on("SERVER_RETURN_USER_OFFLINE", (userId) => {
+  updateRoomMemberStatus(userId, "offline");
 });
 
 // auto scroll and  preview image
@@ -301,6 +345,19 @@ if (elementListTyping) {
   });
 }
 // END SERVER_RETURN_TYPING
+
+const formDeleteRoom = document.querySelector("[form-delete-room]");
+if (formDeleteRoom) {
+  formDeleteRoom.addEventListener("submit", (event) => {
+    const isConfirmed = confirm(
+      "Bạn chắc chắn muốn xóa phòng chat này? Hành động này không thể hoàn tác.",
+    );
+
+    if (!isConfirmed) {
+      event.preventDefault();
+    }
+  });
+}
 
 // preview image
 

@@ -10,12 +10,17 @@ block main
     
     include ../../partials/list-btn-user.pug
 
-    .row.mb-3
-      .col-12
-        +box-head("Chat")
+    .row.align-items-center.mb-3
+      .col-12.col-lg-7
+        +box-head(roomChat.title ? roomChat.title : "Chat")
+      .col-12.col-lg-5.text-lg-end
+        a(
+          href="/rooms-chat"
+          class="btn btn-cyber"
+        ) Quay lại danh sách phòng
 
-    .row 
-      .col-12 
+    .row.g-4
+      .col-12.col-xl-8
         .chat(my-id=user.id my-full-name=user.fullName room-chat-id=roomChatId)
           .inner-body
             if chats.length
@@ -53,6 +58,93 @@ block main
               button.btn-chat-submit(type="submit")
                 i.fas.fa-paper-plane
                 | Gửi
+
+      .col-12.col-xl-4
+        .room-side-panel.glass-card(room-total-members=roomUsers.length)
+          .room-side-head
+            h5.room-side-title Thành viên phòng chat
+            p.room-side-subtitle
+              span(room-online-counter) #{onlineUsersCount}
+              | /#{roomUsers.length} đang online
+
+          if canDeleteRoom
+            form.room-delete-form(action=`/chat/${roomChat.id}/delete` method="POST" form-delete-room)
+              button(type="submit" class="btn btn-sm btn-outline-danger") Xóa phòng chat
+
+          .room-user-list
+            if roomUsers.length
+              each roomUser in roomUsers
+                .room-user-item(user-id=roomUser.id)
+                  .room-user-avatar
+                    img(
+                      src=roomUser.avatar ? roomUser.avatar : "/images/user-default.jpg"
+                      alt=roomUser.fullName
+                    )
+                  .room-user-content
+                    .room-user-name
+                      | #{roomUser.fullName}
+                      if roomUser.isMe
+                        span.room-user-me (Bạn)
+                    .room-user-meta
+                      if roomUser.role === "superAdmin"
+                        span.room-role-badge.room-role-owner Trưởng phòng
+                      else if roomUser.role === "admin"
+                        span.room-role-badge.room-role-admin Phó phòng
+                      else
+                        span.room-role-badge.room-role-user Thành viên
+
+                      span.room-user-status(room-user-status=roomUser.statusOnline status=roomUser.statusOnline)
+                        i.fa-solid.fa-circle
+                        span.room-user-status-text
+                          if roomUser.statusOnline === "online"
+                            | Đang online
+                          else
+                            | Offline
+
+                  if canPromoteMembers && roomUser.role === "user"
+                    form.room-promote-form(action=`/chat/${roomChat.id}/members/${roomUser.id}/promote` method="POST")
+                      button(type="submit" class="btn btn-sm btn-cyber-outline")
+                        i.fa-solid.fa-user-shield
+                        |  Chọn làm admin
+            else
+              .room-empty Không có thành viên trong phòng chat.
+
+          if canManageMembers
+            .room-manage-divider
+            .room-manage-head
+              h6.room-manage-title Thêm thành viên
+              p.room-manage-subtitle Chỉ thêm thành viên thường vào phòng chat.
+
+            if candidateUsers.length
+              form(action=`/chat/${roomChat.id}/members/add` method="POST")
+                .room-add-member-list
+                  each candidateUser in candidateUsers
+                    label.room-add-member-item(for=`add-member-${candidateUser.id}`)
+                      input(
+                        id=`add-member-${candidateUser.id}`
+                        type="checkbox"
+                        name="usersId"
+                        value=candidateUser.id
+                      )
+                      .room-add-member-avatar
+                        img(
+                          src=candidateUser.avatar ? candidateUser.avatar : "/images/user-default.jpg"
+                          alt=candidateUser.fullName
+                        )
+                      .room-add-member-info
+                        span.room-add-member-name #{candidateUser.fullName}
+                        span.room-user-status(room-user-status=candidateUser.statusOnline status=candidateUser.statusOnline)
+                          i.fa-solid.fa-circle
+                          span.room-user-status-text
+                            if candidateUser.statusOnline === "online"
+                              | Đang online
+                            else
+                              | Offline
+
+                .room-add-member-actions
+                  button(type="submit" class="btn btn-cyber") Thêm vào phòng
+            else
+              .room-empty Hiện không còn bạn bè nào để thêm vào phòng.
   
   div(class="tooltip" role="tooltip")
     emoji-picker

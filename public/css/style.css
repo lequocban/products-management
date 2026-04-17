@@ -641,6 +641,18 @@ body > main {
   transform: translateY(-2px);
 }
 
+.btn-cyber-outline {
+  background: transparent;
+  color: var(--cyber-blue);
+  border: 1px solid rgba(0, 240, 255, 0.65);
+}
+
+.btn-cyber-outline:hover {
+  color: #fff;
+  border-color: rgba(255, 0, 60, 0.75);
+  background: rgba(255, 0, 60, 0.2);
+}
+
 .cyber-text {
   background: linear-gradient(45deg, var(--cyber-blue), var(--cyber-pink));
   -webkit-background-clip: text;
@@ -676,6 +688,207 @@ body > main {
   border: 1px dashed rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   padding: 14px 18px;
+}
+
+.room-side-panel {
+  border-radius: 14px;
+  padding: 16px;
+  height: 100%;
+}
+
+.room-side-head {
+  margin-bottom: 12px;
+}
+
+.room-side-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.room-side-subtitle {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.88rem;
+}
+
+.room-delete-form {
+  margin-bottom: 12px;
+}
+
+.room-user-list {
+  max-height: 340px;
+  overflow-y: auto;
+  display: grid;
+  gap: 10px;
+  padding-right: 2px;
+}
+
+.room-user-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px;
+}
+
+.room-user-avatar,
+.room-add-member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.room-user-avatar img,
+.room-add-member-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.room-user-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.room-user-name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.94rem;
+  margin-bottom: 4px;
+}
+
+.room-user-me {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.8rem;
+  margin-left: 4px;
+}
+
+.room-user-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.room-role-badge {
+  font-size: 0.72rem;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-weight: 700;
+}
+
+.room-role-owner {
+  background: rgba(255, 185, 67, 0.2);
+  border: 1px solid rgba(255, 185, 67, 0.4);
+  color: #ffc55f;
+}
+
+.room-role-admin {
+  background: rgba(0, 240, 255, 0.14);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: #7df7ff;
+}
+
+.room-role-user {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f0f0f0;
+}
+
+.room-user-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.room-user-status i {
+  font-size: 0.52rem;
+}
+
+.room-user-status[status="online"] {
+  color: #8cf6b2;
+}
+
+.room-user-status[status="online"] i {
+  color: #00ff9d;
+  text-shadow: 0 0 8px rgba(0, 255, 157, 0.75);
+}
+
+.room-user-status[status="offline"] i {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.room-promote-form .btn {
+  border-radius: 999px;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+}
+
+.room-manage-divider {
+  margin: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.room-manage-title {
+  margin-bottom: 3px;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.room-manage-subtitle {
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.82rem;
+}
+
+.room-add-member-list {
+  max-height: 260px;
+  overflow-y: auto;
+  display: grid;
+  gap: 8px;
+}
+
+.room-add-member-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.room-add-member-item input {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.room-add-member-info {
+  display: grid;
+  gap: 2px;
+}
+
+.room-add-member-name {
+  color: #f0f0f0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.room-add-member-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .chat .inner-body {
@@ -1380,6 +1593,15 @@ body > main {
 
   .box-room .inner-buttons {
     width: 100%;
+  }
+
+  .room-user-list,
+  .room-add-member-list {
+    max-height: none;
+  }
+
+  .room-user-item {
+    flex-wrap: wrap;
   }
 
   .room-section {
