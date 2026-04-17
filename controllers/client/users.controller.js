@@ -99,7 +99,6 @@ module.exports.friends = async (req, res) => {
 
   for (const user of users) {
     const infoFriend = friendList.find((friend) => friend.user_id == user.id);
-    console.log("infoFriend: ", infoFriend);
     if (infoFriend) {
       user.room_chat_id = infoFriend.room_chat_id;
     }

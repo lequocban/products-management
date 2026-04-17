@@ -52,6 +52,5 @@ module.exports.createPost = async (req, res) => {
   const room = new RoomChat(dataChat);
   await room.save();
 
-  console.log(dataChat)
   res.redirect(`/chat/${room._id}`);
 };
