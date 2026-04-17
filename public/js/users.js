@@ -34,6 +34,16 @@ const acceptFriend = async (btn) => {
     socket.emit("CLIENT_ACCEPT_FRIEND", userId);
   });
 };
+
+const updateStatusUserOnline = (userId, status) => {
+  const dataUsersFriends = document.querySelector(`[data-users-friends]`);
+  if (dataUsersFriends) {
+    const boxUser = document.querySelector(`[user-id="${userId}"]`);
+    if (boxUser) {
+      boxUser.querySelector("[status]").setAttribute("status", status);
+    }
+  }
+};
 // end hàm
 
 // send request add friend
@@ -227,7 +237,7 @@ socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
       `;
       dataUsersNotFriends.appendChild(newBoxUser);
       // end vẽ giao diện
-      
+
       // sự kiện gửi lời mời kết bạn
       const btnAddFriend = newBoxUser.querySelector("[btn-add-friend]");
       sendRequestAddFriend(btnAddFriend);
@@ -242,3 +252,29 @@ socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
   // end trang danh sách người dùng
 });
 // end SERVER_RETURN_USER_ID_CANCEL_FRIEND
+
+// SERVER_RETURN_USER_ONLINE
+socket.on("SERVER_RETURN_USER_ONLINE", (userId) => {
+  // const dataUsersFriends = document.querySelector(`[data-users-friends]`);
+  // if (dataUsersFriends) {
+  //   const boxUser = document.querySelector(`[user-id="${userId}"]`);
+  //   if (boxUser) {
+  //     boxUser.querySelector("[status]").setAttribute("status", "online");
+  //   }
+  // }
+  updateStatusUserOnline(userId, "online");
+});
+// END SERVER_RETURN_USER_ONLINE
+
+// SERVER_RETURN_USER_OFFLINE
+socket.on("SERVER_RETURN_USER_OFFLINE", (userId) => {
+  // const dataUsersFriends = document.querySelector(`[data-users-friends]`);
+  // if (dataUsersFriends) {
+  //   const boxUser = document.querySelector(`[user-id="${userId}"]`);
+  //   if (boxUser) {
+  //     boxUser.querySelector("[status]").setAttribute("status", "offline");
+  //   }
+  // }
+  updateStatusUserOnline(userId, "offline");
+});
+// END SERVER_RETURN_USER_OFFLINE

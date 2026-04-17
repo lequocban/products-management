@@ -24,7 +24,6 @@ module.exports.notFriends = async (req, res) => {
       { _id: { $nin: requestFriends } },
       { _id: { $nin: acceptFriends } },
       { _id: { $nin: friendIds } },
-
     ],
     deleted: false,
     status: "active",
@@ -76,6 +75,28 @@ module.exports.accept = async (req, res) => {
   }).select("id fullName avatar");
   res.render("client/pages/users/accept", {
     pageTitle: "Lời mời kết bạn",
+    users: users,
+  });
+};
+
+// [GET] /users/friends
+module.exports.friends = async (req, res) => {
+  const userId = res.locals.user.id;
+  const friendIds = await User.distinct("friendList.user_id", {
+    _id: userId,
+  });
+
+  const users = await User.find({
+    $and: [
+      { _id: { $ne: userId } },
+      { _id: { $in: friendIds } },
+    ],
+    deleted: false,
+    status: "active",
+  }).select("id fullName avatar statusOnline");
+
+  res.render("client/pages/users/friends", {
+    pageTitle: "Danh sách bạn bè",
     users: users,
   });
 };

@@ -1,0 +1,36 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+  .container.my-3.cyber-wrapper.rounded-5 
+    
+    include ../../partials/list-btn-user.pug
+
+    .row 
+      .col-12
+        +box-head("Danh sách bạn bè")
+
+    .row(data-users-friends)
+      each user in users
+        .col-6(user-id=user.id)
+          div(class="box-user")
+            div(class="inner-avatar")
+              img(
+                src=user.avatar ? user.avatar : "/images/user-default.jpg"
+                alt=user.fullName
+              )
+            div(class="inner-info")
+              div(class="inner-name") #{user.fullName}
+              div(class="inner-buttons")
+                button(
+                  class="btn btn-sm btn-primary ms-1"
+                ) Nhắn tin
+            div(
+              class="inner-status"
+              status=user.statusOnline
+            ) 
+              i.fa-solid.fa-circle
+
+
+block script
+  script( src="/js/users.js")

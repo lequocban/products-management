@@ -31,7 +31,9 @@ module.exports.registerPost = async (req, res) => {
   // Việc này giúp ta KHÔNG CẦN LƯU VÀO DATABASE bảng User khi chưa xác thực
   const hashedPassword = md5(password);
   const registerData = { fullName, email, hashedPassword };
-  res.cookie("registerData", JSON.stringify(registerData), { maxAge: 5 * 60 * 1000 });
+  res.cookie("registerData", JSON.stringify(registerData), {
+    maxAge: 5 * 60 * 1000,
+  });
 
   // 3. Tạo mã OTP và lưu vào database (Mượn bảng ForgotPassword)
   const otp = generateHelper.generateRandomNumber(6);
@@ -67,7 +69,7 @@ module.exports.otpRegister = (req, res) => {
   }
 
   const registerData = JSON.parse(req.cookies.registerData);
-  
+
   res.render("client/pages/user/otp-register", {
     pageTitle: "Xác thực tài khoản",
     email: registerData.email, // Gửi email ra view để hiển thị
@@ -103,7 +105,7 @@ module.exports.otpRegisterPost = async (req, res) => {
     fullName: registerData.fullName,
     email: registerData.email,
     password: registerData.hashedPassword,
-    status: "active"
+    status: "active",
   });
   await user.save();
 
@@ -113,7 +115,7 @@ module.exports.otpRegisterPost = async (req, res) => {
 
   // 4. Cho phép đăng nhập luôn
   res.cookie("tokenUser", user.tokenUser);
-  
+
   // Đồng bộ giỏ hàng và đơn hàng (logic cũ của bạn)
   await Cart.updateOne({ _id: req.cookies.cartId }, { user_id: user.id });
   await Order.updateMany({ cart_id: req.cookies.cartId }, { user_id: user.id });
@@ -156,13 +158,27 @@ module.exports.loginPost = async (req, res) => {
   await Cart.updateOne({ _id: req.cookies.cartId }, { user_id: user.id });
   // lưu user_id vào order collection
   await Order.updateMany({ cart_id: req.cookies.cartId }, { user_id: user.id });
+  //cập nhật trạng thái online
+  await User.updateOne({ _id: user.id }, { statusOnline: "online" });
 
+  _io.once("connection", (socket) => {
+    socket.broadcast.emit("SERVER_RETURN_USER_ONLINE", user.id);
+  });
   req.flash("success", "Đăng nhập tài khoản thành công!");
   res.redirect("/");
 };
 
 // [GET] /user/logout
-module.exports.logout = (req, res) => {
+module.exports.logout = async (req, res) => {
+  //cập nhật trạng thái online
+  await User.updateOne(
+    { _id: res.locals.user.id },
+    { statusOnline: "offline" },
+  );
+
+  _io.once("connection", (socket) => {
+    socket.broadcast.emit("SERVER_RETURN_USER_OFFLINE", res.locals.user.id);
+  });
   res.clearCookie("tokenUser");
   res.redirect("/");
 };
@@ -285,7 +301,10 @@ module.exports.edit = async (req, res) => {
 module.exports.editPatch = async (req, res) => {
   try {
     const tokenUser = req.cookies.tokenUser;
-    const user = await User.findOne({ tokenUser: tokenUser, deleted: false }).select("-password -tokenUser");
+    const user = await User.findOne({
+      tokenUser: tokenUser,
+      deleted: false,
+    }).select("-password -tokenUser");
     if (!req.file) {
       if (req.body.isAvatarDeleted === "true") {
         // Trường hợp 1: Người dùng chủ động bấm X -> Xóa ảnh trong Database
@@ -341,9 +360,9 @@ module.exports.changePasswordPost = async (req, res) => {
     const objectForgotPassword = {
       email: email,
       otp: otp,
-      expiredAt: Date.now() + 3 * 60 * 1000, 
+      expiredAt: Date.now() + 3 * 60 * 1000,
     };
-    
+
     const forgotPassword = new ForgotPassword(objectForgotPassword);
     await forgotPassword.save();
 
@@ -358,7 +377,6 @@ module.exports.changePasswordPost = async (req, res) => {
 
     // Chuyển hướng sang trang OTP
     res.redirect(`/user/password/otp?email=${email}`);
-
   } catch (error) {
     // 2. Bắt lỗi nếu có biến nào đó bị undefined gây sập hệ thống
     console.log("Lỗi trong quá trình đổi mật khẩu:", error);
