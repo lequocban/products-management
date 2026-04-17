@@ -6,7 +6,10 @@ const chatSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    rom_chat_id: String,
+    room_chat_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "RoomChat",
+    },
     content: String,
     images: Array,
     deleted: {
