@@ -1,23 +1,24 @@
-.row
-  .col-12 
-    a(
-      class="btn btn-primary m-1"
-      href="/users/not-friends"
-    ) Danh sách người dùng
-    a(
-      class="btn btn-primary m-1"
-      href="/users/friends"
-    ) Danh sách bạn bè
-    a(
-      class="btn btn-primary m-1"
-      href="/users/requests"
-    ) Lời mời đă gửi
-    a(
-      class="btn btn-primary m-1"
-      href="/users/accept"
-    ) 
-      | Lời mời kết bạn
-      span(
-        class="badge badge-light"
-        badge-user-accept=user.id
-      ) #{user.acceptFriends.length}
+.row.user-nav-row
+  .col-12
+    .user-nav-actions
+      a(
+        class="user-nav-btn"
+        href="/users/not-friends"
+      ) Danh sách người dùng
+      a(
+        class="user-nav-btn"
+        href="/users/friends"
+      ) Danh sách bạn bè
+      a(
+        class="user-nav-btn"
+        href="/users/requests"
+      ) Lời mời đã gửi
+      a(
+        class="user-nav-btn"
+        href="/users/accept"
+      )
+        span Lời mời kết bạn
+        span(
+          class="badge user-nav-badge"
+          badge-user-accept=user.id
+        ) #{user.acceptFriends.length}

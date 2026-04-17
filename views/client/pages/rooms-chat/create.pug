@@ -8,44 +8,58 @@ block main
 
   .container.my-3.cyber-wrapper.rounded-5 
 
-    .row 
+    include ../../partials/list-btn-user.pug
+
+    .row.mb-3
       .col-12
         +box-head("Tạo phòng chat")
 
-
-    .row
-      .col-12
-        form(
+    .row.justify-content-center
+      .col-12.col-lg-9
+        form.room-form.glass-card(
           action=`/rooms-chat/create`
           method="POST"
         )
-          div(class="form-group")
-            label(for="title") Tiêu đề
+          .room-form-header
+            h5.room-form-title Tạo phòng nhóm mới
+            p.room-form-subtitle Chọn bạn bè để bắt đầu trò chuyện trong cùng một phòng.
+
+          .form-group.mb-4
+            label(for="title") Tiêu đề phòng
             input(
               type="text"
-              class="form-control"
+              class="form-control cyber-input"
               id="title"
               name="title"
+              placeholder="Ví dụ: Team Marketing"
               required
             )
-          div(class="form-group")
-            label Thêm thành viên
-            each friend in friendsList
-              div(class="form-check")
-                input(
-                  class="form-check-input"
-                  type="checkbox"
-                  value=friend.user_id
-                  id=`user-${friend.user_id}`
-                  name="usersId"
-                )
-                label(
-                  class="form-check-label"
-                  for=`user-${friend.user_id}`
-                ) #{friend.infoFriend.fullName}
 
-          div(class="form-group")
+          .form-group
+            label.d-block.mb-2 Thêm thành viên
+
+            if friendsList.length
+              .room-member-list
+                each friend in friendsList
+                  label(class="form-check room-member-item" for=`user-${friend.user_id}`)
+                    input(
+                      class="form-check-input"
+                      type="checkbox"
+                      value=friend.user_id
+                      id=`user-${friend.user_id}`
+                      name="usersId"
+                    )
+                    .room-member-avatar
+                      img(
+                        src=(friend.infoFriend.avatar ? friend.infoFriend.avatar : "/images/user-default.jpg")
+                        alt=friend.infoFriend.fullName
+                      )
+                    span(class="form-check-label") #{friend.infoFriend.fullName}
+            else
+              .room-empty Bạn chưa có bạn bè để tạo phòng chat nhóm.
+
+          .room-form-actions
             button(
               type="submit"
-              class="btn btn-primary"
-            ) Tạo
+              class="btn btn-cyber room-create-btn"
+            ) Tạo phòng

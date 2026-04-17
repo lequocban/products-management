@@ -6,11 +6,11 @@ block main
   +alert-success(5000)  
   +alert-error(5000)
 
-  .container.my-3.cyber-wrapper.rounded-5 
+  .container.my-3.cyber-wrapper.rounded-5.chat-page
     
     include ../../partials/list-btn-user.pug
 
-    .row 
+    .row.mb-3
       .col-12
         +box-head("Chat")
 
@@ -18,17 +18,20 @@ block main
       .col-12 
         .chat(my-id=user.id my-full-name=user.fullName room-chat-id=roomChatId)
           .inner-body
-            each chat in chats
-              div(class=(chat.user_id.id == user.id) ? "inner-outgoing" :"inner-incoming")
-                if chat.user_id.id != user.id
-                  .inner-name #{chat.user_id.fullName}
-                if (chat.content)
-                  .inner-content
-                    | #{chat.content}
-                if (chat.images)
-                  .inner-images
-                    each image in chat.images
-                      img(src=image)
+            if chats.length
+              each chat in chats
+                div(class=(chat.user_id.id == user.id) ? "inner-outgoing" :"inner-incoming")
+                  if chat.user_id.id != user.id
+                    .inner-name #{chat.user_id.fullName}
+                  if (chat.content)
+                    .inner-content
+                      | #{chat.content}
+                  if (chat.images)
+                    .inner-images
+                      each image in chat.images
+                        img(src=image)
+            else
+              .chat-empty Chưa có tin nhắn nào. Hãy bắt đầu cuộc trò chuyện.
             div(class="inner-list-typing")
           .inner-preview-images
             div(class="custom-file-container" data-upload-id="upload-images")
@@ -47,7 +50,7 @@ block main
                 label.button-icon(for="file-upload-with-preview-upload-images")   
                   i.fa-regular.fa-image 
 
-              button(type="submit")
+              button.btn-chat-submit(type="submit")
                 i.fas.fa-paper-plane
                 | Gửi
   

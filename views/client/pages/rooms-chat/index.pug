@@ -8,23 +8,63 @@ block main
 
   .container.my-3.cyber-wrapper.rounded-5 
 
-    .row 
-      .col-12
+
+    .row.align-items-center.mb-3
+      .col-12.col-lg-8
         +box-head("Danh sách phòng chat")
+      .col-12.col-lg-4.text-lg-end
+        a(
+          href="/rooms-chat/create"
+          class="btn btn-cyber"
+        )
+          i.fa-solid.fa-plus
+          |  Tạo phòng mới
 
+    .row.g-4
+      .col-12.col-xl-6
+        .room-section.glass-card
+          .room-section-head
+            h5.room-section-title Chat nhóm
+            span.room-section-count #{listRoomChat.length}
+          .room-section-body
+            if listRoomChat.length
+              each room in listRoomChat
+                div(class="box-room")
+                  div(class="inner-avatar")
+                    img(
+                      src=room.avatar ? room.avatar : "/images/group-chat-default.png"
+                      alt=room.title
+                    )
+                  div(class="inner-info")
+                    div(class="inner-name") #{room.title}
+                    div(class="inner-buttons")
+                      a(
+                        href=`/chat/${room.id}`
+                        class="btn btn-sm btn-cyber"
+                      ) Nhắn tin
+            else
+              .room-list-empty Chưa có phòng chat nhóm nào, hãy tạo phòng mới để bắt đầu.
 
-    each room in listRoomChat
-      .col-6
-        div(class="box-room")
-          div(class="inner-avatar")
-            img(
-              src=room.avatar ? room.avatar : "/images/group-chat-default.png"
-              alt=room.title
-            )
-          div(class="inner-info")
-            div(class="inner-name") #{room.title}
-            div(class="inner-buttons")
-              a(
-                href=`/chat/${room.id}`
-                class="btn btn-sm btn-primary mr-1"
-              ) Nhắn tin
+      .col-12.col-xl-6
+        .room-section.glass-card
+          .room-section-head
+            h5.room-section-title Chat cá nhân
+            span.room-section-count #{listDirectChat.length}
+          .room-section-body
+            if listDirectChat.length
+              each userChat in listDirectChat
+                div(class="box-room")
+                  div(class="inner-avatar")
+                    img(
+                      src=userChat.avatar ? userChat.avatar : "/images/user-default.jpg"
+                      alt=userChat.fullName
+                    )
+                  div(class="inner-info")
+                    div(class="inner-name") #{userChat.fullName}
+                    div(class="inner-buttons")
+                      a(
+                        href=`/chat/${userChat.room_chat_id}`
+                        class="btn btn-sm btn-cyber"
+                      ) Nhắn tin
+            else
+              .room-list-empty Chưa có cuộc trò chuyện cá nhân nào.
