@@ -1,4 +1,5 @@
 const User = require("../../models/user.model");
+const RoomChat = require("../../models/room-chat.model");
 
 const uploadToCloudinary = require("../../helper/uploadToCloudinary");
 
@@ -123,31 +124,57 @@ module.exports = (res) => {
 
     // chấp nhận yêu cầu kết bạn
     socket.on("CLIENT_ACCEPT_FRIEND", async (userId) => {
-      // xóa id của b khỏi acceptFriends của a + thêm {user_id, room_chat_id} của b vào friends của a
+      // kiểm tra user tồn tại
       const existUserAcpFr = await User.findOne({
         _id: myUserId,
         acceptFriends: userId,
       });
+      const existUserReqFr = await User.findOne({
+        _id: userId,
+        requestFriends: myUserId,
+      });
+      // tạo phòng chat
+      let roomChat;
+      if (existUserAcpFr && existUserReqFr) {
+        roomChat = new RoomChat({
+          typeRoom: "friend",
+          users: [
+            {
+              user_id: myUserId,
+              role: "superAdmin",
+            },
+            {
+              user_id: userId,
+              role: "superAdmin",
+            }
+          ],
+        });
+        await roomChat.save();
+      }
+
+      // xóa id của b khỏi acceptFriends của a + thêm {user_id, room_chat_id} của b vào friends của a
+
       if (existUserAcpFr) {
         await User.updateOne(
           { _id: myUserId },
           {
-            $push: { friendList: { user_id: userId, room_chat_id: " " } },
+            $push: {
+              friendList: { user_id: userId, room_chat_id: roomChat._id },
+            },
             $pull: { acceptFriends: userId },
           },
         );
       }
 
       // xóa id của a khỏi requestFriends của b
-      const existUserReqFr = await User.findOne({
-        _id: userId,
-        requestFriends: myUserId,
-      });
+
       if (existUserReqFr) {
         await User.updateOne(
           { _id: userId },
           {
-            $push: { friendList: { user_id: myUserId, room_chat_id: " " } },
+            $push: {
+              friendList: { user_id: myUserId, room_chat_id: roomChat._id },
+            },
             $pull: { requestFriends: myUserId },
           },
         );
