@@ -16,7 +16,7 @@ block main
 
     .row 
       .col-12 
-        .chat(my-id=user.id my-full-name=user.fullName)
+        .chat(my-id=user.id my-full-name=user.fullName room-chat-id=roomChatId)
           .inner-body
             each chat in chats
               div(class=(chat.user_id.id == user.id) ? "inner-outgoing" :"inner-incoming")

@@ -12,6 +12,7 @@ module.exports.index = async (req, res) => {
   // end lấy data
   res.render("client/pages/chat/index", {
     pageTitle: "Chat",
+    roomChatId: roomChatId,
     chats: chats,
   });
 };

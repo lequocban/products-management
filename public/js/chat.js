@@ -5,7 +5,20 @@ var timeOutTyping;
 const chatElement = document.querySelector(".chat");
 const myId = chatElement?.getAttribute("my-id");
 const myFullName = chatElement?.getAttribute("my-full-name");
+const roomChatId = chatElement?.getAttribute("room-chat-id");
 const maxTotalImageSize = 20 * 1024 * 1024;
+
+if (roomChatId) {
+  const joinCurrentRoom = () => {
+    socket.emit("CLIENT_JOIN_ROOM", roomChatId);
+  };
+
+  if (socket.connected) {
+    joinCurrentRoom();
+  }
+
+  socket.on("connect", joinCurrentRoom);
+}
 
 // TÌM THEO TEXTAREA THAY VÌ INPUT
 const chatInput = document.querySelector(
@@ -14,7 +27,7 @@ const chatInput = document.querySelector(
 
 // show typing
 const showTyping = () => {
-  if (!myId || !myFullName) {
+  if (!myId || !myFullName || !roomChatId) {
     return;
   }
 
@@ -22,6 +35,7 @@ const showTyping = () => {
     socket.emit("CLIENT_SEND_TYPING", {
       userId: myId,
       fullName: myFullName,
+      roomChatId: roomChatId,
       type: "hidden",
     });
     return;
@@ -30,6 +44,7 @@ const showTyping = () => {
   socket.emit("CLIENT_SEND_TYPING", {
     userId: myId,
     fullName: myFullName,
+    roomChatId: roomChatId,
     type: "show",
   });
   clearTimeout(timeOutTyping);
@@ -38,6 +53,7 @@ const showTyping = () => {
     socket.emit("CLIENT_SEND_TYPING", {
       userId: myId,
       fullName: myFullName,
+      roomChatId: roomChatId,
       type: "hidden",
     });
   }, 3000);
@@ -75,12 +91,15 @@ const sendMessage = async (contentRaw) => {
     return;
   }
 
-  if (!myId || !myFullName) {
+  if (!myId || !myFullName || !roomChatId) {
     console.error("Không có thông tin người dùng để gửi tin nhắn.");
     return;
   }
 
-  const totalImageSize = images.reduce((sum, file) => sum + (file.size || 0), 0);
+  const totalImageSize = images.reduce(
+    (sum, file) => sum + (file.size || 0),
+    0,
+  );
   if (totalImageSize > maxTotalImageSize) {
     console.error("Tổng dung lượng ảnh vượt quá 20MB.");
     return;
@@ -97,6 +116,7 @@ const sendMessage = async (contentRaw) => {
     socket.emit("CLIENT_SEND_MESSAGE", {
       userId: myId,
       fullName: myFullName,
+      roomChatId: roomChatId,
       content: content,
       images: imageBuffers,
     });
@@ -105,6 +125,7 @@ const sendMessage = async (contentRaw) => {
     socket.emit("CLIENT_SEND_TYPING", {
       userId: myId,
       fullName: myFullName,
+      roomChatId: roomChatId,
       type: "hidden",
     });
     clearTimeout(timeOutTyping);
@@ -280,7 +301,6 @@ if (elementListTyping) {
   });
 }
 // END SERVER_RETURN_TYPING
-
 
 // preview image
 

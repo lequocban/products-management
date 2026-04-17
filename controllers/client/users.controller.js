@@ -86,7 +86,7 @@ module.exports.friends = async (req, res) => {
     "-password -tokenUser",
   ).lean();
 
-  const friendList = currentUser.friendList ;
+  const friendList = currentUser.friendList || [];
 
   const friendIds = friendList.map((item) => item.user_id);
 

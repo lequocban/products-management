@@ -4,10 +4,19 @@ const uploadToCloudinary = require("../../helper/uploadToCloudinary");
 
 module.exports = (io) => {
   io.on("connection", (socket) => {
+    socket.on("CLIENT_JOIN_ROOM", (roomChatId) => {
+      if (!roomChatId) {
+        return;
+      }
+
+      socket.join(roomChatId);
+    });
+
     socket.on("CLIENT_SEND_MESSAGE", async (data) => {
       try {
         const userId = data.userId;
         const fullName = data.fullName;
+        const roomChatId = data.roomChatId;
         const content = typeof data.content === "string" ? data.content : "";
 
         if (!userId) {
@@ -16,6 +25,15 @@ module.exports = (io) => {
           });
           return;
         }
+
+        if (!roomChatId) {
+          socket.emit("SERVER_MESSAGE_ERROR", {
+            message: "Thiếu thông tin phòng chat.",
+          });
+          return;
+        }
+
+        socket.join(roomChatId);
 
         const images = [];
         const rawImages = Array.isArray(data.images) ? data.images : [];
@@ -50,13 +68,14 @@ module.exports = (io) => {
         // lưu vào db
         const chat = new Chat({
           user_id: userId,
+          room_chat_id: roomChatId,
           content: content,
           images: images,
         });
         await chat.save();
 
         // trả về client
-        io.emit("SERVER_RETURN_MESSAGE", {
+        io.to(roomChatId).emit("SERVER_RETURN_MESSAGE", {
           userId: userId,
           fullName: fullName,
           content: content,
@@ -71,11 +90,11 @@ module.exports = (io) => {
     });
 
     socket.on("CLIENT_SEND_TYPING", (data) => {
-      if (!data || !data.userId || !data.fullName) {
+      if (!data || !data.userId || !data.fullName || !data.roomChatId) {
         return;
       }
 
-      socket.broadcast.emit("SERVER_RETURN_TYPING", {
+      socket.to(data.roomChatId).emit("SERVER_RETURN_TYPING", {
         userId: data.userId,
         fullName: data.fullName,
         type: data.type,
