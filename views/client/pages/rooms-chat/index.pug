@@ -1,0 +1,36 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success(5000)  
+  +alert-error(5000)
+
+  .container.my-3.cyber-wrapper.rounded-5 
+
+    .row 
+      .col-12
+        +box-head("Danh sách phòng chat")
+
+    .row.mb-3
+      .col-12
+        a(
+          href="/rooms-chat/create"
+          class="btn btn-sm btn-success mr-1"
+        ) Tạo phòng chat
+
+    .row
+      .col-6
+        div(class="box-room")
+          div(class="inner-avatar")
+            img(
+              src="https://robohash.org/hicveldicta.png"
+              alt="Phòng abc"
+            )
+          div(class="inner-info")
+            div(class="inner-name") Phòng abc
+            div(class="inner-buttons")
+              a(
+                href="#"
+                class="btn btn-sm btn-primary mr-1"
+              ) Nhắn tin
