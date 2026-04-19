@@ -105,6 +105,7 @@ module.exports.otpRegisterPost = async (req, res) => {
     fullName: registerData.fullName,
     email: registerData.email,
     password: registerData.hashedPassword,
+    tokenUser: generateHelper.generateRandomString(20),
     status: "active",
   });
   await user.save();
